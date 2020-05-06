@@ -88,9 +88,6 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'skywind3000/asyncrun.vim'
-Plugin 'xolox/vim-misc' " for vim-easytags
-Plugin 'xolox/vim-easytags'
-Plugin 'ronakg/quickr-cscope.vim'
 Plugin 'majutsushi/tagbar' " <F8>: show functions, variables, structs, etc
 Plugin 'tpope/vim-commentary' " comment with gc, gcc
 Plugin 'tpope/vim-surround' " cs, ds, ys
@@ -168,35 +165,6 @@ nnoremap <silent> <F5> :AsyncRun -raw -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/$(VI
 command GCC w <bar> AsyncRun gcc "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
 command NVCC w <bar> AsyncRun nvcc "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
 command GoBin AsyncRun -raw -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
-
-
-"-------------------------------------------------------------------
-" vim-easytags
-"-------------------------------------------------------------------
-set tag=./tags;/
-let g:easytags_async = 1 " load tags asynchronously
-"let g:easytags_auto_highlight = 0 " turn off auto highlight
-let g:easytags_include_members = 1 " include member variables of structs
-let g:easytags_dynamic_files = 1   " first try loading tags from the current project, then try global tags
-
-
-"-------------------------------------------------------------------
-" quickr-cscope
-"-------------------------------------------------------------------
-function! LoadCscope()
-  let db = findfile("cscope.out", ".;")
-  if (!empty(db))
-    let path = strpart(db, 0, match(db, "/cscope.out$"))
-    set nocscopeverbose " supress 'duplicate connection' error
-    exe "cs add " . db . " " . path
-    set cscopeverbose
-  " else add the database pointed to by environment variable
-  elseif $CSCOPE_DB != ""
-    cs add $CSCOPE_DB
-  endif
-endfunction
-autocmd BufEnter /* call LoadCscope()
-set cst " <C-]> and <C-t> will always use :cstag instead of :tag
 
 
 "-------------------------------------------------------------------
