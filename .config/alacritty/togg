@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Made by Jaewon for personal use.
+# Toggle's Alacritty's background opacity
+
+CONFIG="$HOME/.config/alacritty/alacritty.yml"
+
+grep -q 'background_opacity: 1.0' $CONFIG && 
+sed -i 's/background_opacity: 1.0/background_opacity: 0.85/' $CONFIG ||
+sed -i 's/background_opacity: 0.85/background_opacity: 1.0/' $CONFIG 
