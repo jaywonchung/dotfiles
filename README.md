@@ -6,6 +6,7 @@ Initialize the dotfile management environment.
 
 ```bash
 git clone --bare https://github.com/jaywonchung/dotfiles.git $HOME/.dotfiles
+git checkout master
 source .install_dotfiles/init.sh
 ```
 
