@@ -481,7 +481,7 @@ key_bindings:
   - { key: LBracket,  mods: Control,       chars: "\x02[",              mode: Alt       }
 
   # toggle alacritty opacity
-  - { key: F3,        mods: Control,       command: ".config/alacritty/togg"                           }
+  - { key: Key3,      mods: Control|Shift, command: ".config/alacritty/togg"            }
 
 
 #debug:
