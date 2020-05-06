@@ -18,6 +18,12 @@ dotfiles checkout ubuntu-desktop
 You may run into errors when checking out a branch due to existing dotfiles in your home directory.
 Do a quick backup to a separate directory, or just remove them.
 
+Finally, run the post-checkout script. It installs packages.
+```bash
+zsh ~/.install_dotfiles/post_checkout.sh
+source ~/.zshrc
+```
+
 ## Modifying configurations
 
 In your home directory, you can do things like:
