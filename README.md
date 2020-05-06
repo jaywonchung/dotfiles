@@ -6,7 +6,7 @@ Initialize the dotfile management environment.
 
 ```bash
 git clone --bare https://github.com/jaywonchung/dotfiles.git $HOME/.dotfiles
-source init_dotfiles.sh
+source .install_dotfiles/init.sh
 ```
 
 Then checkout the desired system branch. For example, install the `ubuntu-desktop` settings with:
