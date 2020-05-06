@@ -1,1 +1,1 @@
-ubuntu-desktop.sh
+ubuntu-server.sh
