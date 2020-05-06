@@ -1,0 +1,65 @@
+{
+  "title": "CAPSLOCK <=> LEFT CTRL in Alacritty and iTerm2",
+  "rules": [
+    {
+      "description": "Map CAPSLOCK to CTRL",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "caps_lock",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_control"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "io.alacritty",
+                "com.googlecode.iterm2"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Map CTRL to CAPSLOCK",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_control",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "caps_lock"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "io.alacritty",
+                "com.googlecode.iterm2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

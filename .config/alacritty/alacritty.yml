@@ -480,9 +480,6 @@ key_bindings:
   - { key: Key0,      mods: Control,       chars: "\x020",              mode: Alt       }
   - { key: LBracket,  mods: Control,       chars: "\x02[",              mode: Alt       }
 
-  # toggle alacritty opacity
-  - { key: Key3,      mods: Control|Shift, command: ".config/alacritty/togg"            }
-
 
 #debug:
   # Display the time it takes to redraw each frame.
