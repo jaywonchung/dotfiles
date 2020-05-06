@@ -23,4 +23,5 @@ printf 'yyn' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindings. Do
 git clone https://github.com/wting/autojump.git ~/_autojump
 cd ~/_autojump
 ./install.py
+cd
 rm -rf ~/_autojump
