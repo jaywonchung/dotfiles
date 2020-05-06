@@ -1,0 +1,10 @@
+[user]
+	email = jaywonchung@snu.ac.kr
+	name = Jaewon Chung
+[credential]
+	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+[alias]
+	last = log -1 HEAD
+	unstage = reset HEAD --
+[core]
+	editor = vim
