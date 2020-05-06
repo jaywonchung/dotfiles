@@ -1,7 +1,10 @@
 #!/bin/zsh
 
 # zsh
+export RUNZSH=no
+export KEEP_ZSHRC=yes
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+source ~/.zshrc
 
 # install powerlevel10k
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
@@ -14,7 +17,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/
 
 # install fuzzy finder
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
+printf 'yyn' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindings. Do not modify .zshrc.
 
 # install autojump
 git clone https://github.com/wting/autojump.git ~/_autojump
