@@ -17,7 +17,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/
 
 # install fuzzy finder
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-printf 'yyn' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindings. Do not modify .zshrc.
+printf 'y\ny\nn\n' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindings. Do not modify .zshrc.
 
 # install autojump
 git clone https://github.com/wting/autojump.git ~/_autojump
