@@ -67,6 +67,9 @@ if has('persistent_undo')
   endif
 endif
 
+" mouse mode
+set mouse+=a
+
 "-------------------------------------------------------------------
 " Vundle
 "-------------------------------------------------------------------
@@ -103,6 +106,7 @@ Plugin 'junegunn/fzf.vim' " for vista finder
 Plugin 'junegunn/goyo.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
@@ -204,9 +208,6 @@ set cst " <C-]> and <C-t> will always use :cstag instead of :tag
 "-------------------------------------------------------------------
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
 
-" auto-open only on supported filetypes
-autocmd FileType * :call tagbar#autoopen(0)
-
 " sort in the order that appears in the source file
 let g:tagbar_sort = 0
 
@@ -250,6 +251,16 @@ if executable('pyls')
     \ 'cmd': {server_info->['pyls']},
     \ 'whitelist': ['python'],
     \ })
+endif
+
+" rls
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+        \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
+        \ 'whitelist': ['rust'],
+        \ })
 endif
 
 "-------------------------------------------------------------------
