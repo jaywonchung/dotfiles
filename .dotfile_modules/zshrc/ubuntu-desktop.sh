@@ -18,3 +18,6 @@ export PATH="$HOME/builds/gdb-8.3.1-riscv64-linux-gnu/bin:$PATH"
 
 # llvm and clang (for ccls)
 export PATH="/usr/local/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04/bin:$PATH"
+
+# rust cargo
+export PATH="$HOME/.cargo/bin:$PATH"
