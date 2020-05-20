@@ -1,5 +1,5 @@
 {
-  "title": "CAPSLOCK <=> LEFT CTRL in Alacritty and iTerm2",
+  "title": "CAPSLOCK <=> LEFT CTRL",
   "rules": [
     {
       "description": "Map CAPSLOCK to CTRL",
@@ -24,7 +24,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "io.alacritty",
-                "com.googlecode.iterm2"
+                "com.googlecode.iterm2",
+                "com.naver.Whale"
               ]
             }
           ]
@@ -54,7 +55,8 @@
               "type": "frontmost_application_if",
               "bundle_identifiers": [
                 "io.alacritty",
-                "com.googlecode.iterm2"
+                "com.googlecode.iterm2",
+                "com.naver.Whale"
               ]
             }
           ]
