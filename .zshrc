@@ -54,7 +54,7 @@ POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------
-# Rython environments
+# Python environments
 #-------------------------------------------------------------------
 source "$HOME/.dotfile_modules/zshrc/python-env.sh"
 
