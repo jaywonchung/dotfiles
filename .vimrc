@@ -106,7 +106,6 @@ Plugin 'junegunn/goyo.vim'
 Plugin 'flazz/vim-colorschemes' " using gruvbox
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'rust-lang/rust.vim'
-Plugin 'metakirby5/codi.vim' " :Codi [filetype]
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
