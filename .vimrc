@@ -94,19 +94,19 @@ Plugin 'skywind3000/asyncrun.vim'
 Plugin 'xolox/vim-misc' " for vim-easytags
 Plugin 'xolox/vim-easytags'
 Plugin 'ronakg/quickr-cscope.vim'
-Plugin 'majutsushi/tagbar' " <F8>: show functions, variables, structs, etc
+Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-commentary' " comment with gc, gcc
 Plugin 'tpope/vim-surround' " cs, ds, ys
 Plugin 'prabirshrestha/async.vim' " for vim-lsp
 Plugin 'prabirshrestha/vim-lsp' " language server
-Plugin 'prabirshrestha/asyncomplete.vim' " autocompletion
+Plugin 'prabirshrestha/asyncomplete.vim' " for autocomplete-lsp
 Plugin 'prabirshrestha/asyncomplete-lsp.vim' " autocompletion with vim-lsp
 Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim' " for vista finder
 Plugin 'junegunn/goyo.vim'
-Plugin 'flazz/vim-colorschemes'
+Plugin 'flazz/vim-colorschemes' " using gruvbox
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'rust-lang/rust.vim'
+Plugin 'metakirby5/codi.vim' " :Codi [filetype]
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
@@ -135,6 +135,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = {'mode': 'passive'}
 
 " C
 "let g:syntastic_c_compiler_options = ' -std=c11 -Wall -Wextra -Wpedantic -wbuiltin-declaration-mismatch'
@@ -233,6 +234,9 @@ nnoremap <f2> :LspRename<CR>
 nnoremap <silent> gd :LspDefinition<CR>
 nnoremap <silent> gr :LspReferences<CR>
 
+" options
+let g:lsp_preview_float = 1
+
 " ccls
 if executable('ccls')
   autocmd User lsp_setup call lsp#register_server({
@@ -253,7 +257,7 @@ if executable('pyls')
     \ })
 endif
 
-" rls
+" rust language server
 if executable('rls')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'rls',
@@ -281,7 +285,8 @@ hi! NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
 "-------------------------------------------------------------------
 " asyncomplete-lsp
 "-------------------------------------------------------------------
-let g:asyncomplete_auto_popup = 0 " autocompletion popup only when I press tab
+let g:asyncomplete_auto_popup = 0 " autocompletion popup only on tab
+let g:asyncomplete_auto_completeopt = 0 " do not overwrite completeopt
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -292,11 +297,12 @@ inoremap <silent><expr> <TAB>
   \ pumvisible() ? "\<C-n>" :
   \ <SID>check_back_space() ? "\<TAB>" :
   \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <C-space> <Plug>(asyncomplete_force_refresh)
 
 set completeopt-=preview " disable preview window
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif " close preview when complete
+autocmd! CompleteDone * pclose " close preview when complete
+autocmd InsertLeave * pclose " close preview when leaving insert mode
 
 "-------------------------------------------------------------------
 " editorconfig-vim
