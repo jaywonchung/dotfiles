@@ -67,6 +67,9 @@ if has('persistent_undo')
   endif
 endif
 
+" mouse mode
+set mouse+=a
+
 "-------------------------------------------------------------------
 " Vundle
 "-------------------------------------------------------------------
@@ -88,20 +91,13 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'skywind3000/asyncrun.vim'
-Plugin 'xolox/vim-misc' " for vim-easytags
-Plugin 'xolox/vim-easytags'
-Plugin 'ronakg/quickr-cscope.vim'
-Plugin 'majutsushi/tagbar' " <F8>: show functions, variables, structs, etc
+Plugin 'majutsushi/tagbar'
 Plugin 'tpope/vim-commentary' " comment with gc, gcc
-Plugin 'tpope/vim-surround' " cs, ds, ys
 Plugin 'prabirshrestha/async.vim' " for vim-lsp
 Plugin 'prabirshrestha/vim-lsp' " language server
-Plugin 'prabirshrestha/asyncomplete.vim' " autocompletion
+Plugin 'prabirshrestha/asyncomplete.vim' " for autocomplete-lsp
 Plugin 'prabirshrestha/asyncomplete-lsp.vim' " autocompletion with vim-lsp
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim' " for vista finder
-Plugin 'junegunn/goyo.vim'
-Plugin 'flazz/vim-colorschemes'
+Plugin 'flazz/vim-colorschemes' " using gruvbox
 Plugin 'editorconfig/editorconfig-vim'
 call vundle#end()
 
@@ -114,8 +110,9 @@ filetype plugin indent on " re-enable filetype
 " Show max line number
 let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinenr', ':%3v'])
 
+
 "-------------------------------------------------------------------
-" Pathogen (for Syntastic)
+" Pathogen (installs Syntastic)
 "-------------------------------------------------------------------
 execute pathogen#infect()
 
@@ -131,6 +128,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = {'mode': 'passive'}
 
 " C
 "let g:syntastic_c_compiler_options = ' -std=c11 -Wall -Wextra -Wpedantic -wbuiltin-declaration-mismatch'
@@ -171,41 +169,12 @@ command GoBin AsyncRun -raw -cwd="$(VIM_FILEDIR)" "$(VIM_FILEDIR)/$(VIM_FILENOEX
 
 
 "-------------------------------------------------------------------
-" vim-easytags
-"-------------------------------------------------------------------
-set tag=./tags;/
-let g:easytags_async = 1 " load tags asynchronously
-"let g:easytags_auto_highlight = 0 " turn off auto highlight
-let g:easytags_include_members = 1 " include member variables of structs
-let g:easytags_dynamic_files = 1   " first try loading tags from the current project, then try global tags
-
-
-"-------------------------------------------------------------------
-" quickr-cscope
-"-------------------------------------------------------------------
-function! LoadCscope()
-  let db = findfile("cscope.out", ".;")
-  if (!empty(db))
-    let path = strpart(db, 0, match(db, "/cscope.out$"))
-    set nocscopeverbose " supress 'duplicate connection' error
-    exe "cs add " . db . " " . path
-    set cscopeverbose
-  " else add the database pointed to by environment variable
-  elseif $CSCOPE_DB != ""
-    cs add $CSCOPE_DB
-  endif
-endfunction
-autocmd BufEnter /* call LoadCscope()
-set cst " <C-]> and <C-t> will always use :cstag instead of :tag
-
-
-"-------------------------------------------------------------------
 " Tagbar
 "-------------------------------------------------------------------
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
 
 " auto-open only on supported filetypes
-autocmd FileType * :call tagbar#autoopen(0)
+" autocmd FileType * :call tagbar#autoopen(0)
 
 " sort in the order that appears in the source file
 let g:tagbar_sort = 0
@@ -231,6 +200,9 @@ augroup END
 nnoremap <f2> :LspRename<CR>
 nnoremap <silent> gd :LspDefinition<CR>
 nnoremap <silent> gr :LspReferences<CR>
+
+" options
+let g:lsp_preview_float = 1
 
 " ccls
 if executable('ccls')
@@ -281,11 +253,12 @@ inoremap <silent><expr> <TAB>
   \ pumvisible() ? "\<C-n>" :
   \ <SID>check_back_space() ? "\<TAB>" :
   \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <C-space> <Plug>(asyncomplete_force_refresh)
 
 set completeopt-=preview " disable preview window
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif " close preview when complete
+autocmd! CompleteDone * pclose " close preview when complete
+autocmd InsertLeave * pclose " close preview when leaving insert mode
 
 "-------------------------------------------------------------------
 " editorconfig-vim
