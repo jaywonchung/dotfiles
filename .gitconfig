@@ -6,3 +6,9 @@
 	unstage = reset HEAD --
 [core]
 	editor = vim
+[diff]
+  tool = vimdiff
+[merge]
+  tool = vimdiff
+[diftool]
+  prompt = false
