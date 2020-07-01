@@ -8,10 +8,6 @@ source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
 " Editor settings
-" vim
-
-
-set ttyfast
 " whitespace
 set autoindent    " Insert indent on newline
 set cindent       " Autoindent for C
@@ -32,15 +28,19 @@ set incsearch
 " file
 set autoread      " Auto load when current file is edited somewhere
 set autowrite     " Auto save when changing to another file
+" performance
+set ttyfast
+set lazyredraw
+" difftool
+set diffopt+=iwhite " Ignore whitespace
+set diffopt+=algorithm:patience " Use the patience algorithm
+set diffopt+=indent-heuristic " Internal diff lib for indents
 " util
 set number relativenumber " Show relative line number
 set exrc          " Execute .vimrc in the directory vim is started
 set mouse=a       " Use mouse for all modes
 set showmatch     " Highlight matching braces
 packadd! matchit  " Lets % work better
-set diffopt+=iwhite " Ignore whitespace
-set diffopt+=algorithm:patience " Use the patience algorithm
-set diffopt+=indent-heuristic " Internal diff lib for indents
 
 " General key bindings
 let mapleader = "\<space>"
@@ -49,6 +49,8 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qq :q<CR>
+nnoremap <Leader>qa :qa<CR>
 
 " Highlight search results only in command mode
 augroup vimrc-incsearch-highlight
@@ -154,7 +156,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = {'mode': 'passive'}
 
 " Key bindings
-nnoremap <Leader>s :SyntasticCheck<CR>
+nnoremap <Leader>s :w <bar> :SyntasticCheck<CR>
 nnoremap <Leader>r :SyntasticReset<CR>
 nnoremap <Leader>i :SyntasticInfo<CR>
 
@@ -209,13 +211,13 @@ let g:tagbar_sort = 0
 " Quit NERDTree when its the only window open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" For systems without pretty arrows
-" let g:NERDTreeDirArrowExpandable = '>'
-" let g:NERDTreeDirArrowCollapsible = 'v'
-
 " Key mappings
 nnoremap <C-F> :NERDTreeFind<CR>
 nnoremap <Leader>n :NERDTreeToggle<CR>
+
+" For systems without pretty arrows
+" let g:NERDTreeDirArrowExpandable = '>'
+" let g:NERDTreeDirArrowCollapsible = 'v'
 
 
 " =============================================================================
@@ -287,6 +289,7 @@ augroup lsp_install
 augroup END
 
 let g:lsp_diagnostics_enabled = 0
+let g:lsp_peek_alignment = 'top'
 
 " enable logging
 "let g:lsp_log_verbose = 1
@@ -296,7 +299,7 @@ let g:lsp_diagnostics_enabled = 0
 nnoremap <f2> :LspRename<CR>
 nnoremap <silent> gd :LspDefinition<CR>
 nnoremap <silent> gr :LspReferences<CR>
-nnoremap <silent> gpd :LspPeekDefinition<CR>
+nnoremap <silent> ge :LspPeekDefinition<CR>
 
 " ccls
 if executable('ccls')
@@ -332,7 +335,7 @@ endif
 " =============================================================================
 " asyncomplete-lsp
 " =============================================================================
-" Disable auto-popup. Only open on <TAB>.
+" Disable auto-popup. Only open on <Tab>.
 let g:asyncomplete_auto_popup = 0
 
 function! s:check_back_space() abort
@@ -340,8 +343,8 @@ function! s:check_back_space() abort
     return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-inoremap <silent><expr> <TAB>
+inoremap <silent><expr> <Tab>
   \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
+  \ <SID>check_back_space() ? "\<Tab>" :
   \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
