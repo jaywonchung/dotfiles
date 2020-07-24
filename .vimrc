@@ -33,6 +33,8 @@ set ttyfast
 set lazyredraw
 " difftool
 set diffopt+=iwhite " Ignore whitespace
+set diffopt+=algorithm:patience " Use the patience algorithm
+set diffopt+=indent-heuristic " Internal diff lib for indents
 " util
 set number relativenumber " Show relative line number
 set exrc          " Execute .vimrc in the directory vim is started
@@ -87,6 +89,9 @@ if has('persistent_undo')
   endif
 endif
 
+" Fix autoread
+autocmd FocusGained,BufEnter * :checktime
+
 
 " =============================================================================
 " Vundle
@@ -107,6 +112,7 @@ Plugin 'VundleVim/Vundle.vim'
 " editing
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'foosoft/vim-argwrap'
 " appearance
 Plugin 'vim-airline/vim-airline'
 Plugin 'machakann/vim-highlightedyank'
@@ -129,6 +135,12 @@ Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
+
+
+" =============================================================================
+" vim-argwrap
+" =============================================================================
+nnoremap <Leader>a :ArgWrap<CR>
 
 
 " =============================================================================
