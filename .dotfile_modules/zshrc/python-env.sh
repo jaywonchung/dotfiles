@@ -12,15 +12,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-# Deactivate conda base environment
-conda deactivate
-
-# pyenv
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
-# python userpath
-# Created by `userpath` on 2020-05-10 15:22:11
-export PATH="$PATH:/home/jaywonchung/.local/bin"

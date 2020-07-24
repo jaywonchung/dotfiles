@@ -9,38 +9,38 @@ source $VIMRUNTIME/menu.vim
 
 " Editor settings
 " whitespace
-set autoindent    " Insert indent on newline
-set cindent       " Autoindent for C
-set smartindent   " Aware of {, }, etc
-set scrolloff=2   " Lines between cursor and screen
-set softtabstop=2 " Width of <tab>
-set tabstop=2     " Width of interpretation of <tab>
-set shiftwidth=2  " Width of >> and <<
-set expandtab     " <Tab> to spaces, <C-v><Tab> for real tab
-set smarttab      " <Tab> at line start obeys shiftwidth
+set autoindent         " Insert indent on newline
+set cindent            " Autoindent for C
+set smartindent        " Aware of {, }, etc
+set scrolloff=2        " Lines between cursor and screen
+set softtabstop=2      " Width of <tab>
+set tabstop=2          " Width of interpretation of <tab>
+set shiftwidth=2       " Width of >> and <<
+set expandtab          " <Tab> to spaces, <C-v><Tab> for real tab
+set smarttab           " <Tab> at line start obeys shiftwidth
 set backspace=eol,start,indent " Backspace same as other programs
 " search
-set history=256   " History for commands, searches, etc
+set history=256        " History for commands, searches, etc
 set wildmode=longest,list " Command-mode autocompletion
-set ignorecase    " Case-insensitive search
-set smartcase     " Except when uppercase characters are typed
+set ignorecase         " Case-insensitive search
+set smartcase          " Except when uppercase characters are typed
 set incsearch
 " file
-set autoread      " Auto load when current file is edited somewhere
-set autowrite     " Auto save when changing to another file
+set autoread           " Auto load when current file is edited somewhere
+set autowrite          " Auto save when changing to another file
 " performance
 set ttyfast
 set lazyredraw
 " difftool
-set diffopt+=iwhite " Ignore whitespace
+set diffopt+=iwhite    " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
 set diffopt+=indent-heuristic " Internal diff lib for indents
 " util
 set number relativenumber " Show relative line number
-set exrc          " Execute .vimrc in the directory vim is started
-set mouse=a       " Use mouse for all modes
-set showmatch     " Highlight matching braces
-packadd! matchit  " Lets % work better
+set exrc               " Execute .vimrc in the directory vim is started
+set mouse=a            " Use mouse for all modes
+set showmatch          " Highlight matching braces
+packadd! matchit       " Lets % work better
 
 " General key bindings
 let mapleader = "\<space>"

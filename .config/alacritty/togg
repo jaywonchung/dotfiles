@@ -6,5 +6,5 @@
 CONFIG="$HOME/.config/alacritty/alacritty.yml"
 
 grep -q 'background_opacity: 1.0' $CONFIG && 
-sed -i 's/background_opacity: 1.0/background_opacity: 0.85/' $CONFIG ||
-sed -i 's/background_opacity: 0.85/background_opacity: 1.0/' $CONFIG 
+sed -i 's/background_opacity: 1.0/background_opacity: 0.75/' $CONFIG ||
+sed -i 's/background_opacity: 0.75/background_opacity: 1.0/' $CONFIG 
