@@ -89,6 +89,9 @@ if has('persistent_undo')
   endif
 endif
 
+" Fix autoread
+autocmd FocusGained,BufEnter * :checktime
+
 
 " =============================================================================
 " Vundle
@@ -109,6 +112,7 @@ Plugin 'VundleVim/Vundle.vim'
 " editing
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'foosoft/vim-argwrap'
 " appearance
 Plugin 'vim-airline/vim-airline'
 Plugin 'machakann/vim-highlightedyank'
@@ -133,6 +137,12 @@ Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
+
+
+" =============================================================================
+" vim-argwrap
+" =============================================================================
+nnoremap <Leader>a :ArgWrap<CR>
 
 
 " =============================================================================
