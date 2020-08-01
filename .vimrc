@@ -134,6 +134,7 @@ Plugin 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
 Plugin 'sheerun/vim-polyglot'
+Plugin 'pearofducks/ansible-vim'
 Plugin 'vim-syntastic/syntastic'
 Plugin 'rust-lang/rust.vim'
 call vundle#end()
