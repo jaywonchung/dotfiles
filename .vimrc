@@ -116,7 +116,7 @@ Plugin 'foosoft/vim-argwrap'
 " appearance
 Plugin 'vim-airline/vim-airline'
 Plugin 'machakann/vim-highlightedyank'
-Plugin 'flazz/vim-colorschemes'
+Plugin 'morhetz/gruvbox'
 " git integration
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
@@ -133,6 +133,8 @@ Plugin 'prabirshrestha/vim-lsp'
 Plugin 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
+Plugin 'sheerun/vim-polyglot'
+Plugin 'vim-syntastic/syntastic'
 Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
@@ -143,12 +145,6 @@ filetype plugin indent on " re-enable filetype
 " vim-argwrap
 " =============================================================================
 nnoremap <Leader>a :ArgWrap<CR>
-
-
-" =============================================================================
-" Pathogen (for Syntastic)
-" =============================================================================
-execute pathogen#infect()
 
 
 " =============================================================================
@@ -196,7 +192,7 @@ let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinen
 
 
 " =============================================================================
-" vim-colorschemes
+" gruvbox
 " =============================================================================
 colorscheme gruvbox
 
