@@ -93,6 +93,9 @@ endif
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
 
+" YAML indentation
+autocmd FileType yaml,helm setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=0# indentkeys-=<:>
+
 
 " =============================================================================
 " Vundle
@@ -135,7 +138,6 @@ Plugin 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
 Plugin 'sheerun/vim-polyglot'
-Plugin 'pearofducks/ansible-vim'
 Plugin 'vim-syntastic/syntastic'
 call vundle#end()
 
