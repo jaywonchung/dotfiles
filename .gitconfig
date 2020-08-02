@@ -1,16 +1,17 @@
 [user]
-	email = jaywonchung@snu.ac.kr
-	name = Jaewon Chung
+  email = jaywonchung@snu.ac.kr
+  name = Jaewon Chung
 [credential]
-	helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+  helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [alias]
-	last = log -1 HEAD
-	unstage = reset HEAD --
+  last = log -1 HEAD
+  unstage = reset HEAD --
 [core]
-	editor = vim
+  editor = vim
 [diff]
-	tool = vimdiff
+  tool = vimdiff
 [merge]
-	tool = vimdiff
+  tool = vimdiff
 [difftool]
-	prompt = false
+  prompt = false
+  trustExitCode = true
