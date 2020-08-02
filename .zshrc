@@ -77,6 +77,7 @@ alias gcm='git commit -m'
 
 # Managing dotfiles
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+compdef dotfiles=git
 
 #-------------------------------------------------------------------
 # Environment variables
