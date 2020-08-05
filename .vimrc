@@ -38,7 +38,6 @@ set diffopt+=indent-heuristic " Internal diff lib for indents
 " util
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
-set mouse=a            " Use mouse for all modes
 set showmatch          " Highlight matching braces
 packadd! matchit       " Lets % work better
 
