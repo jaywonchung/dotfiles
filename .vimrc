@@ -38,7 +38,6 @@ set diffopt+=indent-heuristic " Internal diff lib for indents
 " util
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
-set mouse=a            " Use mouse for all modes
 set showmatch          " Highlight matching braces
 packadd! matchit       " Lets % work better
 
@@ -92,9 +91,6 @@ endif
 
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
-
-" YAML indentation
-autocmd FileType yaml,helm setlocal ts=2 sts=2 sw=2 expandtab indentkeys-=0# indentkeys-=<:>
 
 
 " =============================================================================
@@ -203,6 +199,9 @@ colorscheme gruvbox
 " This needed to be done after setting the colorscheme.
 hi! Normal ctermbg=NONE guibg=NONE
 hi! NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
+
+" No error highlighting
+hi! Error NONE
 
 
 " =============================================================================
