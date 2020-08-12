@@ -221,8 +221,11 @@ let g:tagbar_sort = 0
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Key mappings
-nnoremap <C-F> :NERDTreeFind<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
 nnoremap <Leader>n :NERDTreeToggle<CR>
+let NERDTreeMapOpenInTab='<C-g>'
+let NERDTreeMapOpenSplit='<C-s>'
+let NERDTreeMapOpenVSplit='<C-v>'
 
 " For systems without pretty arrows
 " let g:NERDTreeDirArrowExpandable = '>'
@@ -267,9 +270,9 @@ let g:fzf_colors =
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment'] }
 
-let g:fzf_layout = { 'down': '~20%' }
-" let g:fzf_layout = { 'up':'~90%', 'window':
-  " \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+" let g:fzf_layout = { 'down': '~20%' }
+let g:fzf_layout = { 'up':'~90%', 'window':
+  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
 
 
 " =============================================================================
