@@ -112,6 +112,8 @@ Plugin 'VundleVim/Vundle.vim'
 " editing
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 Plugin 'foosoft/vim-argwrap'
 " appearance
 Plugin 'vim-airline/vim-airline'
