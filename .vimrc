@@ -43,6 +43,8 @@ packadd! matchit       " Lets % work better
 
 " General key bindings
 let mapleader = "\<space>"
+nnoremap H ^
+nnoremap L $
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -207,6 +209,12 @@ hi! Error NONE
 
 
 " =============================================================================
+" fugitive
+" =============================================================================
+nnoremap <Leader>d :Gdiff master:%<CR>
+
+
+" =============================================================================
 " Tagbar
 " =============================================================================
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
@@ -302,7 +310,6 @@ augroup lsp_install
 augroup END
 
 let g:lsp_diagnostics_enabled = 0
-let g:lsp_peek_alignment = 'top'
 
 " enable logging
 "let g:lsp_log_verbose = 1
