@@ -213,7 +213,10 @@ hi! Error NONE
 " =============================================================================
 " fugitive
 " =============================================================================
-nnoremap <Leader>d :Gdiff master:%<CR>
+nnoremap <Leader>gd :Gdiff master:%<CR>
+nnoremap <Leader>gs :G<CR>
+nnoremap <Leader>gh :diffget //2
+nnoremap <Leader>gl :diffget //3
 
 
 " =============================================================================
