@@ -35,14 +35,18 @@ set lazyredraw
 set diffopt+=iwhite    " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
 set diffopt+=indent-heuristic " Internal diff lib for indents
-" util
+" Misc settings
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
 set showmatch          " Highlight matching braces
+set guicursor=         " Use terminal-default cursor shape
 packadd! matchit       " Lets % work better
+
 
 " General key bindings
 let mapleader = "\<space>"
+nnoremap H ^
+nnoremap L $
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -137,7 +141,6 @@ Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
 Plugin 'sheerun/vim-polyglot'
 Plugin 'vim-syntastic/syntastic'
-Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
@@ -205,6 +208,15 @@ hi! NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
 
 " No error highlighting
 hi! Error NONE
+
+
+" =============================================================================
+" fugitive
+" =============================================================================
+nnoremap <Leader>gd :Gdiff master:%<CR>
+nnoremap <Leader>gs :G<CR>
+nnoremap <Leader>gh :diffget //2
+nnoremap <Leader>gl :diffget //3
 
 
 " =============================================================================
@@ -303,7 +315,6 @@ augroup lsp_install
 augroup END
 
 let g:lsp_diagnostics_enabled = 0
-let g:lsp_peek_alignment = 'top'
 
 " enable logging
 "let g:lsp_log_verbose = 1
