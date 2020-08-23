@@ -35,11 +35,13 @@ set lazyredraw
 set diffopt+=iwhite    " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
 set diffopt+=indent-heuristic " Internal diff lib for indents
-" util
+" Misc settings
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
 set showmatch          " Highlight matching braces
+set guicursor=         " Use terminal-default cursor shape
 packadd! matchit       " Lets % work better
+
 
 " General key bindings
 let mapleader = "\<space>"
