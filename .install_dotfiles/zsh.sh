@@ -25,3 +25,5 @@ cd ~/_autojump
 ./install.py
 cd
 rm -rf ~/_autojump
+
+soruce ~/.zshrc
