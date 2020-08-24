@@ -35,19 +35,23 @@ set lazyredraw
 set diffopt+=iwhite    " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
 set diffopt+=indent-heuristic " Internal diff lib for indents
-" util
+" Misc settings
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
-set mouse=a            " Use mouse for all modes
 set showmatch          " Highlight matching braces
+set guicursor=         " Use terminal-default cursor shape
 packadd! matchit       " Lets % work better
+
 
 " General key bindings
 let mapleader = "\<space>"
+nnoremap H ^
+nnoremap L $
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+nnoremap <C-c> <silent> <C-c>
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
@@ -112,6 +116,8 @@ Plugin 'VundleVim/Vundle.vim'
 " editing
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 Plugin 'foosoft/vim-argwrap'
 " appearance
 Plugin 'vim-airline/vim-airline'
@@ -135,7 +141,6 @@ Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
 Plugin 'sheerun/vim-polyglot'
 Plugin 'vim-syntastic/syntastic'
-Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
@@ -201,6 +206,18 @@ colorscheme gruvbox
 hi! Normal ctermbg=NONE guibg=NONE
 hi! NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
 
+" No error highlighting
+hi! Error NONE
+
+
+" =============================================================================
+" fugitive
+" =============================================================================
+nnoremap <Leader>gd :Gdiff master:%<CR>
+nnoremap <Leader>gs :G<CR>
+nnoremap <Leader>gh :diffget //2
+nnoremap <Leader>gl :diffget //3
+
 
 " =============================================================================
 " Tagbar
@@ -218,8 +235,11 @@ let g:tagbar_sort = 0
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Key mappings
-nnoremap <C-F> :NERDTreeFind<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
 nnoremap <Leader>n :NERDTreeToggle<CR>
+let NERDTreeMapOpenInTab='<C-g>'
+let NERDTreeMapOpenSplit='<C-s>'
+let NERDTreeMapOpenVSplit='<C-v>'
 
 " For systems without pretty arrows
 " let g:NERDTreeDirArrowExpandable = '>'
@@ -264,9 +284,9 @@ let g:fzf_colors =
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment'] }
 
-let g:fzf_layout = { 'down': '~20%' }
-" let g:fzf_layout = { 'up':'~90%', 'window':
-  " \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+" let g:fzf_layout = { 'down': '~20%' }
+let g:fzf_layout = { 'up':'~90%', 'window':
+  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
 
 
 " =============================================================================
@@ -295,7 +315,6 @@ augroup lsp_install
 augroup END
 
 let g:lsp_diagnostics_enabled = 0
-let g:lsp_peek_alignment = 'top'
 
 " enable logging
 "let g:lsp_log_verbose = 1
