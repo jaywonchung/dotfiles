@@ -26,4 +26,4 @@ cd ~/_autojump
 cd
 rm -rf ~/_autojump
 
-soruce ~/.zshrc
+source ~/.zshrc
