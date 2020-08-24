@@ -9,4 +9,4 @@ curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 git clone --depth=1 https://github.com/vim-syntastic/syntastic.git ~/.vim/bundle/vim-syntastic
 
 # install plugins
-vim +PluginInstall +Helptags +qall!
+vim -E -s -u ~/.vimrc +PluginInstall +Helptags +qall!
