@@ -129,7 +129,7 @@ Plugin 'airblade/vim-gitgutter'
 " navigation
 Plugin 'majutsushi/tagbar'
 Plugin 'scrooloose/nerdtree'
-Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'airblade/vim-rooter'
 Plugin 'justinmk/vim-sneak'
