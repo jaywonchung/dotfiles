@@ -27,7 +27,6 @@ set smartcase          " Except when uppercase characters are typed
 set incsearch
 " file
 set autoread           " Auto load when current file is edited somewhere
-set autowrite          " Auto save when changing to another file
 " performance
 set ttyfast
 set lazyredraw
@@ -47,14 +46,21 @@ packadd! matchit       " Lets % work better
 let mapleader = "\<space>"
 nnoremap H ^
 nnoremap L $
+nnoremap ; :
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+nnoremap <C-z> :sus<CR>
 nnoremap <C-c> <silent> <C-c>
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
+
+" Closing brackets
+inoremap (<CR> (<CR>)<ESC>O
+inoremap {<CR> {<CR>}<ESC>O
+inoremap [<CR> [<CR>]<ESC>O
 
 " Highlight search results only in command mode
 augroup vimrc-incsearch-highlight
@@ -251,6 +257,9 @@ let NERDTreeMapOpenVSplit='<C-v>'
 " =============================================================================
 " Open fzf window
 nnoremap <leader>f :Files<CR>
+if executable('ag')
+  nnoremap <Leader>g :Ag<CR>
+endif
 
 " fzf command
 if executable('ag')
