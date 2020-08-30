@@ -15,3 +15,6 @@ export PATH="/usr/local/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04/bin:$PATH
 
 # rust cargo
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# go
+export PATH="$HOME/builds/go/bin:$PATH"
