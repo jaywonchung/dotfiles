@@ -24,6 +24,8 @@ Finally, run the post-checkout script. It installs packages.
 zsh ~/.install_dotfiles/post_checkout.sh
 ```
 
+Restarting the shell will finish the installation.
+
 ## Modifying configurations
 
 In your home directory, you can do things like:
