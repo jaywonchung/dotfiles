@@ -1,6 +1,6 @@
 # Dotfiles
 
-## Installing dotfiles to a new system
+## Installing dotfiles on a new system
 
 Initialize the dotfile management environment.
 
