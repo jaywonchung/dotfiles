@@ -26,6 +26,8 @@ zsh ~/.install_dotfiles/post_checkout.sh
 
 Restarting the shell will finish the installation.
 
+**Warning.** Don't forget to change `.gitconfig` to reflect your identity (use the `git config` command).
+
 ## Modifying configurations
 
 In your home directory, you can do things like:
