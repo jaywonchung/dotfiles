@@ -9,6 +9,3 @@ export CUDA_VISIBLE_DEVICES=5
 
 # Crane
 export PATH="$HOME/workspace/crane/bin:$PATH"
-
-# Kubectl
-export PATH="$HOME/.local/bin:$PATH"
