@@ -18,3 +18,6 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # go
 export PATH="$HOME/builds/go/bin:$PATH"
+
+# vivado
+export PATH="/tools/Xilinx/Vivado/2019.1/bin:$PATH"
