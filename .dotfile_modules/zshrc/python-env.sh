@@ -12,12 +12,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-# Deactivate conda base environment
-conda deactivate
-conda activate crane
-#  
-#  # pyenv
-#  export PATH="$HOME/.pyenv/bin:$PATH"
-#  eval "$(pyenv init -)"
-#  eval "$(pyenv virtualenv-init -)"
