@@ -21,7 +21,7 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_UPDATE_PROMPT="true"
 
 # Oh-my-zsh plugins
-plugins=(git fast-syntax-highlighting zsh-autosuggestions direnv)
+plugins=(git fast-syntax-highlighting zsh-autosuggestions)
 
 # Configure oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -61,6 +61,9 @@ source "$HOME/.dotfile_modules/zshrc/python-env.sh"
 #-------------------------------------------------------------------
 # Command-line tools
 #-------------------------------------------------------------------
+# I like keeping things here
+export PATH="$HOME/.local/bin:$PATH"
+
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -68,6 +71,9 @@ source "$HOME/.dotfile_modules/zshrc/python-env.sh"
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
 autoload -U compinit && compinit -u
+
+# direnv
+eval "$(direnv hook zsh)"
 
 #-------------------------------------------------------------------
 # Aliases
