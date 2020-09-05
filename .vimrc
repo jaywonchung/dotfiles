@@ -147,6 +147,7 @@ Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
 Plugin 'sheerun/vim-polyglot'
 Plugin 'vim-syntastic/syntastic'
+Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
 filetype plugin indent on " re-enable filetype
