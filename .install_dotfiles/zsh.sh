@@ -2,6 +2,8 @@
 
 set -ev
 
+mkdir -p ~/.local/bin
+
 # install oh-my-zsh
 export RUNZSH=no
 export KEEP_ZSHRC=yes
