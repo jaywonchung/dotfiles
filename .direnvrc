@@ -1,0 +1,6 @@
+direnv_use_conda() {
+  if [[ ! $CONDA_DETAULT_ENV = $1 ]]; then
+    eval "$(conda shell.zsh hook)"
+    conda activate $1
+  fi
+}

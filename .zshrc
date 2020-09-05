@@ -21,7 +21,7 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_UPDATE_PROMPT="true"
 
 # Oh-my-zsh plugins
-plugins=(git fast-syntax-highlighting zsh-autosuggestions)
+plugins=(git fast-syntax-highlighting zsh-autosuggestions direnv)
 
 # Configure oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -54,17 +54,17 @@ POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------
-# Python environments
+# Language-specific
 #-------------------------------------------------------------------
 source "$HOME/.dotfile_modules/zshrc/python-env.sh"
 
 #-------------------------------------------------------------------
 # Command-line tools
 #-------------------------------------------------------------------
-# Fuzzy Finder
+# fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Autojmp
+# autojump
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
 autoload -U compinit && compinit -u
@@ -72,10 +72,10 @@ autoload -U compinit && compinit -u
 #-------------------------------------------------------------------
 # Aliases
 #-------------------------------------------------------------------
-# Git
+# git
 alias gcm='git commit -m'
 
-# Managing dotfiles
+# dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 compdef dotfiles=git
 
@@ -91,6 +91,7 @@ export MANPAGER="/bin/sh -c \"unset PAGER;col -b -x | \
     -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
     -c 'set nonu' -c 'set nornu' \
     -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
+
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
