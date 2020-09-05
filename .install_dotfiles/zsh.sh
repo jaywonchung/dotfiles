@@ -1,6 +1,8 @@
 #!/bin/zsh
 
-# zsh
+set -ev
+
+# install oh-my-zsh
 export RUNZSH=no
 export KEEP_ZSHRC=yes
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -13,7 +15,7 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/th
 git clone https://github.com/zdharma/fast-syntax-highlighting.git "$ZSH_CUSTOM/plugins/fast-syntax-highlighting"
 
 # install zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+git clone https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 
 # install fuzzy finder
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
@@ -21,9 +23,8 @@ printf 'y\ny\nn\n' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindin
 
 # install autojump
 git clone https://github.com/wting/autojump.git ~/_autojump
-cd ~/_autojump
-./install.py
-cd
+~/_autojump/install.py
 rm -rf ~/_autojump
 
-source ~/.zshrc
+# install direnv
+curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
