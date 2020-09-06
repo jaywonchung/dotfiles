@@ -32,8 +32,8 @@ set ttyfast
 set lazyredraw
 " difftool
 set diffopt+=iwhite    " Ignore whitespace
-set diffopt+=algorithm:patience " Use the patience algorithm
-set diffopt+=indent-heuristic " Internal diff lib for indents
+silent! set diffopt+=algorithm:patience " Use the patience algorithm
+silent! set diffopt+=indent-heuristic " Internal diff lib for indents
 " Misc settings
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
