@@ -47,10 +47,6 @@ let mapleader = "\<space>"
 nnoremap H ^
 nnoremap L $
 nnoremap ; :
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
 nnoremap <C-z> :sus<CR>
 nnoremap <C-c> <silent> <C-c>
 nnoremap <Leader>w :w<CR>
@@ -104,53 +100,40 @@ autocmd FocusGained,BufEnter * :checktime
 
 
 " =============================================================================
-" Vundle
+" Plugins
 " =============================================================================
-set nocompatible
-filetype off
-
-" Install vundle if not already installed
-if empty(glob('~/.vim/bundle/Vundle.vim'))
-  silent !git clone https://github.com/VundleVim/Vundle.vim.git
-    \ ~/.vim/bundle/Vundle.vim
-  autocmd VimEnter * PluginInstall | source ~/.vimrc
-endif
-
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 " editing
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'foosoft/vim-argwrap'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'foosoft/vim-argwrap'
 " appearance
-Plugin 'vim-airline/vim-airline'
-Plugin 'machakann/vim-highlightedyank'
-Plugin 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'machakann/vim-highlightedyank'
+Plug 'morhetz/gruvbox'
 " git integration
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 " navigation
-Plugin 'majutsushi/tagbar'
-Plugin 'scrooloose/nerdtree'
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-Plugin 'airblade/vim-rooter'
-Plugin 'justinmk/vim-sneak'
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
+Plug 'justinmk/vim-sneak'
+Plug 'christoomey/vim-tmux-navigator'
 " semantic language support
-Plugin 'prabirshrestha/async.vim' " for vim-lsp
-Plugin 'prabirshrestha/vim-lsp'
-Plugin 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
-Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/async.vim' " for vim-lsp
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
 " syntactic language support
-Plugin 'sheerun/vim-polyglot'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'rust-lang/rust.vim'
-call vundle#end()
-
-filetype plugin indent on " re-enable filetype
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-syntastic/syntastic'
+Plug 'rust-lang/rust.vim'
+call plug#end()
 
 
 " =============================================================================
