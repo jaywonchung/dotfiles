@@ -48,10 +48,12 @@ nnoremap H ^
 nnoremap L $
 nnoremap ; :
 nnoremap <C-z> :sus<CR>
-nnoremap <C-c> <silent> <C-c>
+nnoremap <C-c> <silent> :noh<CR>
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
+nnoremap <Leader>s :sp<CR>
+nnoremap <Leader>v :vsp<CR>
 
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
@@ -97,6 +99,13 @@ endif
 
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
+
+
+" =============================================================================
+" Language settings
+" =============================================================================
+" Verilog
+autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 
 
 " =============================================================================
@@ -157,9 +166,9 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = {'mode': 'passive'}
 
 " Key bindings
-nnoremap <Leader>s :w <bar> :SyntasticCheck<CR>
-nnoremap <Leader>r :SyntasticReset<CR>
-nnoremap <Leader>i :SyntasticInfo<CR>
+nnoremap <Leader>sc :SyntasticCheck<CR>
+nnoremap <Leader>sr :SyntasticReset<CR>
+nnoremap <Leader>si :SyntasticInfo<CR>
 
 " C
 "let g:syntastic_c_compiler_options = ' -std=c11 -Wall -Wextra -Wpedantic -wbuiltin-declaration-mismatch'
