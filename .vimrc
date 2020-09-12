@@ -100,6 +100,12 @@ endif
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
 
+" Tmux window renaming
+if exists('$TMUX')
+  autocmd BufEnter,FocusGained * call system("tmux rename-window " . expand("%:t"))
+  autocmd VimLeave * call system("tmux rename-window zsh")
+endif
+
 
 " =============================================================================
 " Language settings
