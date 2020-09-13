@@ -106,6 +106,12 @@ if exists('$TMUX')
   autocmd VimLeave * call system("tmux rename-window zsh")
 endif
 
+" * and # obeys smartcase
+nnoremap <silent> * :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=1<CR>n
+nnoremap <silent> # :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=0<CR>n
+nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>n
+nnoremap <silent> g# :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=0<CR>n
+
 
 " =============================================================================
 " Language settings
