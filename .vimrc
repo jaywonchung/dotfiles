@@ -210,10 +210,10 @@ hi! Error NONE
 " =============================================================================
 " fugitive
 " =============================================================================
-nnoremap <Leader>gd :Gdiff master:%<CR>
 nnoremap <Leader>gs :G<CR>
-nnoremap <Leader>gh :diffget //2
-nnoremap <Leader>gl :diffget //3
+nnoremap <Leader>gd :Gdiffsplit!<CR>
+nnoremap <Leader>gh :diffget //2<CR>
+nnoremap <Leader>gl :diffget //3<CR>
 
 
 " =============================================================================
