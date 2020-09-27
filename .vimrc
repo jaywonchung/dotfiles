@@ -230,7 +230,7 @@ nnoremap <Leader>gs :G<CR>
 nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gd :Gdiffsplit!<CR>
 
-" This is just git integration, but I'd like to keep this here
+" Actually mappings for diff, not fugitive
 nnoremap <Leader>gh :diffget //2<CR>
 nnoremap <Leader>gl :diffget //3<CR>
 
@@ -302,7 +302,7 @@ let g:fzf_colors =
 
 " let g:fzf_layout = { 'down': '~20%' }
 let g:fzf_layout = { 'up':'~90%', 'window':
-  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' } }
 
 
 " =============================================================================
