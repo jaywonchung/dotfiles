@@ -48,12 +48,15 @@ nnoremap H ^
 nnoremap L $
 nnoremap ; :
 nnoremap <C-z> :sus<CR>
-nnoremap <C-c> <silent> :noh<CR>
+nnoremap <C-c> :noh<CR>
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
+
+" <C-c> and <ESC> are not the same
+inoremap <C-c> <ESC>
 
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
@@ -143,6 +146,7 @@ Plug 'prabirshrestha/async.vim' " for vim-lsp
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
@@ -217,7 +221,10 @@ hi! Error NONE
 " fugitive
 " =============================================================================
 nnoremap <Leader>gs :G<CR>
+nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gd :Gdiffsplit!<CR>
+
+" Actually mappings for diff, not fugitive
 nnoremap <Leader>gh :diffget //2<CR>
 nnoremap <Leader>gl :diffget //3<CR>
 
@@ -260,9 +267,9 @@ endif
 
 " fzf command
 if executable('ag')
-  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore .google -g ""'
+  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 else
-  let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/.git/*" -not -path "*/.google/*"'
+  let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/.git/*"'
 endif
 
 " Key bindings to be pressed on fzf list
@@ -270,9 +277,6 @@ let g:fzf_action = {
   \ 'ctrl-g': 'tab split',
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
-
-" Set local history directory
-let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Match fzf colors with current color scheme
 let g:fzf_colors =
@@ -292,7 +296,7 @@ let g:fzf_colors =
 
 " let g:fzf_layout = { 'down': '~20%' }
 let g:fzf_layout = { 'up':'~90%', 'window':
-  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' } }
 
 
 " =============================================================================
@@ -338,7 +342,7 @@ if executable('ccls')
     \ 'name': 'ccls',
     \ 'cmd': {server_info->['ccls']},
     \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-    \ 'initialization_options': {},
+    \ 'initialization_options': {'highlight': {'lsRanges': v:true}},
     \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
     \ })
 endif
