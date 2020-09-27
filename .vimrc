@@ -49,12 +49,14 @@ nnoremap L $
 nnoremap ; :
 nnoremap <C-z> :sus<CR>
 nnoremap <C-c> :noh<CR>
-inoremap <C-c> <ESC>
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
+
+" <C-c> and <ESC> are not the same
+inoremap <C-c> <ESC>
 
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
