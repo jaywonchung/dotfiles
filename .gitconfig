@@ -9,7 +9,9 @@
 [diff]
   tool = vimdiff
 [merge]
-  tool = vimdiff
+	tool = fugitive
 [difftool]
   prompt = false
   trustExitCode = true
+[mergetool "fugitive"]
+	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
