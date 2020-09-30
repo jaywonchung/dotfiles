@@ -63,6 +63,28 @@ inoremap (<CR> (<CR>)<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
 inoremap [<CR> [<CR>]<ESC>O
 
+" Move visual selection up and down
+function! s:move_down(count) abort range
+  if visualmode() == 'V' && a:lastline != line('$')
+    let amount = min([a:count, line('$')-a:lastline])
+    exec "'<,'>move '>+" . amount
+    call feedkeys('gv=', 'n')
+  endif
+  call feedkeys('gv', 'n')
+endfunction
+
+function! s:move_up(count) abort range
+  if visualmode() == 'V' && a:firstline != 1
+    let amount = min([a:count, a:firstline-1]) + 1
+    exec "'<,'>move '<-" . amount
+    call feedkeys('gv=', 'n')
+  endif
+  call feedkeys('gv', 'n')
+endfunction
+
+xnoremap J :call <SID>move_down(v:count1)<CR>
+xnoremap K :call <SID>move_up(v:count1)<CR>
+
 " Highlight search results only in command mode
 augroup vimrc-incsearch-highlight
   autocmd!
@@ -135,7 +157,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " navigation
 Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
