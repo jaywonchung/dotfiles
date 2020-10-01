@@ -42,49 +42,6 @@ set guicursor=         " Use terminal-default cursor shape
 packadd! matchit       " Lets % work better
 
 
-" General key bindings
-let mapleader = "\<space>"
-nnoremap H ^
-nnoremap L $
-nnoremap ; :
-nnoremap <C-z> :sus<CR>
-nnoremap <C-c> :noh<CR>
-nnoremap <Leader>w :w<CR>
-nnoremap <Leader>qq :q<CR>
-nnoremap <Leader>qa :qa<CR>
-nnoremap <Leader>s :sp<CR>
-nnoremap <Leader>v :vsp<CR>
-
-" <C-c> and <ESC> are not the same
-inoremap <C-c> <ESC>
-
-" Closing brackets
-inoremap (<CR> (<CR>)<ESC>O
-inoremap {<CR> {<CR>}<ESC>O
-inoremap [<CR> [<CR>]<ESC>O
-
-" Move visual selection up and down
-function! s:move_down(count) abort range
-  if visualmode() == 'V' && a:lastline != line('$')
-    let amount = min([a:count, line('$')-a:lastline])
-    exec "'<,'>move '>+" . amount
-    call feedkeys('gv=', 'n')
-  endif
-  call feedkeys('gv', 'n')
-endfunction
-
-function! s:move_up(count) abort range
-  if visualmode() == 'V' && a:firstline != 1
-    let amount = min([a:count, a:firstline-1]) + 1
-    exec "'<,'>move '<-" . amount
-    call feedkeys('gv=', 'n')
-  endif
-  call feedkeys('gv', 'n')
-endfunction
-
-xnoremap J :call <SID>move_down(v:count1)<CR>
-xnoremap K :call <SID>move_up(v:count1)<CR>
-
 " Highlight search results only in command mode
 augroup vimrc-incsearch-highlight
   autocmd!
@@ -131,7 +88,54 @@ if exists('$TMUX')
   autocmd VimLeave * call system("tmux rename-window zsh")
 endif
 
-" * and # obeys smartcase
+
+" =============================================================================
+" Key mappings
+" =============================================================================
+" General
+let mapleader = "\<space>"
+nnoremap H ^
+nnoremap L $
+nnoremap ; :
+nnoremap <C-z> :sus<CR>
+nnoremap <C-c> :noh<CR>
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qq :q<CR>
+nnoremap <Leader>qa :qa<CR>
+nnoremap <Leader>s :sp<CR>
+nnoremap <Leader>v :vsp<CR>
+
+" <C-c> and <ESC> are not the same
+inoremap <C-c> <ESC>
+
+" Closing brackets
+inoremap (<CR> (<CR>)<ESC>O
+inoremap {<CR> {<CR>}<ESC>O
+inoremap [<CR> [<CR>]<ESC>O
+
+" Move visual selection up and down
+function! s:move_down(count) abort range
+  if visualmode() == 'V' && a:lastline != line('$')
+    let amount = min([a:count, line('$')-a:lastline])
+    exec "'<,'>move '>+" . amount
+    call feedkeys('gv=', 'n')
+  endif
+  call feedkeys('gv', 'n')
+endfunction
+
+function! s:move_up(count) abort range
+  if visualmode() == 'V' && a:firstline != 1
+    let amount = min([a:count, a:firstline-1]) + 1
+    exec "'<,'>move '<-" . amount
+    call feedkeys('gv=', 'n')
+  endif
+  call feedkeys('gv', 'n')
+endfunction
+
+xnoremap J :call <SID>move_down(v:count1)<CR>
+xnoremap K :call <SID>move_up(v:count1)<CR>
+
+" * and # obey smartcase
 nnoremap <silent> * :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=1<CR>n
 nnoremap <silent> # :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=0<CR>n
 nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>n
