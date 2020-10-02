@@ -1,5 +1,5 @@
 " =============================================================================
-" General
+" General and Miscellaneous
 " =============================================================================
 " Language settings
 set langmenu=en_US
@@ -27,14 +27,13 @@ set smartcase          " Except when uppercase characters are typed
 set incsearch
 " file
 set autoread           " Auto load when current file is edited somewhere
-set autowrite          " Auto save when changing to another file
 " performance
 set ttyfast
 set lazyredraw
 " difftool
 set diffopt+=iwhite    " Ignore whitespace
-set diffopt+=algorithm:patience " Use the patience algorithm
-set diffopt+=indent-heuristic " Internal diff lib for indents
+silent! set diffopt+=algorithm:patience " Use the patience algorithm
+silent! set diffopt+=indent-heuristic " Internal diff lib for indents
 " Misc settings
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
@@ -42,26 +41,6 @@ set showmatch          " Highlight matching braces
 set guicursor=         " Use terminal-default cursor shape
 packadd! matchit       " Lets % work better
 
-
-" General key bindings
-let mapleader = "\<space>"
-nnoremap H ^
-nnoremap L $
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-nnoremap <C-c> <silent> <C-c>
-nnoremap <Leader>w :w<CR>
-nnoremap <Leader>qq :q<CR>
-nnoremap <Leader>qa :qa<CR>
-
-" Highlight search results only in command mode
-augroup vimrc-incsearch-highlight
-  autocmd!
-  autocmd CmdlineEnter /,\? :set hlsearch
-  autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
 
 " Set cursor line
 set cursorline
@@ -71,12 +50,6 @@ hi CursorLine cterm=NONE ctermbg=239
 
 " Color fix in tmux
 set background=dark
-
-" Pick up where I left off
-autocmd BufReadPost *
-\ if line("'\"") > 0 && line("'\"") <= line("$") |
-\ exe "norm g`\"" |
-\ endif
 
 " Syntax highlighting
 if has("syntax")
@@ -93,57 +66,146 @@ if has('persistent_undo')
   endif
 endif
 
+
+" =============================================================================
+" Key mappings
+" =============================================================================
+" General
+nnoremap H ^
+nnoremap L $
+nnoremap ; :
+
+nnoremap <C-z> :sus<CR>
+nnoremap <C-c> :noh<CR>
+
+let mapleader = "\<space>"
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qq :q<CR>
+nnoremap <Leader>qa :qa<CR>
+nnoremap <Leader>s :sp<CR>
+nnoremap <Leader>v :vsp<CR>
+nnoremap <Leader>p :echo expand('%')<CR>
+
+" <C-c> and <ESC> are not the same
+inoremap <C-c> <ESC>
+
+" Closing brackets
+inoremap (<CR> (<CR>)<ESC>O
+inoremap {<CR> {<CR>}<ESC>O
+inoremap [<CR> [<CR>]<ESC>O
+
+" Move visual selection up and down
+function! s:move_down(count) abort range
+  if visualmode() == 'V' && a:lastline != line('$')
+    let amount = min([a:count, line('$')-a:lastline])
+    exec "'<,'>move '>+" . amount
+    call feedkeys('gv=', 'n')
+  endif
+  call feedkeys('gv', 'n')
+endfunction
+
+function! s:move_up(count) abort range
+  if visualmode() == 'V' && a:firstline != 1
+    let amount = min([a:count, a:firstline-1]) + 1
+    exec "'<,'>move '<-" . amount
+    call feedkeys('gv=', 'n')
+  endif
+  call feedkeys('gv', 'n')
+endfunction
+
+xnoremap J :call <SID>move_down(v:count1)<CR>
+xnoremap K :call <SID>move_up(v:count1)<CR>
+
+" * and # obey smartcase
+nnoremap <silent> * :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=1<CR>n
+nnoremap <silent> # :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=0<CR>n
+nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>n
+nnoremap <silent> g# :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=0<CR>n
+
+" Toggle relativenumber
+function! s:toggle_relnum() abort
+  if &relativenumber
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunction
+
+nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
+
+
+" =============================================================================
+" Autocommands
+" =============================================================================
+" Highlight search results only in command mode
+augroup vimrc-incsearch-highlight
+  autocmd!
+  autocmd CmdlineEnter /,\? :set hlsearch
+  autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
+
+" Pick up where I left off
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\ exe "norm g`\"" |
+\ endif
+
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
 
-
-" =============================================================================
-" Vundle
-" =============================================================================
-set nocompatible
-filetype off
-
-" Install vundle if not already installed
-if empty(glob('~/.vim/bundle/Vundle.vim'))
-  silent !git clone https://github.com/VundleVim/Vundle.vim.git
-    \ ~/.vim/bundle/Vundle.vim
-  autocmd VimEnter * PluginInstall | source ~/.vimrc
+" Tmux window renaming
+if exists('$TMUX')
+  autocmd BufEnter,FocusGained * call system("tmux rename-window " . expand("%:t"))
+  autocmd VimLeave * call system("tmux rename-window zsh")
 endif
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-" editing
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'foosoft/vim-argwrap'
-" appearance
-Plugin 'vim-airline/vim-airline'
-Plugin 'machakann/vim-highlightedyank'
-Plugin 'morhetz/gruvbox'
-" git integration
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-" navigation
-Plugin 'majutsushi/tagbar'
-Plugin 'scrooloose/nerdtree'
-Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plugin 'junegunn/fzf.vim'
-Plugin 'airblade/vim-rooter'
-Plugin 'justinmk/vim-sneak'
-" semantic language support
-Plugin 'prabirshrestha/async.vim' " for vim-lsp
-Plugin 'prabirshrestha/vim-lsp'
-Plugin 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
-Plugin 'prabirshrestha/asyncomplete-lsp.vim'
-" syntactic language support
-Plugin 'sheerun/vim-polyglot'
-Plugin 'vim-syntastic/syntastic'
-call vundle#end()
+" Resize splits when vim size changes
+autocmd VimResized * execute "normal! \<c-w>="
 
-filetype plugin indent on " re-enable filetype
+
+" =============================================================================
+" Language settings
+" =============================================================================
+" Verilog
+autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
+
+
+" =============================================================================
+" Plugins
+" =============================================================================
+call plug#begin('~/.vim/plugged')
+" editing
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'foosoft/vim-argwrap'
+" appearance
+Plug 'vim-airline/vim-airline'
+Plug 'machakann/vim-highlightedyank'
+Plug 'morhetz/gruvbox'
+" git integration
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+" navigation
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
+Plug 'justinmk/vim-sneak'
+Plug 'christoomey/vim-tmux-navigator'
+" semantic language support
+Plug 'prabirshrestha/async.vim' " for vim-lsp
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
+" syntactic language support
+Plug 'sheerun/vim-polyglot'
+Plug 'vim-syntastic/syntastic'
+Plug 'rust-lang/rust.vim'
+call plug#end()
 
 
 " =============================================================================
@@ -167,9 +229,9 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = {'mode': 'passive'}
 
 " Key bindings
-nnoremap <Leader>s :w <bar> :SyntasticCheck<CR>
-nnoremap <Leader>r :SyntasticReset<CR>
-nnoremap <Leader>i :SyntasticInfo<CR>
+nnoremap <Leader>sc :SyntasticCheck<CR>
+nnoremap <Leader>sr :SyntasticReset<CR>
+nnoremap <Leader>si :SyntasticInfo<CR>
 
 " C
 "let g:syntastic_c_compiler_options = ' -std=c11 -Wall -Wextra -Wpedantic -wbuiltin-declaration-mismatch'
@@ -213,10 +275,13 @@ hi! Error NONE
 " =============================================================================
 " fugitive
 " =============================================================================
-nnoremap <Leader>gd :Gdiff master:%<CR>
 nnoremap <Leader>gs :G<CR>
-nnoremap <Leader>gh :diffget //2
-nnoremap <Leader>gl :diffget //3
+nnoremap <Leader>gb :Gblame<CR>
+nnoremap <Leader>gd :Gdiffsplit!<CR>
+
+" Actually mappings for diff, not fugitive
+nnoremap <Leader>gh :diffget //2<CR>
+nnoremap <Leader>gl :diffget //3<CR>
 
 
 " =============================================================================
@@ -251,12 +316,15 @@ let NERDTreeMapOpenVSplit='<C-v>'
 " =============================================================================
 " Open fzf window
 nnoremap <leader>f :Files<CR>
+if executable('ag')
+  nnoremap <Leader>g :Ag<CR>
+endif
 
 " fzf command
 if executable('ag')
-  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git --ignore .google -g ""'
+  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
 else
-  let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/.git/*" -not -path "*/.google/*"'
+  let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/.git/*"'
 endif
 
 " Key bindings to be pressed on fzf list
@@ -264,9 +332,6 @@ let g:fzf_action = {
   \ 'ctrl-g': 'tab split',
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit' }
-
-" Set local history directory
-let g:fzf_history_dir = '~/.local/share/fzf-history'
 
 " Match fzf colors with current color scheme
 let g:fzf_colors =
@@ -286,7 +351,7 @@ let g:fzf_colors =
 
 " let g:fzf_layout = { 'down': '~20%' }
 let g:fzf_layout = { 'up':'~90%', 'window':
-  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp' } }
+  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' } }
 
 
 " =============================================================================
@@ -332,7 +397,7 @@ if executable('ccls')
     \ 'name': 'ccls',
     \ 'cmd': {server_info->['ccls']},
     \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-    \ 'initialization_options': {},
+    \ 'initialization_options': {'highlight': {'lsRanges': v:true}},
     \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
     \ })
 endif

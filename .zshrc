@@ -79,6 +79,13 @@ alias gcm='git commit -m'
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 compdef dotfiles=git
 
+alias dst='dotfiles status'
+alias da='dotfiles add'
+alias dcm='dotfiles commit -m'
+alias dco='dotfiles checkout'
+alias dp='dotfiles push'
+alias dl='dotfiles pull'
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
