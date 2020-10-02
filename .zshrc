@@ -84,7 +84,6 @@ alias gcm='git commit -m'
 # dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 compdef dotfiles=git
-
 alias dst='dotfiles status'
 alias da='dotfiles add'
 alias dcm='dotfiles commit -m'
