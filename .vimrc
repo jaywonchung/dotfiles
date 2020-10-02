@@ -122,6 +122,17 @@ nnoremap <silent> # :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=
 nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>n
 nnoremap <silent> g# :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=0<CR>n
 
+" Toggle relativenumber
+function! s:toggle_relnum() abort
+  if &relativenumber
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunction
+
+nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
+
 
 " =============================================================================
 " Autocommands
