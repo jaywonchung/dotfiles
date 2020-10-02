@@ -1,5 +1,5 @@
 " =============================================================================
-" General
+" General and Miscellaneous
 " =============================================================================
 " Language settings
 set langmenu=en_US
@@ -42,13 +42,6 @@ set guicursor=         " Use terminal-default cursor shape
 packadd! matchit       " Lets % work better
 
 
-" Highlight search results only in command mode
-augroup vimrc-incsearch-highlight
-  autocmd!
-  autocmd CmdlineEnter /,\? :set hlsearch
-  autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
-
 " Set cursor line
 set cursorline
 autocmd BufEnter * setlocal cursorline    " Enable when entering window
@@ -57,12 +50,6 @@ hi CursorLine cterm=NONE ctermbg=239
 
 " Color fix in tmux
 set background=dark
-
-" Pick up where I left off
-autocmd BufReadPost *
-\ if line("'\"") > 0 && line("'\"") <= line("$") |
-\ exe "norm g`\"" |
-\ endif
 
 " Syntax highlighting
 if has("syntax")
@@ -79,31 +66,25 @@ if has('persistent_undo')
   endif
 endif
 
-" Fix autoread
-autocmd FocusGained,BufEnter * :checktime
-
-" Tmux window renaming
-if exists('$TMUX')
-  autocmd BufEnter,FocusGained * call system("tmux rename-window " . expand("%:t"))
-  autocmd VimLeave * call system("tmux rename-window zsh")
-endif
-
 
 " =============================================================================
 " Key mappings
 " =============================================================================
 " General
-let mapleader = "\<space>"
 nnoremap H ^
 nnoremap L $
 nnoremap ; :
+
 nnoremap <C-z> :sus<CR>
 nnoremap <C-c> :noh<CR>
+
+let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
+nnoremap <Leader>p :echo expand('%')<CR>
 
 " <C-c> and <ESC> are not the same
 inoremap <C-c> <ESC>
@@ -141,6 +122,53 @@ nnoremap <silent> # :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=
 nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>n
 nnoremap <silent> g# :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=0<CR>n
 
+" Toggle relativenumber
+function! s:toggle_relnum() abort
+  if &relativenumber
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunction
+
+nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
+
+
+" =============================================================================
+" Autocommands
+" =============================================================================
+" Highlight search results only in command mode
+augroup vimrc-incsearch-highlight
+  autocmd!
+  autocmd CmdlineEnter /,\? :set hlsearch
+  autocmd CmdlineLeave /,\? :set nohlsearch
+augroup END
+
+" Pick up where I left off
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line("'\"") <= line("$") |
+\ exe "norm g`\"" |
+\ endif
+
+" Fix autoread
+autocmd FocusGained,BufEnter * :checktime
+
+" Tmux window renaming
+if exists('$TMUX')
+  autocmd BufEnter,FocusGained * call system("tmux rename-window " . expand("%:t"))
+  autocmd VimLeave * call system("tmux rename-window zsh")
+endif
+
+" Resize splits when vim size changes
+autocmd VimResized * execute "normal! \<c-w>="
+
+
+" =============================================================================
+" Language settings
+" =============================================================================
+" Verilog
+autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
+
 
 " =============================================================================
 " Plugins
@@ -176,6 +204,7 @@ Plug 'jackguo380/vim-lsp-cxx-highlight'
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
+Plug 'rust-lang/rust.vim'
 call plug#end()
 
 
