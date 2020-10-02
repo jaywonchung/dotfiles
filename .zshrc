@@ -61,24 +61,29 @@ source "$HOME/.dotfile_modules/zshrc/python-env.sh"
 #-------------------------------------------------------------------
 # Command-line tools
 #-------------------------------------------------------------------
-# Fuzzy Finder
+# I like keeping things here
+export PATH="$HOME/.local/bin:$PATH"
+
+# fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Autojmp
+# autojmp
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
 autoload -U compinit && compinit -u
 
+# direnv
+eval "$(direnv hook zsh)"
+
 #-------------------------------------------------------------------
 # Aliases
 #-------------------------------------------------------------------
-# Git
+# git
 alias gcm='git commit -m'
 
-# Managing dotfiles
+# dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 compdef dotfiles=git
-
 alias dst='dotfiles status'
 alias da='dotfiles add'
 alias dcm='dotfiles commit -m'
@@ -91,6 +96,13 @@ alias dl='dotfiles pull'
 #-------------------------------------------------------------------
 # /usr/local/lib should be in LD_LIBRARY_PATH
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
+
+# vim as manpage viewer
+export MANPAGER="/bin/sh -c \"unset PAGER;col -b -x | \
+    vim --noplugin -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
+    -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
+    -c 'set nonu' -c 'set nornu' \
+    -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
 
 #-------------------------------------------------------------------
 # Machine-specific

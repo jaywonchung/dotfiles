@@ -21,3 +21,6 @@ git clone https://github.com/wting/autojump.git ~/_autojump
 cd ~/_autojump
 ./install.py
 rm -rf ~/_autojump
+
+# install direnv
+curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
