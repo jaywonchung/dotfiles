@@ -1,4 +1,9 @@
 # Machine-specific Ubuntu 18.04 desktop
+# Neovim
+if ! command -v nvim &> /dev/null; then
+    ln -s $(which vim) ~/.local/bin/nvim
+fi
+
 # Minimize application when clicking on dock icon
 export GIO_EXTRA_MODULES=/usr/lib/x86_64-linux-gnu/gio/modules/
 
