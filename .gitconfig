@@ -5,7 +5,7 @@
   last = log -1 HEAD
   unstage = reset HEAD --
 [core]
-  editor = vim
+  editor = nvim
 [diff]
   tool = vimdiff
 [merge]
@@ -13,5 +13,7 @@
 [difftool]
   prompt = false
   trustExitCode = true
+[difftool "vimdiff"]
+	path = nvim
 [mergetool "fugitive"]
 	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
