@@ -205,7 +205,9 @@ else
   Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
   Plug 'prabirshrestha/asyncomplete-lsp.vim'
 endif
-Plug 'jackguo380/vim-lsp-cxx-highlight'
+if executable('ccls')
+  Plug 'jackguo380/vim-lsp-cxx-highlight'
+endif
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
@@ -309,7 +311,7 @@ function! NERDTreeStartup()
   endif
 endfunction
 
-autocmd VimEnter * call NERDTreeStartup()
+autocmd VimEnter * silent call NERDTreeStartup()
 
 " Quit NERDTree when its the only window open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -446,19 +448,9 @@ END
   " Use <Tab> and <S-Tab> to nativage the popup menu
   inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
   inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-  " function! s:check_back_space() abort
-  "     let col = col('.') - 1
-  "     return !col || getline('.')[col - 1]  =~ '\s'
-  " endfunction
-
-  " inoremap <expr> <Tab>
-  "   \ pumvisible() ? "\<C-n>" :
-  "   \ <SID>check_back_space() ? "\<Tab>" : "\<C-x>\<C-o>"
-  " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
   set completeopt=menuone,noinsert,noselect
   set shortmess+=c
-  " let g:completion_enable_auto_popup = 0
 
 else  " plain vim
   " basic configurations
