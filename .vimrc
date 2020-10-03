@@ -160,7 +160,7 @@ if exists('$TMUX')
 endif
 
 " Resize splits when vim size changes
-autocmd VimResized * execute "normal! \<c-w>="
+autocmd VimResized * execute "normal! \<C-w>="
 
 
 " =============================================================================
