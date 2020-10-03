@@ -1,5 +1,7 @@
-# Install the Tmux Plugin Manager 
+#!/bin/zsh
+
+installing "TPM"
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-# Install plugins
+installing "TPM plugins"
 ~/.tmux/plugins/tpm/bin/install_plugins
