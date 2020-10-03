@@ -95,7 +95,7 @@ inoremap {<CR> {<CR>}<ESC>O
 inoremap [<CR> [<CR>]<ESC>O
 
 " Move visual selection up and down
-function! s:move_down(count) abort range
+function! MoveDown(count) abort range
   if visualmode() == 'V' && a:lastline != line('$')
     let amount = min([a:count, line('$')-a:lastline])
     exec "'<,'>move '>+" . amount
@@ -104,7 +104,7 @@ function! s:move_down(count) abort range
   call feedkeys('gv', 'n')
 endfunction
 
-function! s:move_up(count) abort range
+function! MoveUp(count) abort range
   if visualmode() == 'V' && a:firstline != 1
     let amount = min([a:count, a:firstline-1]) + 1
     exec "'<,'>move '<-" . amount
@@ -113,8 +113,8 @@ function! s:move_up(count) abort range
   call feedkeys('gv', 'n')
 endfunction
 
-xnoremap J :call <SID>move_down(v:count1)<CR>
-xnoremap K :call <SID>move_up(v:count1)<CR>
+xnoremap J :call MoveDown(v:count1)<CR>
+xnoremap K :call MoveUp(v:count1)<CR>
 
 " * and # obey smartcase
 nnoremap <silent> * :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=1<CR>n
@@ -146,9 +146,9 @@ augroup END
 
 " Pick up where I left off
 autocmd BufReadPost *
-\ if line("'\"") > 0 && line("'\"") <= line("$") |
-\ exe "norm g`\"" |
-\ endif
+  \   if line("'\"") > 0 && line("'\"") <= line("$")
+  \ |   exe "norm g`\""
+  \ | endif
 
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
@@ -296,6 +296,16 @@ let g:tagbar_sort = 0
 " =============================================================================
 " NERDTree
 " =============================================================================
+" Run NERDTreeFind on VimEnter
+function! NERDTreeStartup()
+  if (&columns > 150)
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+autocmd VimEnter * call NERDTreeStartup()
+
 " Quit NERDTree when its the only window open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
