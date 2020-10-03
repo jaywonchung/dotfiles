@@ -56,7 +56,7 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 #-------------------------------------------------------------------
 # Rython environments
 #-------------------------------------------------------------------
-source "$HOME/.dotfile_modules/zshrc/python-env.sh"
+source "$HOME/.dotmodules/zshrc/python-env.sh"
 
 #-------------------------------------------------------------------
 # Command-line tools
@@ -107,4 +107,4 @@ export MANPAGER="/bin/sh -c \"unset PAGER;col -b -x | \
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
-source "$HOME/.dotfile_modules/zshrc/machine-specific.sh"
+source "$HOME/.dotmodules/zshrc/machine-specific.sh"

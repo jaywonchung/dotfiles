@@ -196,11 +196,18 @@ Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
 " semantic language support
-Plug 'prabirshrestha/async.vim' " for vim-lsp
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'jackguo380/vim-lsp-cxx-highlight'
+if has('nvim')
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'nvim-lua/completion-nvim'
+else
+  Plug 'prabirshrestha/async.vim' " for vim-lsp
+  Plug 'prabirshrestha/vim-lsp'
+  Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
+  Plug 'prabirshrestha/asyncomplete-lsp.vim'
+endif
+if executable('ccls')
+  Plug 'jackguo380/vim-lsp-cxx-highlight'
+endif
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
@@ -298,13 +305,13 @@ let g:tagbar_sort = 0
 " =============================================================================
 " Run NERDTreeFind on VimEnter
 function! NERDTreeStartup()
-  if (&columns > 150)
+  if (&columns > 125)
     NERDTreeFind
     wincmd p
   endif
 endfunction
 
-autocmd VimEnter * call NERDTreeStartup()
+autocmd VimEnter * silent call NERDTreeStartup()
 
 " Quit NERDTree when its the only window open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -377,74 +384,139 @@ map T <Plug>Sneak_T
 
 
 " =============================================================================
-" vim-lsp
+" LSP
 " =============================================================================
-" basic configurations
-function! s:on_lsp_buffer_enabled() abort
-  setlocal omnifunc=lsp#complete
-  setlocal signcolumn=yes
-endfunction
-augroup lsp_install
-  autocmd!
-  autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
+if has('nvim')
+  " key bindings
+  nnoremap <F2> <cmd>lua vim.lsp.buf.rename()<CR>
+  nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
+  nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
+  nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
+  nnoremap <silent> ge :lua vim.lsp.buf.hover()<CR>
 
-let g:lsp_diagnostics_enabled = 0
+	sign define LspDiagnosticsErrorSign text=✖
+	sign define LspDiagnosticsWarningSign text=⚠
+	sign define LspDiagnosticsInformationSign text=ℹ
+	sign define LspDiagnosticsHintSign text=➤
 
-" enable logging
-"let g:lsp_log_verbose = 1
-"let g:lsp_log_file = 'vim-lsp.log'
+  highlight! LspDiagnosticsError cterm=italic gui=italic
+  highlight! LspDiagnosticsErrorFloating cterm=italic gui=italic
+  highlight! LspDiagnosticsWarning cterm=italic gui=italic
+  highlight! LspDiagnosticsWarningFloating cterm=italic gui=italic
+  highlight! LspDiagnosticsInformation cterm=italic gui=italic
+  highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
+  highlight! LspDiagnosticsHint cterm=italic gui=italic
+  highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
-" key bindings
-nnoremap <f2> :LspRename<CR>
-nnoremap <silent> gd :LspDefinition<CR>
-nnoremap <silent> gr :LspReferences<CR>
-nnoremap <silent> ge :LspPeekDefinition<CR>
+  if executable('ccls')
+    lua << END
+    require'nvim_lsp'.ccls.setup{
+      on_attach = require'completion'.on_attach,
+      init_options = {
+        client = {snippetSupport = false},
+        highlight = {lsRanges = true}
+      }
+    }
+END
+    autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc
+    setlocal signcolumn=yes
+  endif
+  if executable('pyls')
+    lua << END
+    require'nvim_lsp'.pyls.setup{
+      on_attach = require'completion'.on_attach
+    }
+END
+    autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+    setlocal signcolumn=yes
+  endif
+  if executable('rls')
+    lua << END
+    require'nvim_lsp'.rls.setup{
+      on_attach = require'completion'.on_attach,
+      settings = {rust = {clippy_preference = on}}
+    }
+END
+    autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
+    setlocal signcolumn=yes
+  endif
 
-" ccls
-if executable('ccls')
-  autocmd User lsp_setup call lsp#register_server({
-    \ 'name': 'ccls',
-    \ 'cmd': {server_info->['ccls']},
-    \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-    \ 'initialization_options': {'highlight': {'lsRanges': v:true}},
-    \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-    \ })
+  " completion-nvim
+  " just enable for all buffers
+  autocmd BufEnter * lua require'completion'.on_attach()
+
+  " Use <Tab> and <S-Tab> to nativage the popup menu
+  inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+  set completeopt=menuone,noinsert,noselect
+  set shortmess+=c
+
+else  " plain vim
+  " basic configurations
+  function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+  endfunction
+  augroup lsp_install
+    autocmd!
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+  augroup END
+
+  let g:lsp_diagnostics_enabled = 0
+
+  " enable logging
+  "let g:lsp_log_verbose = 1
+  "let g:lsp_log_file = 'vim-lsp.log'
+
+  " key bindings
+  nnoremap <f2> :LspRename<CR>
+  nnoremap <silent> gd :LspDefinition<CR>
+  nnoremap <silent> gr :LspReferences<CR>
+  nnoremap <silent> ge :LspPeekDefinition<CR>
+
+  " ccls
+  if executable('ccls')
+    autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': {'highlight': {'lsRanges': v:true}},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+  endif
+
+  " python-language-server
+  if executable('pyls')
+    autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'pyls',
+      \ 'cmd': {server_info->['pyls']},
+      \ 'whitelist': ['python'],
+      \ })
+  endif
+
+  " rust language server
+  if executable('rls')
+    autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'rls',
+      \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+      \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
+      \ 'whitelist': ['rust'],
+      \ })
+  endif
+
+  " autocomplete-lsp
+  " Disable auto-popup. Only open on <Tab>.
+  let g:asyncomplete_auto_popup = 0
+
+  function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction
+
+  inoremap <silent><expr> <Tab>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<Tab>" :
+    \ asyncomplete#force_refresh()
+  inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
 endif
-
-" python-language-server
-if executable('pyls')
-  autocmd User lsp_setup call lsp#register_server({
-    \ 'name': 'pyls',
-    \ 'cmd': {server_info->['pyls']},
-    \ 'whitelist': ['python'],
-    \ })
-endif
-
-" rust language server
-if executable('rls')
-  autocmd User lsp_setup call lsp#register_server({
-    \ 'name': 'rls',
-    \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-    \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
-    \ 'whitelist': ['rust'],
-    \ })
-endif
-
-
-" =============================================================================
-" asyncomplete-lsp
-" =============================================================================
-" Disable auto-popup. Only open on <Tab>.
-let g:asyncomplete_auto_popup = 0
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <Tab>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<Tab>" :
-  \ asyncomplete#force_refresh()
-inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
