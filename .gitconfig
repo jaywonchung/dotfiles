@@ -1,6 +1,6 @@
 [user]
   email = jaywonchung@snu.ac.kr
-  name = Jaewon Chung
+  name = Jae-Won Chung
 [credential]
   helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [alias]
