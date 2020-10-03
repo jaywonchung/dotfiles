@@ -303,7 +303,7 @@ let g:tagbar_sort = 0
 " =============================================================================
 " Run NERDTreeFind on VimEnter
 function! NERDTreeStartup()
-  if (&columns > 150)
+  if (&columns > 125)
     NERDTreeFind
     wincmd p
   endif
@@ -396,6 +396,15 @@ if has('nvim')
 	sign define LspDiagnosticsWarningSign text=⚠
 	sign define LspDiagnosticsInformationSign text=ℹ
 	sign define LspDiagnosticsHintSign text=➤
+
+  highlight! LspDiagnosticsError cterm=italic gui=italic
+  highlight! LspDiagnosticsErrorFloating cterm=italic gui=italic
+  highlight! LspDiagnosticsWarning cterm=italic gui=italic
+  highlight! LspDiagnosticsWarningFloating cterm=italic gui=italic
+  highlight! LspDiagnosticsInformation cterm=italic gui=italic
+  highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
+  highlight! LspDiagnosticsHint cterm=italic gui=italic
+  highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
   if executable('ccls')
     lua << END
