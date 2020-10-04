@@ -303,23 +303,34 @@ let g:tagbar_sort = 0
 " =============================================================================
 " NERDTree
 " =============================================================================
-" Run NERDTreeFind on VimEnter
-function! s:NERDTreeFindNoFocus()
-  if (&diff == 0 && &columns > 125)
+" NERDTreeToggle but does not move focus
+function! s:NERDTreeToggleNoFocus()
+  if exists("g:NERDTree_open_no_focus") && g:NERDTree_open_no_focus == 1
+    NERDTreeClose
+    let g:NERDTree_open_no_focus = 0
+  else
     NERDTreeFind
     wincmd p
+    let g:NERDTree_open_no_focus = 1
   endif
 endfunction
+nnoremap <silent> <C-f> :NERDTreeFind<CR>
+nnoremap <silent> <Leader>n :call <SID>NERDTreeToggleNoFocus()<CR>
 
-autocmd VimEnter * silent call <SID>NERDTreeFindNoFocus()
-nnoremap <silent> <C-f> :call <SID>NERDTreeFindNoFocus()<CR>
+" Open NERDTree on startup
+function! s:NERDTreeStartup()
+  if (&diff == 0 && argc() != 0 && &columns > 125)
+    call <SID>NERDTreeToggleNoFocus()
+  endif
+endfunction
+if @% != ""
+  autocmd VimEnter * silent call <SID>NERDTreeStartup()
+endif
 
 " Quit NERDTree when its the only window open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Key mappings
-" nnoremap <C-f> :NERDTreeFind<CR>
-nnoremap <Leader>n :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='<C-g>'
 let NERDTreeMapOpenSplit='<C-s>'
 let NERDTreeMapOpenVSplit='<C-v>'
