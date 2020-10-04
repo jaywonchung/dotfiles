@@ -62,7 +62,7 @@ source "$HOME/.dotmodules/zshrc/python-env.sh"
 # Command-line tools
 #-------------------------------------------------------------------
 # I like keeping things here
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:$HOME/.local/bin"
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

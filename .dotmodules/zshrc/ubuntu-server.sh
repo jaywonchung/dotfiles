@@ -1,9 +1,6 @@
 # Machine-specific Ubuntu server with CUDA
 # Neovim
-if ! command -v nvim &> /dev/null; then
-    mkdir -p ~/.local/bin
-    ln -s $(which vim) ~/.local/bin/nvim
-fi
+alias nvim="$HOME/.local/bin/nvim"
 
 # NVCC
 export PATH="/usr/local/cuda/bin:$PATH"
