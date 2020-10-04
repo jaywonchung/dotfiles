@@ -305,7 +305,7 @@ let g:tagbar_sort = 0
 " =============================================================================
 " Run NERDTreeFind on VimEnter
 function! NERDTreeStartup()
-  if (&columns > 125)
+  if (&diff == 0 && &columns > 125)
     NERDTreeFind
     wincmd p
   endif
