@@ -304,20 +304,21 @@ let g:tagbar_sort = 0
 " NERDTree
 " =============================================================================
 " Run NERDTreeFind on VimEnter
-function! NERDTreeStartup()
+function! s:NERDTreeFindNoFocus()
   if (&diff == 0 && &columns > 125)
     NERDTreeFind
     wincmd p
   endif
 endfunction
 
-autocmd VimEnter * silent call NERDTreeStartup()
+autocmd VimEnter * silent call <SID>NERDTreeFindNoFocus()
+nnoremap <silent> <C-f> :call <SID>NERDTreeFindNoFocus()<CR>
 
 " Quit NERDTree when its the only window open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " Key mappings
-nnoremap <C-f> :NERDTreeFind<CR>
+" nnoremap <C-f> :NERDTreeFind<CR>
 nnoremap <Leader>n :NERDTreeToggle<CR>
 let NERDTreeMapOpenInTab='<C-g>'
 let NERDTreeMapOpenSplit='<C-s>'
