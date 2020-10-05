@@ -160,7 +160,7 @@ if exists('$TMUX')
 endif
 
 " Resize splits when vim size changes
-autocmd VimResized * execute "normal! \<C-w>="
+autocmd VimResized * execute "normal! \<c-w>="
 
 
 " =============================================================================
@@ -433,10 +433,24 @@ END
     autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc
     setlocal signcolumn=yes
   endif
-  if executable('pyls')
+  " if executable('pyls')
+  "   lua << END
+  "   require'nvim_lsp'.pyls.setup{
+  "     on_attach = require'completion'.on_attach
+  "   }
+" END
+  "   autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+  "   setlocal signcolumn=yes
+  " endif
+  if executable('dotnet')
     lua << END
-    require'nvim_lsp'.pyls.setup{
-      on_attach = require'completion'.on_attach
+    require'nvim_lsp'.pyls_ms.setup{
+      on_attach = require'completion'.on_attach,
+      cmd = {
+        "dotnet",
+        "exec",
+        vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
+      }
     }
 END
     autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
