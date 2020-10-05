@@ -449,7 +449,7 @@ END
       cmd = {
         "dotnet",
         "exec",
-        "/home/jaywonchung/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
+        vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
       }
     }
 END
