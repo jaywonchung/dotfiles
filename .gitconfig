@@ -7,13 +7,11 @@
 [core]
   editor = nvim
 [diff]
-  tool = vimdiff
+  tool = fugitive
 [merge]
 	tool = fugitive
 [difftool]
   prompt = false
   trustExitCode = true
-[difftool "vimdiff"]
-	path = nvim
 [mergetool "fugitive"]
-	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
+	cmd = nvim -f -c "Gvdiffsplit!" "$MERGED"
