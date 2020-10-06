@@ -420,6 +420,8 @@ if has('nvim')
   highlight! LspDiagnosticsHint cterm=italic gui=italic
   highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
+  setlocal signcolumn=yes
+
   if executable('ccls')
     lua << END
     require'nvim_lsp'.ccls.setup{
@@ -431,17 +433,15 @@ if has('nvim')
     }
 END
     autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    setlocal signcolumn=yes
   endif
-  " if executable('pyls')
-  "   lua << END
-  "   require'nvim_lsp'.pyls.setup{
-  "     on_attach = require'completion'.on_attach
-  "   }
-" END
-  "   autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-  "   setlocal signcolumn=yes
-  " endif
+  if executable('pyls')
+    lua << END
+    require'nvim_lsp'.pyls.setup{
+      on_attach = require'completion'.on_attach
+    }
+END
+    autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+  endif
   if executable('dotnet')
     lua << END
     require'nvim_lsp'.pyls_ms.setup{
@@ -454,7 +454,6 @@ END
     }
 END
     autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    setlocal signcolumn=yes
   endif
   if executable('rls')
     lua << END
@@ -464,7 +463,6 @@ END
     }
 END
     autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    setlocal signcolumn=yes
   endif
 
   " completion-nvim
