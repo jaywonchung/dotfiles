@@ -39,6 +39,7 @@ set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
 set showmatch          " Highlight matching braces
 set guicursor=         " Use terminal-default cursor shape
+set mouse=a            " Mouses are useful for visual selection
 packadd! matchit       " Lets % work better
 
 
@@ -183,7 +184,7 @@ Plug 'foosoft/vim-argwrap'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'machakann/vim-highlightedyank'
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -268,6 +269,9 @@ let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinen
 " =============================================================================
 " gruvbox
 " =============================================================================
+let g:gruvbox_invert_selection = 0
+let g:gruvbox_sign_column = 'bg0'
+
 colorscheme gruvbox
 
 " Transparency fix for Alacritty
