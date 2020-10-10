@@ -200,6 +200,7 @@ Plug 'christoomey/vim-tmux-navigator'
 if has('nvim')
   Plug 'neovim/nvim-lspconfig'
   Plug 'nvim-lua/completion-nvim'
+  Plug 'nvim-lua/diagnostic-nvim'
 else
   Plug 'prabirshrestha/async.vim' " for vim-lsp
   Plug 'prabirshrestha/vim-lsp'
@@ -406,9 +407,11 @@ if has('nvim')
   " key bindings
   nnoremap <F2> <cmd>lua vim.lsp.buf.rename()<CR>
   nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
+  nnoremap <silent> gD :lua vim.lsp.buf.declaration()<CR>
   nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
   nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
   nnoremap <silent> ge :lua vim.lsp.buf.hover()<CR>
+  nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
 
 	sign define LspDiagnosticsErrorSign text=✖
 	sign define LspDiagnosticsWarningSign text=⚠
@@ -430,6 +433,7 @@ if has('nvim')
     lua << END
     require'nvim_lsp'.ccls.setup{
       on_attach = require'completion'.on_attach,
+      on_attach = require'diagnostic'.on_attach,
       init_options = {
         client = {snippetSupport = false},
         highlight = {lsRanges = true}
@@ -441,7 +445,8 @@ END
   if executable('pyls')
     lua << END
     require'nvim_lsp'.pyls.setup{
-      on_attach = require'completion'.on_attach
+      on_attach = require'completion'.on_attach,
+      on_attach = require'diagnostic'.on_attach
     }
 END
     autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
@@ -450,6 +455,7 @@ END
     lua << END
     require'nvim_lsp'.pyls_ms.setup{
       on_attach = require'completion'.on_attach,
+      on_attach = require'diagnostic'.on_attach,
       cmd = {
         "dotnet",
         "exec",
@@ -463,6 +469,7 @@ END
     lua << END
     require'nvim_lsp'.rls.setup{
       on_attach = require'completion'.on_attach,
+      on_attach = require'diagnostic'.on_attach,
       settings = {rust = {clippy_preference = on}}
     }
 END
@@ -479,6 +486,10 @@ END
 
   set completeopt=menuone,noinsert,noselect
   set shortmess+=c
+
+  " diagnostic-vim
+  set updatetime=100
+  autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
 
 else  " plain vim
   " basic configurations
