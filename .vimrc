@@ -41,6 +41,7 @@ set showmatch          " Highlight matching braces
 set guicursor=         " Use terminal-default cursor shape
 set mouse=a            " Mouses are useful for visual selection
 packadd! matchit       " Lets % work better
+let g:vimsyn_embed = 'l' " Embed lua syntax highlight in vimscript
 
 
 " Set cursor line
@@ -268,6 +269,26 @@ let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinen
 
 
 " =============================================================================
+" fugitive
+" =============================================================================
+nnoremap <Leader>gs :G<CR>
+nnoremap <Leader>gb :Gblame<CR>
+nnoremap <Leader>gd :Gdiffsplit!<CR>
+
+" Actually mappings for diff, not fugitive
+nnoremap <Leader>gh :diffget //2<CR>
+nnoremap <Leader>gl :diffget //3<CR>
+
+
+" =============================================================================
+" vim-gitgutter
+" =============================================================================
+highlight GitGitterAdd ctermfg=Green
+highlight GitGutterChange ctermfg=Yellow
+highlight GitGutterDelete ctermfg=Red
+
+
+" =============================================================================
 " gruvbox
 " =============================================================================
 let g:gruvbox_invert_selection = 0
@@ -282,18 +303,6 @@ hi! NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
 
 " No error highlighting
 hi! Error NONE
-
-
-" =============================================================================
-" fugitive
-" =============================================================================
-nnoremap <Leader>gs :G<CR>
-nnoremap <Leader>gb :Gblame<CR>
-nnoremap <Leader>gd :Gdiffsplit!<CR>
-
-" Actually mappings for diff, not fugitive
-nnoremap <Leader>gh :diffget //2<CR>
-nnoremap <Leader>gl :diffget //3<CR>
 
 
 " =============================================================================
@@ -403,159 +412,87 @@ map T <Plug>Sneak_T
 " =============================================================================
 " LSP
 " =============================================================================
-if has('nvim')
-  " key bindings
-  nnoremap <F2> <cmd>lua vim.lsp.buf.rename()<CR>
-  nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
-  nnoremap <silent> gD :lua vim.lsp.buf.declaration()<CR>
-  nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
-  nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
-  nnoremap <silent> ge :lua vim.lsp.buf.hover()<CR>
-  nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
+" key bindings
+nnoremap <F2> <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gD :lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
+nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> ge :lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
 
-	sign define LspDiagnosticsErrorSign text=✖
-	sign define LspDiagnosticsWarningSign text=⚠
-	sign define LspDiagnosticsInformationSign text=ℹ
-	sign define LspDiagnosticsHintSign text=➤
+sign define LspDiagnosticsErrorSign text=✖
+sign define LspDiagnosticsWarningSign text=⚠
+sign define LspDiagnosticsInformationSign text=ℹ
+sign define LspDiagnosticsHintSign text=➤
 
-  highlight! LspDiagnosticsError cterm=italic gui=italic
-  highlight! LspDiagnosticsErrorFloating cterm=italic gui=italic
-  highlight! LspDiagnosticsWarning cterm=italic gui=italic
-  highlight! LspDiagnosticsWarningFloating cterm=italic gui=italic
-  highlight! LspDiagnosticsInformation cterm=italic gui=italic
-  highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
-  highlight! LspDiagnosticsHint cterm=italic gui=italic
-  highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
+highlight! LspDiagnosticsError cterm=italic gui=italic
+highlight! LspDiagnosticsErrorFloating cterm=italic gui=italic
+highlight! LspDiagnosticsWarning cterm=italic gui=italic
+highlight! LspDiagnosticsWarningFloating cterm=italic gui=italic
+highlight! LspDiagnosticsInformation cterm=italic gui=italic
+highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
+highlight! LspDiagnosticsHint cterm=italic gui=italic
+highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
-  setlocal signcolumn=yes
+setlocal signcolumn=yes
 
-  if executable('ccls')
-    lua << END
-    require'nvim_lsp'.ccls.setup{
-      on_attach = require'completion'.on_attach,
-      on_attach = require'diagnostic'.on_attach,
-      init_options = {
-        client = {snippetSupport = false},
-        highlight = {lsRanges = true}
-      }
+lua << END
+local lsp = require'nvim_lsp'
+local on_attach = function(client)
+  require'diagnostic'.on_attach()
+  require'completion'.on_attach()
+end
+
+if vim.fn.executable('ccls') then
+  lsp.ccls.setup{
+    on_attach = on_attach,
+    init_options = {
+      client = {snippetSupport = false},
+      highlight = {lsRanges = true}
     }
-END
-    autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc
-  endif
-  if executable('pyls')
-    lua << END
-    require'nvim_lsp'.pyls.setup{
-      on_attach = require'completion'.on_attach,
-      on_attach = require'diagnostic'.on_attach
+  }
+  vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+end
+
+if vim.fn.executable('pyls') then
+  lsp.pyls.setup{
+    on_attach = on_attach
+  }
+end
+
+if vim.fn.executable('dotnet') then
+  lsp.pyls_ms.setup{
+    on_attach = on_attach,
+    cmd = {
+      "dotnet",
+      "exec",
+      vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
     }
+  }
+  vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+end
+
+if vim.fn.executable('rls') then
+  lsp.rls.setup{
+    on_attach = on_attach,
+    settings = {rust = {clippy_preference = on}}
+  }
+  vim.api.nvim_command('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+end
 END
-    autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-  endif
-  if executable('dotnet')
-    lua << END
-    require'nvim_lsp'.pyls_ms.setup{
-      on_attach = require'completion'.on_attach,
-      on_attach = require'diagnostic'.on_attach,
-      cmd = {
-        "dotnet",
-        "exec",
-        vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
-      }
-    }
-END
-    autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-  endif
-  if executable('rls')
-    lua << END
-    require'nvim_lsp'.rls.setup{
-      on_attach = require'completion'.on_attach,
-      on_attach = require'diagnostic'.on_attach,
-      settings = {rust = {clippy_preference = on}}
-    }
-END
-    autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-  endif
 
-  " completion-nvim
-  " just enable for all buffers
-  autocmd BufEnter * lua require'completion'.on_attach()
+" completion-nvim
+" just enable for all buffers
+" autocmd BufEnter * lua require'completion'.on_attach()
 
-  " Use <Tab> and <S-Tab> to nativage the popup menu
-  inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Use <Tab> and <S-Tab> to nativage the popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-  set completeopt=menuone,noinsert,noselect
-  set shortmess+=c
+set completeopt=menuone,noinsert,noselect
+set shortmess+=c
 
-  " diagnostic-vim
-  set updatetime=100
-  autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
-
-else  " plain vim
-  " basic configurations
-  function! s:on_lsp_buffer_enabled() abort
-    setlocal omnifunc=lsp#complete
-    setlocal signcolumn=yes
-  endfunction
-  augroup lsp_install
-    autocmd!
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-  augroup END
-
-  let g:lsp_diagnostics_enabled = 0
-
-  " enable logging
-  "let g:lsp_log_verbose = 1
-  "let g:lsp_log_file = 'vim-lsp.log'
-
-  " key bindings
-  nnoremap <f2> :LspRename<CR>
-  nnoremap <silent> gd :LspDefinition<CR>
-  nnoremap <silent> gr :LspReferences<CR>
-  nnoremap <silent> ge :LspPeekDefinition<CR>
-
-  " ccls
-  if executable('ccls')
-    autocmd User lsp_setup call lsp#register_server({
-      \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': {'highlight': {'lsRanges': v:true}},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-      \ })
-  endif
-
-  " python-language-server
-  if executable('pyls')
-    autocmd User lsp_setup call lsp#register_server({
-      \ 'name': 'pyls',
-      \ 'cmd': {server_info->['pyls']},
-      \ 'whitelist': ['python'],
-      \ })
-  endif
-
-  " rust language server
-  if executable('rls')
-    autocmd User lsp_setup call lsp#register_server({
-      \ 'name': 'rls',
-      \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-      \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
-      \ 'whitelist': ['rust'],
-      \ })
-  endif
-
-  " autocomplete-lsp
-  " Disable auto-popup. Only open on <Tab>.
-  let g:asyncomplete_auto_popup = 0
-
-  function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-
-  inoremap <silent><expr> <Tab>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<Tab>" :
-    \ asyncomplete#force_refresh()
-  inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
-endif
+" diagnostic-vim
+set updatetime=100
+autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
