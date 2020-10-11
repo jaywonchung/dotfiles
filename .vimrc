@@ -310,8 +310,11 @@ hi! Error NONE
 " =============================================================================
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
 
-" first show in the order that appears in the source
+" First show in the order that appears in the source
 let g:tagbar_sort = 0
+
+" Do not close tagbar on jump
+let g:tagbar_autoclose = 0
 
 
 " =============================================================================
