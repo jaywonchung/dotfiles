@@ -16,6 +16,6 @@
   prompt = false
   trustExitCode = true
 [difftool "vimdiff"]
-	path = nvim
+  path = nvim
 [mergetool "fugitive"]
-	cmd = nvim -f -c \"Gvdiffsplit!\" \"$MERGED\"
+  cmd = nvim -f -c "Gvdiffsplit!" "$MERGED"
