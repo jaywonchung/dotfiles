@@ -7,7 +7,7 @@ Initialize the dotfile management environment.
 ```bash
 git clone --bare git@github.com:jaywonchung/dotfiles.git $HOME/.dotfiles
 git --git-dir=$HOME/.dotfiles --work-tree=$HOME checkout master
-source .install_dotfiles/init.sh
+source .dotmodules/init.sh
 ```
 
 Then checkout the desired system branch. For example, install the `ubuntu-server` settings with:
@@ -21,7 +21,7 @@ Do a quick backup to a separate directory, or just remove them.
 
 Finally, run the installation script.
 ```bash
-zsh ~/.install_dotfiles/install.sh
+zsh ~/.dotmodules/install/all.sh
 ```
 
 Restarting the shell will finish the installation.
