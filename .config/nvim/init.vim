@@ -32,8 +32,8 @@ set ttyfast
 set lazyredraw
 " difftool
 set diffopt+=iwhite    " Ignore whitespace
-silent! set diffopt+=algorithm:patience " Use the patience algorithm
-silent! set diffopt+=indent-heuristic " Internal diff lib for indents
+set diffopt+=algorithm:patience " Use the patience algorithm
+set diffopt+=indent-heuristic " Internal diff lib for indents
 " Misc settings
 set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
@@ -60,11 +60,10 @@ endif
 
 " Persistent undo
 if has('persistent_undo')
-  let undodir=$HOME . "/.vim/undodir"
-  set undodir=$HOME/.vim/undodir
+  let &undodir = stdpath('data') . '/undodir'
   set undofile
-  if !isdirectory(undodir)
-    call mkdir(undodir, "p")
+  if !isdirectory(&undodir)
+    call mkdir(&undodir, "p")
   endif
 endif
 
@@ -95,6 +94,12 @@ inoremap <C-c> <ESC>
 inoremap (<CR> (<CR>)<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
 inoremap [<CR> [<CR>]<ESC>O
+
+" Diff mappings
+nnoremap <Leader>dg :diffget<CR>
+nnoremap <Leader>dp :diffput<CR>
+nnoremap <Leader>gh :diffget //2<CR>
+nnoremap <Leader>gl :diffget //3<CR>
 
 " Move visual selection up and down
 function! MoveDown(count) abort range
@@ -164,6 +169,9 @@ endif
 " Resize splits when vim size changes
 autocmd VimResized * execute "normal! \<c-w>="
 
+" Highlight yanked text
+autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
+
 
 " =============================================================================
 " Language settings
@@ -175,7 +183,7 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " =============================================================================
 " Plugins
 " =============================================================================
-call plug#begin('~/.vim/plugged')
+call plug#begin(stdpath('data') . '/plugged')
 " editing
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-commentary'
@@ -184,7 +192,6 @@ Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
 " appearance
 Plug 'vim-airline/vim-airline'
-Plug 'machakann/vim-highlightedyank'
 Plug 'gruvbox-community/gruvbox'
 " git integration
 Plug 'tpope/vim-fugitive'
@@ -198,19 +205,10 @@ Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
 " semantic language support
-if has('nvim')
-  Plug 'neovim/nvim-lspconfig'
-  Plug 'nvim-lua/completion-nvim'
-  Plug 'nvim-lua/diagnostic-nvim'
-else
-  Plug 'prabirshrestha/async.vim' " for vim-lsp
-  Plug 'prabirshrestha/vim-lsp'
-  Plug 'prabirshrestha/asyncomplete.vim' " for asyncomplete-vim
-  Plug 'prabirshrestha/asyncomplete-lsp.vim'
-endif
-if executable('ccls')
-  Plug 'jackguo380/vim-lsp-cxx-highlight'
-endif
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+Plug 'nvim-lua/diagnostic-nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
@@ -221,7 +219,7 @@ call plug#end()
 " =============================================================================
 " vim-argwrap
 " =============================================================================
-nnoremap <Leader>a :ArgWrap<CR>
+nnoremap <Leader>aw :ArgWrap<CR>
 
 
 " =============================================================================
@@ -256,12 +254,6 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*'] " for compatibility with
 
 
 " =============================================================================
-" vim-highlightedyank
-" =============================================================================
-let g:highlightedyank_highlight_duration = 300
-
-
-" =============================================================================
 " vim-airline
 " =============================================================================
 " Show max line number
@@ -274,10 +266,6 @@ let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinen
 nnoremap <Leader>gs :G<CR>
 nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gd :Gdiffsplit!<CR>
-
-" Actually mappings for diff, not fugitive
-nnoremap <Leader>gh :diffget //2<CR>
-nnoremap <Leader>gl :diffget //3<CR>
 
 
 " =============================================================================
@@ -363,7 +351,7 @@ let NERDTreeMapOpenVSplit='<C-v>'
 " Open fzf window
 nnoremap <leader>f :Files<CR>
 if executable('ag')
-  nnoremap <Leader>g :Ag<CR>
+  nnoremap <Leader>ag :Ag<CR>
 endif
 
 " fzf command
@@ -438,8 +426,6 @@ highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
 highlight! LspDiagnosticsHint cterm=italic gui=italic
 highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
-setlocal signcolumn=yes
-
 lua << END
 local lsp = require'nvim_lsp'
 local on_attach = function(client)
@@ -455,13 +441,16 @@ if vim.fn.executable('ccls') then
       highlight = {lsRanges = true}
     }
   }
-  vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('pyls') then
   lsp.pyls.setup{
     on_attach = on_attach
   }
+  vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.api.nvim_command('autocmd FileType python setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('dotnet') then
@@ -474,6 +463,7 @@ if vim.fn.executable('dotnet') then
     }
   }
   vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.api.nvim_command('autocmd FileType python setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('rls') then
@@ -481,7 +471,8 @@ if vim.fn.executable('rls') then
     on_attach = on_attach,
     settings = {rust = {clippy_preference = on}}
   }
-  vim.api.nvim_command('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
 end
 END
 
@@ -489,9 +480,9 @@ END
 " just enable for all buffers
 " autocmd BufEnter * lua require'completion'.on_attach()
 
-" Use <Tab> and <S-Tab> to nativage the popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Use tab to bring up and traverse completion list
+imap <Tab> <Plug>(completion_smart_tab)
+imap <S-Tab> <Plug>(completion_smart_s_tab)
 
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
@@ -499,3 +490,13 @@ set shortmess+=c
 " diagnostic-vim
 set updatetime=100
 autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
+
+
+" =============================================================================
+" nvim-treesitter
+" =============================================================================
+lua << END
+require'nvim-treesitter.configs'.setup {
+  highlight = { "c", "cpp", "python", "rust" },
+}
+END
