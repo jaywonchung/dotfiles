@@ -8,8 +8,8 @@ mkdir -p ~/.local
 rsync -a nvim-linux64/* ~/.local/
 
 installing "vim-plug"
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 installing "vim plugins"
-vim -E -s -u ~/.vimrc +PlugInstall +qall!
+nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!
