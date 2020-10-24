@@ -457,10 +457,13 @@ end
 
 if vim.fn.executable('pyls') then
   lsp.pyls.setup{
-    on_attach = on_attach
+    on_attach = on_attach,
+    settings = {
+      pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
   }
-  vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.api.nvim_command('autocmd FileType python setlocal signcolumn=yes')
+  }
+  vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('dotnet') then
@@ -472,8 +475,8 @@ if vim.fn.executable('dotnet') then
       vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
     }
   }
-  vim.api.nvim_command('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.api.nvim_command('autocmd FileType python setlocal signcolumn=yes')
+  vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('rls') then
