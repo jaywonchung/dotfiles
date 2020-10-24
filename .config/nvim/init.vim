@@ -77,7 +77,7 @@ nnoremap L $
 nnoremap ; :
 
 nnoremap <C-z> :sus<CR>
-nnoremap <C-c> :noh<CR>
+nnoremap <silent> <C-c> :noh<CR>
 
 let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
@@ -190,6 +190,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
+Plug 'junegunn/goyo.vim'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'gruvbox-community/gruvbox'
@@ -199,7 +200,7 @@ Plug 'airblade/vim-gitgutter'
 " navigation
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
@@ -220,6 +221,15 @@ call plug#end()
 " vim-argwrap
 " =============================================================================
 nnoremap <Leader>aw :ArgWrap<CR>
+
+
+" =============================================================================
+" goyo
+" =============================================================================
+nnoremap <silent> <Leader>gy :Goyo<CR>
+
+let g:goyo_width = 90
+let g:goyo_height = '90%'
 
 
 " =============================================================================
@@ -324,11 +334,11 @@ nnoremap <silent> <Leader>n :call <SID>NERDTreeToggleNoFocus()<CR>
 
 " Open NERDTree on startup
 function! s:NERDTreeStartup()
-  if (&diff == 0 && argc() != 0 && &columns > 125)
+  if (&diff == 0 && &columns > 125)
     call <SID>NERDTreeToggleNoFocus()
   endif
 endfunction
-if @% != ""
+if argc() > 0 
   autocmd VimEnter * silent call <SID>NERDTreeStartup()
 endif
 
