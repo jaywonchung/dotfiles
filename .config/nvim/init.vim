@@ -124,6 +124,20 @@ xnoremap J :call MoveDown(v:count1)<CR>
 xnoremap K :call MoveUp(v:count1)<CR>
 
 " * and # obey smartcase
+"
+" e.g.
+"              | foo  fool  Foo  Fool
+"  ------------|-----------------------
+"   *  on foo  |  v          v
+"   *  on fool |        v          v
+"   *  on Foo  |             v
+"   *  on Fool |                   v
+"  ------------|-----------------------
+"   g* on foo  |  v     v    v     v
+"   g* on fool |        v          v
+"   g* on Foo  |             v     v
+"   g* on Fool |                   v
+"
 nnoremap <silent> * :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=1<CR>n
 nnoremap <silent> # :let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=0<CR>n
 nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>n
@@ -190,6 +204,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
+Plug 'junegunn/goyo.vim'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'gruvbox-community/gruvbox'
