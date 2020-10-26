@@ -39,6 +39,7 @@ set number relativenumber " Show relative line number
 set exrc               " Execute .vimrc in the directory vim is started
 set showmatch          " Highlight matching braces
 set guicursor=         " Use terminal-default cursor shape
+set mouse=a            " Mouses are useful for visual selection
 packadd! matchit       " Lets % work better
 
 
@@ -160,7 +161,7 @@ if exists('$TMUX')
 endif
 
 " Resize splits when vim size changes
-autocmd VimResized * execute "normal! \<C-w>="
+autocmd VimResized * execute "normal! \<c-w>="
 
 
 " =============================================================================
@@ -183,7 +184,7 @@ Plug 'foosoft/vim-argwrap'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'machakann/vim-highlightedyank'
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -268,6 +269,9 @@ let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinen
 " =============================================================================
 " gruvbox
 " =============================================================================
+let g:gruvbox_invert_selection = 0
+let g:gruvbox_sign_column = 'bg0'
+
 colorscheme gruvbox
 
 " Transparency fix for Alacritty
@@ -420,6 +424,8 @@ if has('nvim')
   highlight! LspDiagnosticsHint cterm=italic gui=italic
   highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
+  setlocal signcolumn=yes
+
   if executable('ccls')
     lua << END
     require'nvim_lsp'.ccls.setup{
@@ -431,7 +437,6 @@ if has('nvim')
     }
 END
     autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    setlocal signcolumn=yes
   endif
   if executable('pyls')
     lua << END
@@ -440,7 +445,19 @@ END
     }
 END
     autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    setlocal signcolumn=yes
+  endif
+  if executable('dotnet')
+    lua << END
+    require'nvim_lsp'.pyls_ms.setup{
+      on_attach = require'completion'.on_attach,
+      cmd = {
+        "dotnet",
+        "exec",
+        vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
+      }
+    }
+END
+    autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc
   endif
   if executable('rls')
     lua << END
@@ -450,7 +467,6 @@ END
     }
 END
     autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    setlocal signcolumn=yes
   endif
 
   " completion-nvim
