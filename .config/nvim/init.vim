@@ -228,6 +228,8 @@ Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
 Plug 'rust-lang/rust.vim'
+" misc
+Plug 'glacambre/firenvim', {'do': {->firenvim#install(0)}}
 call plug#end()
 
 
@@ -527,3 +529,15 @@ require'nvim-treesitter.configs'.setup {
   highlight = { "c", "cpp", "python", "rust" },
 }
 END
+
+
+" =============================================================================
+" firenvim
+" =============================================================================
+let g:firenvim_config = {
+  \ 'localSettings': {
+    \ '.*': {
+      \ 'takeover': 'never'
+    \ }
+  \ }
+\ }
