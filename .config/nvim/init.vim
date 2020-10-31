@@ -464,10 +464,10 @@ highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 lua << END
 -- Whetehr to set up a specific language server
 --   vim.fn.execuatble('ccls') doesn't seem to work.
-local setup_ccls = true;
+local setup_ccls = false;
 local setup_pyls = true;
 local setup_pyls_ms = true;
-local setup_rls = true;
+local setup_rls = false;
 
 local lsp = require'nvim_lsp'
 local on_attach = function(client)
