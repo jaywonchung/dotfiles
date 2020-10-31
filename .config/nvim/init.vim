@@ -458,13 +458,20 @@ highlight! LspDiagnosticsHint cterm=italic gui=italic
 highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
 lua << END
+-- Whetehr to set up a specific language server
+--   vim.fn.execuatble('ccls') doesn't seem to work.
+local setup_ccls = false;
+local setup_pyls = true;
+local setup_pyls_ms = true;
+local setup_rls = false;
+
 local lsp = require'nvim_lsp'
 local on_attach = function(client)
   require'diagnostic'.on_attach()
   require'completion'.on_attach()
 end
 
-if vim.fn.executable('ccls') then
+if setup_ccls then
   lsp.ccls.setup{
     on_attach = on_attach,
     init_options = {
@@ -476,18 +483,18 @@ if vim.fn.executable('ccls') then
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
-if vim.fn.executable('pyls') then
+if setup_pyls then
   lsp.pyls.setup{
     on_attach = on_attach,
     settings = {
       pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
-  }
+    }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if vim.fn.executable('dotnet') then
+if setup_pyls_ms then
   lsp.pyls_ms.setup{
     on_attach = on_attach,
     cmd = {
@@ -500,7 +507,7 @@ if vim.fn.executable('dotnet') then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if vim.fn.executable('rls') then
+if setup_rls then
   lsp.rls.setup{
     on_attach = on_attach,
     settings = {rust = {clippy_preference = on}}
