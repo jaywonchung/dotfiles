@@ -228,8 +228,6 @@ Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
 Plug 'rust-lang/rust.vim'
-" misc
-Plug 'glacambre/firenvim', {'do': {->firenvim#install(0)}}
 call plug#end()
 
 
@@ -295,18 +293,6 @@ nnoremap <Leader>gd :Gdiffsplit!<CR>
 
 
 " =============================================================================
-" vim-gitgutter
-" =============================================================================
-" Transparent git gutter backgrounds
-let g:gitgutter_set_sign_backgrounds = 1
-
-" The option above clears gutter icon foreground. Re-add.
-autocmd VimEnter * highlight GitGutterAdd ctermfg=142
-autocmd VimEnter * highlight GitGutterChange ctermfg=108
-autocmd VimEnter * highlight GitGutterDelete ctermfg=167
-
-
-" =============================================================================
 " gruvbox
 " =============================================================================
 let g:gruvbox_invert_selection = 0
@@ -324,6 +310,18 @@ highlight! Error NONE
 
 
 " =============================================================================
+" vim-gitgutter
+" =============================================================================
+" Transparent git gutter backgrounds
+let g:gitgutter_set_sign_backgrounds = 1
+
+" The option above clears gutter icon foreground. Re-add.
+autocmd VimEnter * highlight GitGutterAdd ctermfg=142
+autocmd VimEnter * highlight GitGutterChange ctermfg=108
+autocmd VimEnter * highlight GitGutterDelete ctermfg=167
+
+
+" =============================================================================
 " Tagbar
 " =============================================================================
 nnoremap <silent> <Leader>t :TagbarToggle<CR>
@@ -338,32 +336,36 @@ let g:tagbar_autoclose = 0
 " =============================================================================
 " NERDTree
 " =============================================================================
+nnoremap <silent> <C-f> :NERDTreeFind<CR>
+
 " NERDTreeToggle but does not move focus
-function! s:NERDTreeToggleNoFocus()
-  if exists("g:NERDTree_open_no_focus") && g:NERDTree_open_no_focus == 1
+function! NERDTreeToggleNoFocus()
+  if exists("g:NERDTree") && g:NERDTree.IsOpen() == 1
     NERDTreeClose
-    let g:NERDTree_open_no_focus = 0
   else
     NERDTreeFind
     wincmd p
-    let g:NERDTree_open_no_focus = 1
   endif
 endfunction
-nnoremap <silent> <C-f> :NERDTreeFind<CR>
-nnoremap <silent> <Leader>n :call <SID>NERDTreeToggleNoFocus()<CR>
+nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
 
 " Open NERDTree on startup
-function! s:NERDTreeStartup()
+function! NERDTreeStartup()
   if (&diff == 0 && &columns > 125)
-    call <SID>NERDTreeToggleNoFocus()
+    call NERDTreeToggleNoFocus()
   endif
 endfunction
 if argc() > 0 
-  autocmd VimEnter * silent call <SID>NERDTreeStartup()
+  autocmd VimEnter * silent call NERDTreeStartup()
 endif
 
 " Quit NERDTree when its the only window open
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+function! NERDTreeAutoQuit()
+  if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+    q
+  endif
+endfunction
+autocmd BufEnter * silent call NERDTreeAutoQuit()
 
 " Key mappings
 let NERDTreeMapOpenInTab='<C-g>'
@@ -457,7 +459,7 @@ highlight! LspDiagnosticsHint cterm=italic gui=italic
 highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
 
 lua << END
--- Whetehr to set up a specific language server
+-- Whether to set up a specific language server
 --   vim.fn.execuatble('ccls') doesn't seem to work.
 local setup_ccls = true;
 local setup_pyls = true;
@@ -540,15 +542,3 @@ require'nvim-treesitter.configs'.setup {
   highlight = { "c", "cpp", "python", "rust" },
 }
 END
-
-
-" =============================================================================
-" firenvim
-" =============================================================================
-let g:firenvim_config = {
-  \ 'localSettings': {
-    \ '.*': {
-      \ 'takeover': 'never'
-    \ }
-  \ }
-\ }
