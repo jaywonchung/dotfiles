@@ -394,10 +394,10 @@ else
 endif
 
 " Key bindings to be pressed on fzf list
-let g:fzf_action = {
-  \ 'ctrl-g': 'tab split',
-  \ 'ctrl-s': 'split',
-  \ 'ctrl-v': 'vsplit' }
+let g:fzf_action =
+  \ { 'ctrl-g': 'tab split',
+    \ 'ctrl-s': 'split',
+    \ 'ctrl-v': 'vsplit' }
 
 " Match fzf colors with current color scheme
 let g:fzf_colors =
