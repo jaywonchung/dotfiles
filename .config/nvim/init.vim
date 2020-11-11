@@ -205,6 +205,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
+Plug 'mbbill/undotree'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'gruvbox-community/gruvbox'
@@ -244,6 +245,12 @@ nnoremap <silent> <Leader>gy :Goyo<CR>
 
 let g:goyo_width = 90
 let g:goyo_height = '90%'
+
+
+" =============================================================================
+" undotree
+" =============================================================================
+nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 
 
 " =============================================================================
@@ -415,9 +422,10 @@ let g:fzf_colors =
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment'] }
 
-" let g:fzf_layout = { 'down': '~20%' }
-let g:fzf_layout = { 'up':'~90%', 'window':
-  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' } }
+" Show in floating window
+let g:fzf_layout = 
+  \ { 'up':     '~90%',
+    \ 'window': { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' }}
 
 
 " =============================================================================
