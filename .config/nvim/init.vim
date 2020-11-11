@@ -48,7 +48,7 @@ let g:vimsyn_embed = 'l' " Embed lua syntax highlight in vimscript
 set cursorline
 autocmd BufEnter * setlocal cursorline    " Enable when entering window
 autocmd BufLeave * setlocal nocursorline  " Disable when leaving window
-hi CursorLine cterm=NONE ctermbg=239
+highlight CursorLine cterm=NONE ctermbg=239
 
 " Color fix in tmux
 set background=dark
@@ -153,6 +153,13 @@ function! s:toggle_relnum() abort
 endfunction
 
 nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
+
+" Neovim terminal emulator
+tnoremap <Esc> <C-\><C-n>
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
 
 
 " =============================================================================
@@ -295,26 +302,30 @@ nnoremap <Leader>gd :Gdiffsplit!<CR>
 " =============================================================================
 " vim-gitgutter
 " =============================================================================
-highlight GitGitterAdd ctermfg=Green
-highlight GitGutterChange ctermfg=Yellow
-highlight GitGutterDelete ctermfg=Red
+" Transparent git gutter backgrounds
+let g:gitgutter_set_sign_backgrounds = 1
+
+" The option above clears gutter icon foreground. Re-add.
+autocmd VimEnter * highlight GitGutterAdd ctermfg=142
+autocmd VimEnter * highlight GitGutterChange ctermfg=108
+autocmd VimEnter * highlight GitGutterDelete ctermfg=167
 
 
 " =============================================================================
 " gruvbox
 " =============================================================================
 let g:gruvbox_invert_selection = 0
-let g:gruvbox_sign_column = 'bg0'
 
 colorscheme gruvbox
 
-" Transparency fix for Alacritty
+" Transparency fix for terminal emulators
 " This needed to be done after setting the colorscheme.
-hi! Normal ctermbg=NONE guibg=NONE
-hi! NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
+highlight! Normal ctermbg=NONE guibg=NONE 
+highlight! SignColumn ctermbg=NONE guibg=NONE
+highlight! NonText ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 
 " No error highlighting
-hi! Error NONE
+highlight! Error NONE
 
 
 " =============================================================================

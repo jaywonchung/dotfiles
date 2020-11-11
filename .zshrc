@@ -90,6 +90,7 @@ alias dcm='dotfiles commit -m'
 alias dco='dotfiles checkout'
 alias dp='dotfiles push'
 alias dl='dotfiles pull'
+alias ddf='dotfiles difftool'
 
 #-------------------------------------------------------------------
 # Environment variables
