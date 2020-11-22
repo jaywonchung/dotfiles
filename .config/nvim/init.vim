@@ -381,7 +381,7 @@ nnoremap <silent> <C-f> :NERDTreeFind<CR>
 
 " NERDTreeToggle but does not move focus
 function! NERDTreeToggleNoFocus()
-  if exists("g:NERDTree") && g:NERDTree.IsOpen() == 1
+  if (exists("g:NERDTree") && g:NERDTree.IsOpen() == 1)
     NERDTreeClose
   else
     NERDTreeFind
