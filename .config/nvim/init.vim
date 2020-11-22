@@ -83,6 +83,7 @@ nnoremap <silent> <C-c> :noh<CR>
 
 let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qw :wq<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
