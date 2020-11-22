@@ -393,7 +393,7 @@ nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
 
 " Open NERDTree on startup
 function! NERDTreeStartup()
-  if (!exists("nerdtree_startup") && &diff == 0 && &columns > 125)
+  if (&diff == 0 && &columns > 125)
     call NERDTreeToggleNoFocus()
   endif
 endfunction
