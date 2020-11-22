@@ -73,7 +73,9 @@ endif
 " =============================================================================
 " General
 nnoremap H ^
+vnoremap H ^
 nnoremap L $
+vnoremap L $
 nnoremap ; :
 
 nnoremap <C-z> :sus<CR>
@@ -154,6 +156,14 @@ endfunction
 
 nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
 
+" Neovim terminal
+tnoremap <Esc> <C-\><C-n>
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+nnoremap <Leader>x :vsp <Bar> term<CR> a
+
 
 " =============================================================================
 " Autocommands
@@ -208,6 +218,8 @@ Plug 'junegunn/goyo.vim'
 Plug 'mbbill/undotree'
 " appearance
 Plug 'vim-airline/vim-airline'
+Plug 'sainnhe/sonokai'
+Plug 'sainnhe/gruvbox-material'
 Plug 'gruvbox-community/gruvbox'
 " git integration
 Plug 'tpope/vim-fugitive'
@@ -223,7 +235,7 @@ Plug 'christoomey/vim-tmux-navigator'
 " semantic language support
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/diagnostic-nvim'
+Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
@@ -300,20 +312,41 @@ nnoremap <Leader>gd :Gdiffsplit!<CR>
 
 
 " =============================================================================
-" gruvbox
+" colorscheme
 " =============================================================================
-let g:gruvbox_invert_selection = 0
+set termguicolors
 
-colorscheme gruvbox
+let g:sonokai_style = 'default'
+let g:gruvbox_material_enable_italic = 0
+let g:gruvbox_material_disable_italic_comment = 1
+let g:gruvbox_material_palette = 'original'
+let g:gruvbox_material_transparent_background = 1
+let g:gruvbox_material_statusline_style = 'original'
 
-" Transparency fix for terminal emulators
-" This needed to be done after setting the colorscheme.
-highlight! Normal ctermbg=NONE guibg=NONE 
-highlight! SignColumn ctermbg=NONE guibg=NONE
-highlight! NonText ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+colorscheme gruvbox-material
+
+let g:airline_theme = 'gruvbox_material'
+
+" Search matches (from gruvbox-community)
+highlight! Search    cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+highlight! IncSearch cterm=reverse ctermfg=208 ctermbg=235 gui=reverse guifg=#fe8019 guibg=#282828
+
+" Vimdiff (from gruvbox-community)
+highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
+highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+
+" Current line number
+highlight! link CursorLineNr Yellow
+
+" Transparency fix for terminal emulators (Not needed for gruvbox_material)
+" highlight! Normal ctermbg=NONE guibg=NONE 
+" highlight! SignColumn ctermbg=NONE guibg=NONE
+" highlight! EndOfBuffer ctermbg=NONE guibg=NONE
+" highlight! NonText ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 
 " No error highlighting
-highlight! Error NONE
+" highlight! Error NONE
 
 
 " =============================================================================
@@ -323,9 +356,10 @@ highlight! Error NONE
 let g:gitgutter_set_sign_backgrounds = 1
 
 " The option above clears gutter icon foreground. Re-add.
-autocmd VimEnter * highlight GitGutterAdd ctermfg=142
-autocmd VimEnter * highlight GitGutterChange ctermfg=108
-autocmd VimEnter * highlight GitGutterDelete ctermfg=167
+autocmd VimEnter * highlight link GitGutterAdd Green
+autocmd VimEnter * highlight link GitGutterChange Yellow
+autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
+autocmd VimEnter * highlight link GitGutterDelete Red
 
 
 " =============================================================================
@@ -444,12 +478,12 @@ map T <Plug>Sneak_T
 " LSP
 " =============================================================================
 " key bindings
-nnoremap <F2> <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <F2>        :lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> K  :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gD :lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gD :lua vim.lsp.util.show_line_diagnostics()<CR>
 nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> ge :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
 
 sign define LspDiagnosticsErrorSign text=✖
@@ -457,26 +491,16 @@ sign define LspDiagnosticsWarningSign text=⚠
 sign define LspDiagnosticsInformationSign text=ℹ
 sign define LspDiagnosticsHintSign text=➤
 
-highlight! LspDiagnosticsError cterm=italic gui=italic
-highlight! LspDiagnosticsErrorFloating cterm=italic gui=italic
-highlight! LspDiagnosticsWarning cterm=italic gui=italic
-highlight! LspDiagnosticsWarningFloating cterm=italic gui=italic
-highlight! LspDiagnosticsInformation cterm=italic gui=italic
-highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
-highlight! LspDiagnosticsHint cterm=italic gui=italic
-highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
-
 lua << END
 -- Whether to set up a specific language server
 --   vim.fn.execuatble('ccls') doesn't seem to work.
 local setup_ccls = true;
 local setup_pyls = true;
 local setup_pyls_ms = true;
-local setup_rls = true;
+local setup_rust_analyzer = true;
 
-local lsp = require'nvim_lsp'
+local lsp = require'lspconfig'
 local on_attach = function(client)
-  require'diagnostic'.on_attach()
   require'completion'.on_attach()
 end
 
@@ -516,19 +540,14 @@ if setup_pyls_ms then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if setup_rls then
-  lsp.rls.setup{
+if setup_rust_analyzer then
+  lsp.rust_analyzer.setup{
     on_attach = on_attach,
-    settings = {rust = {clippy_preference = on}}
   }
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
 end
 END
-
-" completion-nvim
-" just enable for all buffers
-" autocmd BufEnter * lua require'completion'.on_attach()
 
 " Use tab to bring up and traverse completion list
 imap <Tab> <Plug>(completion_smart_tab)
@@ -537,9 +556,12 @@ imap <S-Tab> <Plug>(completion_smart_s_tab)
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
+" lsp_extensions.nvim
+autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = ' » '}
+
 " diagnostic-vim
-set updatetime=100
-autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
+" set updatetime=100
+" autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
 
 
 " =============================================================================
@@ -547,6 +569,12 @@ autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  highlight = { "c", "cpp", "python", "rust" },
+  ensure_installed = { "c", "cpp", "python", "rust" },
+  highlight = {
+    enable = true,
+  },
+  indent = {
+    enable = true,
+  },
 }
 END
