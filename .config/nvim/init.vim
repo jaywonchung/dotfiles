@@ -7,51 +7,52 @@ let $LANG='en_US'
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 
-" Editor settings
+" Options
 " whitespace
-set autoindent         " Insert indent on newline
-set cindent            " Autoindent for C
-set smartindent        " Aware of {, }, etc
-set scrolloff=2        " Lines between cursor and screen
-set softtabstop=2      " Width of <tab>
-set tabstop=2          " Width of interpretation of <tab>
-set shiftwidth=2       " Width of >> and <<
-set expandtab          " <Tab> to spaces, <C-v><Tab> for real tab
-set smarttab           " <Tab> at line start obeys shiftwidth
-set backspace=eol,start,indent " Backspace same as other programs
-" search
-set history=256        " History for commands, searches, etc
-set wildmode=longest,list " Command-mode autocompletion
-set ignorecase         " Case-insensitive search
-set smartcase          " Except when uppercase characters are typed
-set incsearch
+set autoindent                  " Insert indent on newline
+set cindent                     " Autoindent for C
+set smartindent                 " Aware of {, }, etc
+set scrolloff=2                 " Lines between cursor and screen
+set softtabstop=2               " Width of <tab>
+set tabstop=2                   " Width of interpretation of <tab>
+set shiftwidth=2                " Width of >> and <<
+set expandtab                   " <Tab> to spaces, <C-v><Tab> for real tab
+set smarttab                    " <Tab> at line start obeys shiftwidth
+set backspace=eol,start,indent  " Backspace same as other programs
+" command mode
+set wildmenu                    " Command mode autocompletion list
+set wildmode=longest:full,full  " <Tab> spawns wildmenu, then <Tab> to cycle list
+set ignorecase                  " Case-insensitive search
+set smartcase                   " ... except when uppercase characters are typed
+set incsearch                   " Search as I type
 " file
-set autoread           " Auto load when current file is edited somewhere
+set autoread                    " Auto load when current file is edited somewhere
 " performance
-set ttyfast
-set lazyredraw
-" difftool
-set diffopt+=iwhite    " Ignore whitespace
+set lazyredraw                  " Screen not updated during macros, etc
+" vimdiff
+set diffopt+=iwhite             " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
-set diffopt+=indent-heuristic " Internal diff lib for indents
-" Misc settings
-set number relativenumber " Show relative line number
-set exrc               " Execute .vimrc in the directory vim is started
-set showmatch          " Highlight matching braces
-set guicursor=         " Use terminal-default cursor shape
-set mouse=a            " Mouses are useful for visual selection
-packadd! matchit       " Lets % work better
-let g:vimsyn_embed = 'l' " Embed lua syntax highlight in vimscript
+set diffopt+=indent-heuristic   " Internal diff lib for indents
+" appearance
+set showmatch                   " Highlight matching braces
+set guicursor=                  " Use terminal-default cursor shape
+set background=dark             " Dark background
+set number relativenumber       " Show relative line number
+" misc
+set exrc                        " Execute .vimrc in the directory vim is started
+set mouse=a                     " Mouses are useful for visual selection
+set history=256                 " History for commands, searches, etc
 
+" Embed lua syntax highlighting in vimscript
+let g:vimsyn_embed = 'l'
 
 " Set cursor line
 set cursorline
-autocmd BufEnter * setlocal cursorline    " Enable when entering window
-autocmd BufLeave * setlocal nocursorline  " Disable when leaving window
-highlight CursorLine cterm=NONE ctermbg=239
-
-" Color fix in tmux
-set background=dark
+augroup CursorLine
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline    " Enable when entering window
+  autocmd WinLeave * setlocal nocursorline  " Disable when leaving window
+augroup END
 
 " Syntax highlighting
 if has("syntax")
@@ -315,8 +316,22 @@ nnoremap <Leader>gd :Gdiffsplit!<CR>
 " =============================================================================
 " colorscheme
 " =============================================================================
+" Copy from another highlight group
+function! CopyFrom(to, from, term, reset)
+  let terms = execute('highlight ' . a:from)
+  let target = matchstr(terms, a:term . '=\S*')
+  if a:reset
+    let command = 'highlight! '
+  else
+    let command = 'highlight '
+  endif
+  execute('silent ' . command . a:to . ' ' . target)
+endfunction
+
+" 24-bit RGB colors
 set termguicolors
 
+" Colorscheme-specific configs
 let g:sonokai_style = 'default'
 let g:gruvbox_material_enable_italic = 0
 let g:gruvbox_material_disable_italic_comment = 1
@@ -337,17 +352,17 @@ highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#f
 highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
 highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
 
-" Current line number
-highlight! link CursorLineNr Yellow
+" Current line number (fg from Yellow, bg from CursorLine)
+call CopyFrom('CursorLineNr', 'Yellow',     'ctermfg', 1)
+call CopyFrom('CursorLineNr', 'CursorLine', 'ctermbg', 0)
+call CopyFrom('CursorLineNr', 'Yellow',     'guifg',   0)
+call CopyFrom('CursorLineNr', 'CursorLine', 'guibg',   0)
 
 " Transparency fix for terminal emulators (Not needed for gruvbox_material)
 " highlight! Normal ctermbg=NONE guibg=NONE 
 " highlight! SignColumn ctermbg=NONE guibg=NONE
 " highlight! EndOfBuffer ctermbg=NONE guibg=NONE
 " highlight! NonText ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
-
-" No error highlighting
-" highlight! Error NONE
 
 
 " =============================================================================
