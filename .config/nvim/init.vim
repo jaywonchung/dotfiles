@@ -498,7 +498,7 @@ lua << END
 local setup_ccls = true;
 local setup_pyls = true;
 local setup_pyls_ms = true;
-local setup_rust_analyzer = true;
+local setup_rust_analyzer = false;
 
 local lsp = require'lspconfig'
 local on_attach = function(client)
