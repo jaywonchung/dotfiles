@@ -166,6 +166,11 @@ tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 nnoremap <Leader>x :vsp <Bar> term<CR> a
 
+" Braces
+nnoremap (<CR> i(<CR><ESC>o)<ESC>k^
+nnoremap {<CR> i{<CR><ESC>o}<ESC>k^
+nnoremap [<CR> i[<CR><ESC>o]<ESC>k^
+
 
 " =============================================================================
 " Autocommands
