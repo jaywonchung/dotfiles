@@ -79,9 +79,13 @@ nnoremap L $
 vnoremap L $
 nnoremap ; :
 
-nnoremap <C-z> :sus<CR>
+" Suspend vim
+nnoremap <C-z> :suspend<CR>
+
+" Unhighlight all search highlights
 nnoremap <silent> <C-c> :noh<CR>
 
+" Leader mappings
 let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
 nnoremap <Leader>qw :wq<CR>
@@ -90,6 +94,9 @@ nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
 nnoremap <Leader>p :echo expand('%')<CR>
+
+" Delete selected area and replace with yanked content
+vnoremap <Leader>p "_dP
 
 " <C-c> and <ESC> are not the same
 inoremap <C-c> <ESC>
@@ -223,6 +230,7 @@ Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'mbbill/undotree'
+Plug 'ojroques/vim-oscyank'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'sainnhe/sonokai'
@@ -243,11 +251,11 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
 " syntactic language support
 Plug 'sheerun/vim-polyglot'
 Plug 'vim-syntastic/syntastic'
 Plug 'rust-lang/rust.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
 
@@ -270,6 +278,12 @@ let g:goyo_height = '90%'
 " undotree
 " =============================================================================
 nnoremap <silent> <Leader>u :UndotreeToggle<CR>
+
+
+" =============================================================================
+" oscyank
+" =============================================================================
+vnoremap <silent> <Leader>c :OSCYank<CR>
 
 
 " =============================================================================
@@ -502,15 +516,12 @@ map T <Plug>Sneak_T
 nnoremap <F2>        :lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> K  :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gD :lua vim.lsp.util.show_line_diagnostics()<CR>
 nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
-
-sign define LspDiagnosticsErrorSign text=✖
-sign define LspDiagnosticsWarningSign text=⚠
-sign define LspDiagnosticsInformationSign text=ℹ
-sign define LspDiagnosticsHintSign text=➤
+nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next{enable_popup=false}<CR>
+nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev{enable_popup=false}<CR>
 
 lua << END
 -- Whether to set up a specific language server
@@ -518,7 +529,7 @@ lua << END
 local setup_ccls = true;
 local setup_pyls = true;
 local setup_pyls_ms = true;
-local setup_rust_analyzer = false;
+local setup_rust_analyzer = true;
 
 local lsp = require'lspconfig'
 local on_attach = function(client)
@@ -568,6 +579,18 @@ if setup_rust_analyzer then
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
 end
+
+-- Configs for diagnostics
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    -- Virtual text appearance
+    virtual_text = {
+      spacing = 4,
+    },
+    -- Do not update in insert mode
+    update_in_insert = false,
+  }
+)
 END
 
 " Use tab to bring up and traverse completion list
@@ -579,10 +602,6 @@ set shortmess+=c
 
 " lsp_extensions.nvim
 autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = ' » '}
-
-" diagnostic-vim
-" set updatetime=100
-" autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
 
 
 " =============================================================================
