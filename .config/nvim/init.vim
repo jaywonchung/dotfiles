@@ -230,6 +230,7 @@ Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'mbbill/undotree'
+Plug 'ojroques/vim-oscyank'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'sainnhe/sonokai'
@@ -277,6 +278,12 @@ let g:goyo_height = '90%'
 " undotree
 " =============================================================================
 nnoremap <silent> <Leader>u :UndotreeToggle<CR>
+
+
+" =============================================================================
+" oscyank
+" =============================================================================
+vnoremap <silent> <Leader>c :OSCYank<CR>
 
 
 " =============================================================================
