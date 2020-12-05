@@ -92,6 +92,9 @@ alias dp='dotfiles push'
 alias dl='dotfiles pull'
 alias ddf='dotfiles difftool'
 
+# nvim
+alias nconf="nvim $HOME/.config/nvim/init.vim"
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
@@ -102,11 +105,8 @@ export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export EDITOR="nvim"
 
 # nvim as manpage viewer
-export MANPAGER="/bin/sh -c \"unset PAGER;col -b -x | \
-    nvim -u NORC -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
-    -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
-    -c 'set nonu' -c 'set nornu' \
-    -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
+export MANPAGER="nvim +Man!"
+export MANWIDTH=999
 
 #-------------------------------------------------------------------
 # Machine-specific
