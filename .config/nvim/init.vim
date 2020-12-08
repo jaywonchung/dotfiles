@@ -105,6 +105,7 @@ inoremap <C-c> <ESC>
 inoremap (<CR> (<CR>)<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
 inoremap [<CR> [<CR>]<ESC>O
+inoremap ({<CR> (<bar><bar><space>{<CR>})<ESC>O<ESC>k$hhi
 
 " Diff mappings
 nnoremap <Leader>dg :diffget<CR>
@@ -171,7 +172,6 @@ tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
-nnoremap <Leader>x :vsp <Bar> term<CR> a
 
 " Braces
 nnoremap (<CR> i(<CR><ESC>o)<ESC>k^
@@ -231,6 +231,7 @@ Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'mbbill/undotree'
 Plug 'ojroques/vim-oscyank'
+Plug 'voldikss/vim-floaterm'
 " appearance
 Plug 'vim-airline/vim-airline'
 Plug 'sainnhe/sonokai'
@@ -252,8 +253,6 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 " syntactic language support
-Plug 'sheerun/vim-polyglot'
-Plug 'vim-syntastic/syntastic'
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
@@ -287,28 +286,18 @@ vnoremap <silent> <Leader>c :OSCYank<CR>
 
 
 " =============================================================================
-" Syntastic
+" vim-floaterm
 " =============================================================================
-" General configurations
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" Size
+let g:floaterm_height = 0.7
+let g:floaterm_width = 0.7
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = {'mode': 'passive'}
+" Close window when process exits
+let g:floaterm_autoclose = 2
 
-" Key bindings
-nnoremap <Leader>sc :SyntasticCheck<CR>
-nnoremap <Leader>sr :SyntasticReset<CR>
-nnoremap <Leader>si :SyntasticInfo<CR>
-
-" C
-"let g:syntastic_c_compiler_options = ' -std=c11 -Wall -Wextra -Wpedantic -wbuiltin-declaration-mismatch'
-let g:syntastic_c_checkers = ['gcc', 'make']
-let g:syntastic_c_compiler_options = "-std=c11 -Wall -Wextra -Wpedantic"
+" Open and hide. <C-d> to exit.
+nnoremap <Leader>x :FloatermToggle<CR>
+tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 
 
 " =============================================================================
@@ -361,6 +350,9 @@ let g:gruvbox_material_statusline_style = 'original'
 colorscheme gruvbox-material
 
 let g:airline_theme = 'gruvbox_material'
+
+" Transparent tabline
+highlight! TabLineFill NONE
 
 " Search matches (from gruvbox-community)
 highlight! Search    cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
@@ -602,6 +594,12 @@ set shortmess+=c
 
 " lsp_extensions.nvim
 autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = ' » '}
+
+
+" =============================================================================
+" rust.vim
+" =============================================================================
+let g:rust_recommended_style = 0
 
 
 " =============================================================================
