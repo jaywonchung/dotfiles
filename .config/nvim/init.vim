@@ -299,6 +299,9 @@ let g:floaterm_autoclose = 2
 nnoremap <Leader>x :FloatermToggle<CR>
 tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 
+" Wrappers
+command! Vifm FloatermNew vifm
+
 
 " =============================================================================
 " editorconfig-vim
