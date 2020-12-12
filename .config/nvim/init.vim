@@ -1,12 +1,6 @@
 " =============================================================================
 " General and Miscellaneous
 " =============================================================================
-" Language settings
-set langmenu=en_US
-let $LANG='en_US'
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-
 " Options
 " whitespace
 set autoindent                  " Insert indent on newline
@@ -39,7 +33,6 @@ set guicursor=                  " Use terminal-default cursor shape
 set background=dark             " Dark background
 set number relativenumber       " Show relative line number
 " misc
-set exrc                        " Execute .vimrc in the directory vim is started
 set mouse=a                     " Mouses are useful for visual selection
 set history=256                 " History for commands, searches, etc
 
@@ -107,6 +100,11 @@ inoremap {<CR> {<CR>}<ESC>O
 inoremap [<CR> [<CR>]<ESC>O
 inoremap ({<CR> (<bar><bar><space>{<CR>})<ESC>O<ESC>k$hhi
 
+" Surrounding with brackets
+nnoremap (<CR> i(<CR><ESC>o)<ESC>k^
+nnoremap {<CR> i{<CR><ESC>o}<ESC>k^
+nnoremap [<CR> i[<CR><ESC>o]<ESC>k^
+
 " Diff mappings
 nnoremap <Leader>dg :diffget<CR>
 nnoremap <Leader>dp :diffput<CR>
@@ -173,11 +171,6 @@ tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
-" Braces
-nnoremap (<CR> i(<CR><ESC>o)<ESC>k^
-nnoremap {<CR> i{<CR><ESC>o}<ESC>k^
-nnoremap [<CR> i[<CR><ESC>o]<ESC>k^
-
 
 " =============================================================================
 " Autocommands
@@ -229,12 +222,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
-Plug 'mbbill/undotree'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
 " appearance
 Plug 'vim-airline/vim-airline'
-Plug 'sainnhe/sonokai'
+" Plug 'sainnhe/sonokai'
 Plug 'sainnhe/gruvbox-material'
 Plug 'gruvbox-community/gruvbox'
 " git integration
@@ -248,10 +240,11 @@ Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
-" semantic language support
+" language server protocol
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'ojroques/nvim-lspfuzzy'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -271,12 +264,6 @@ nnoremap <silent> <Leader>gy :Goyo<CR>
 
 let g:goyo_width = 90
 let g:goyo_height = '90%'
-
-
-" =============================================================================
-" undotree
-" =============================================================================
-nnoremap <silent> <Leader>u :UndotreeToggle<CR>
 
 
 " =============================================================================
@@ -464,8 +451,8 @@ endif
 " Key bindings to be pressed on fzf list
 let g:fzf_action =
   \ { 'ctrl-g': 'tab split',
-    \ 'ctrl-s': 'split',
-    \ 'ctrl-v': 'vsplit' }
+  \   'ctrl-s': 'split',
+  \   'ctrl-v': 'vsplit' }
 
 " Match fzf colors with current color scheme
 let g:fzf_colors =
@@ -512,8 +499,8 @@ nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next{enable_popup=false}<CR>
-nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev{enable_popup=false}<CR>
+nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
 
 lua << END
 -- Whether to set up a specific language server
@@ -583,6 +570,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = false,
   }
 )
+
+-- Configs for lspfuzzy
+require'lspfuzzy'.setup{}
 END
 
 " Use tab to bring up and traverse completion list
@@ -593,7 +583,7 @@ set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
 " lsp_extensions.nvim
-autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = ' » '}
+autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
 
 
 " =============================================================================
@@ -607,7 +597,7 @@ let g:rust_recommended_style = 0
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust" },
+  ensure_installed = { "c", "cpp", "python", "rust", "lua" },
   highlight = {
     enable = true,
   },
@@ -616,3 +606,9 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 END
+
+
+" =============================================================================
+" Must-be-done-at-the-end config
+" =============================================================================
+set secure exrc                 " Execute .vimrc in the directory vim is started
