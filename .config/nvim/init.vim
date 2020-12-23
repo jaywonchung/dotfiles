@@ -41,11 +41,8 @@ let g:vimsyn_embed = 'l'
 
 " Set cursor line
 set cursorline
-augroup CursorLine
-  autocmd!
-  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline    " Enable when entering window
-  autocmd WinLeave * setlocal nocursorline  " Disable when leaving window
-augroup END
+autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
 
 " Syntax highlighting
 if has("syntax")
@@ -97,7 +94,6 @@ inoremap <C-c> <ESC>
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
-inoremap [<CR> [<CR>]<ESC>O
 inoremap ({<CR> (<bar><bar><space>{<CR>})<ESC>O<ESC>k$hhi
 
 " Surrounding with brackets
@@ -175,13 +171,6 @@ tnoremap <C-l> <C-\><C-n><C-w>l
 " =============================================================================
 " Autocommands
 " =============================================================================
-" Highlight search results only in command mode
-augroup vimrc-incsearch-highlight
-  autocmd!
-  autocmd CmdlineEnter /,\? :set hlsearch
-  autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
-
 " Pick up where I left off
 autocmd BufReadPost *
   \   if line("'\"") > 0 && line("'\"") <= line("$")
@@ -214,6 +203,13 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " =============================================================================
 " Plugins
 " =============================================================================
+" Install vim-plugged if not already
+if filereadable(glob('~/.local/share/nvim/site/autoload/plug.vim')) == 0
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin(stdpath('data') . '/plugged')
 " editing
 Plug 'editorconfig/editorconfig-vim'
@@ -224,18 +220,19 @@ Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
+Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
 Plug 'vim-airline/vim-airline'
 " Plug 'sainnhe/sonokai'
 Plug 'sainnhe/gruvbox-material'
-Plug 'gruvbox-community/gruvbox'
+" Plug 'gruvbox-community/gruvbox'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " navigation
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
-Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
+Plug 'junegunn/fzf', {'do': { -> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
