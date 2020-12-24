@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ACTION=$(echo -e "Shutdown\nReboot\nCancel" | dmenu -i)
+
+case "$ACTION" in
+  'Shutdown') sleep 5; shutdown -P now ;;
+  'Reboot')   shutdown -r now ;;
+esac
