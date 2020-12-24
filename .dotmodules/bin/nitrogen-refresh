@@ -1,13 +1,10 @@
 #!/bin/zsh
 
-set -v
-
 export DISPLAY=":0"
 
 BGDIR="$HOME/Wallpapers"
 RANDOM=$$$(date +%s)
 BGLIST=("$BGDIR"/*.jpg)
-echo "$BGLIST"
 BGNUM=$(ls -1 "$BGDIR" | wc -l)
 NEXTONE=$(( $RANDOM % $BGNUM ))
 cp "$BGLIST[$NEXTONE]" "$BGDIR"/theone.jpg
