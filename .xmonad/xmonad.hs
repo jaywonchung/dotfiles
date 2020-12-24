@@ -13,6 +13,7 @@ import System.Exit
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -228,7 +229,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+myEventHook = fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
