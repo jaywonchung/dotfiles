@@ -2,8 +2,7 @@
 
 set -e
 
-source ~/.dotmodules/install/util.sh
-source ~/.dotmodules/install/zsh.sh
-source ~/.dotmodules/install/vim.sh
-source ~/.dotmodules/install/tmux.sh
-source ~/.dotmodules/install/font.sh
+for file in "$HOME"/.dotmodules/install/*.sh 
+do
+  source "$file"
+done
