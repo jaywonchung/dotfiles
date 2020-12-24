@@ -66,7 +66,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    , ((modm,               xK_p     ), spawn "dmenu_run")
+    , ((modm,               xK_p     ), spawn "dmenu_run -fn xft:JetBrainMono:pixelsize=14:antialias=true:hinting=true")
 
     -- launch gmrun
     , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
@@ -247,7 +247,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-        spawnOnce "/usr/local/bin/nitrogen-refresh &"
+        spawnOnce "nitrogen-refresh"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
