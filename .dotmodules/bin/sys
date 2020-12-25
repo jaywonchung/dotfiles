@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ACTION=$(echo -e "Shutdown\nReboot\nCancel" | dmenu -i)
+ACTION=$(echo -e "Shutdown\nReboot\nCancel" | dmenu -fn xft:JetBrainMono:pixelsize=14:antialias=true:hinting=ture -i)
 
 case "$ACTION" in
   'Shutdown') sleep 5; shutdown -P now ;;

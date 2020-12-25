@@ -31,7 +31,9 @@ printf 'y\ny\nn\n' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindin
 
 installing "autojump"
 git clone --depth=1 https://github.com/wting/autojump.git ~/_autojump
-~/_autojump/install.py
+pushd ~/_autojump
+python3 install.py
+popd
 rm -rf ~/_autojump
 
 installing "direnv"
