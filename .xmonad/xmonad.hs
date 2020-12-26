@@ -184,7 +184,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = smartBorders $ avoidStruts (tiled ||| Mirror tiled ||| Full)
+myLayout = smartBorders $ avoidStruts (tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -216,6 +216,8 @@ myLayout = smartBorders $ avoidStruts (tiled ||| Mirror tiled ||| Full)
 myManageHook = composeAll
     [ className =? "MPlayer"        --> doFloat
     , className =? "Gimp"           --> doFloat
+    , className =? "naver-whale"           --> doFloat
+    , className =? "Kazam"          --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore ]
 
@@ -282,6 +284,11 @@ main = do
       , logHook            = dynamicLogWithPP xmobarPP
             { ppOutput = hPutStrLn xmproc
             , ppTitle = xmobarColor "grey" "" . shorten 50
+            , ppCurrent = xmobarColor "#1793d1" ""
+            , ppHiddenNoWindows = xmobarColor "#535353" ""
+            , ppHidden = xmobarColor "#ffffff" ""
+            , ppOrder = \(ws:_:t:_) -> [ws,t]
+            , ppSep = " | "
             }
       , manageHook         = myManageHook
       , handleEventHook    = myEventHook
