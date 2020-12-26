@@ -1,1 +1,1 @@
-ubuntu-desktop.sh
+arch-desktop.sh
