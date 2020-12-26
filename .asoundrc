@@ -1,3 +1,7 @@
 # ALSA config
+# - Use `amixer` to list all devices
+# - Use `alsamixer` to control volume
+# 
+# `pavucontrol` is a nice helper
 defaults.pcm.card 1
 defaults.ctl.card 1
