@@ -503,21 +503,11 @@ nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
 
 lua << END
--- Whether to set up a specific language server
---   vim.fn.execuatble('ccls') doesn't seem to work.
-local setup_ccls = true;
-local setup_pyls = true;
-local setup_pyls_ms = true;
-local setup_rust_analyzer = true;
+local lspconfig = require'lspconfig'
 
-local lsp = require'lspconfig'
-local on_attach = function(client)
-  require'completion'.on_attach()
-end
-
-if setup_ccls then
-  lsp.ccls.setup{
-    on_attach = on_attach,
+if vim.fn.executable('ccls') == 1 then
+  lspconfig.ccls.setup{
+    on_attach = require'completion'.on_attach,
     init_options = {
       client = {snippetSupport = false},
       highlight = {lsRanges = true}
@@ -527,9 +517,9 @@ if setup_ccls then
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
-if setup_pyls then
-  lsp.pyls.setup{
-    on_attach = on_attach,
+if vim.fn.executable('pyls') == 1 then
+  lspconfig.pyls.setup{
+    on_attach = require'completion'.on_attach,
     settings = {
       pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
     }
@@ -538,9 +528,9 @@ if setup_pyls then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if setup_pyls_ms then
-  lsp.pyls_ms.setup{
-    on_attach = on_attach,
+if vim.fn.executable('dotnet') == 1 then
+  lspconfig.pyls_ms.setup{
+    on_attach = require'completion'.on_attach,
     cmd = {
       "dotnet",
       "exec",
@@ -551,9 +541,9 @@ if setup_pyls_ms then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if setup_rust_analyzer then
-  lsp.rust_analyzer.setup{
-    on_attach = on_attach,
+if vim.fn.executable('rust-analyzer') == 1 then
+  lspconfig.rust_analyzer.setup{
+    on_attach = require'completion'.on_attach,
   }
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
