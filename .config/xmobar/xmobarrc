@@ -28,5 +28,5 @@ Config { font = "xft:D2Coding:pixelsize=15:antialias=true:hinting=true"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% }{ %date1% <fc=#1793d1>%date2%</fc> %date3%                                          %cpu% | %memory% | %disku% | %uname%%trayerpad%  "
+       , template = " %StdinReader% } %date1% <fc=#1793d1>%date2%</fc> %date3% { %cpu% | %memory% | %disku% | %uname% %trayerpad% "
        }
