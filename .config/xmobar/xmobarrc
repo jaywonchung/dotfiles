@@ -18,15 +18,15 @@ Config { font = "xft:D2Coding:pixelsize=15:antialias=true:hinting=true"
        , commands = [ Run Cpu ["-p","2","-H","50","--high","red"] 10
                     , Run Memory ["-p","2","-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
-                    , Run Com "uname" ["-s","-r"] "" 36000
     		            , Run Date "%a %b %_d" "date1" 10
     		            , Run Date "%I:%M:%S" "date2" 10
     		            , Run Date "%P" "date3" 10
                     , Run DiskU [("/", "Disk: <used>/<size>")] [] 20
+                    , Run Volume "default" "Master" ["-t","Vol: <volumevbar>"] 10
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% } %date1% <fc=#1793d1>%date2%</fc> %date3% { %cpu% | %memory% | %disku% | %uname% %trayerpad% "
+       , template = " %StdinReader% } %date1% <fc=#1793d1>%date2%</fc> %date3% { %cpu% | %memory% | %disku% | %default:Master% | %trayerpad% "
        }
