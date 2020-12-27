@@ -253,6 +253,7 @@ myStartupHook = do
         spawnOnce "xsetroot -cursor_name left_ptr"
         spawnOnce "nitrogen-refresh"
         spawnOnce "stalonetray &"
+        spawnOnce "dex -a -s ~/.config/autostart"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
