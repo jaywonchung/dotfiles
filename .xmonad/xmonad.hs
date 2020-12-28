@@ -15,48 +15,8 @@ import XMonad.Layout.NoBorders
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- The preferred terminal program, which is used in a binding below and by
--- certain contrib modules.
---
-myTerminal      = "kitty"
-
--- Whether focus follows the mouse pointer.
-myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
-
--- Whether clicking on a window to focus also passes the click to the window
-myClickJustFocuses :: Bool
-myClickJustFocuses = False
-
--- Width of the window border in pixels.
---
-myBorderWidth   = 2
-
--- Border colors for unfocused and focused windows, respectively.
---
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
-
--- modMask lets you specify which modkey you want to use. The default
--- is mod1Mask ("left alt").  You may also consider using mod3Mask
--- ("right alt"), which does not conflict with emacs keybindings. The
--- "windows key" is usually mod4Mask.
---
-myModMask       = mod4Mask
-
--- The default number of workspaces (virtual screens) and their names.
--- By default we use numeric strings, but any string may be used as a
--- workspace name. The number of workspaces is determined by the length
--- of this list.
---
--- A tagging example:
---
--- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
---
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
-
 ------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
+-- Key bindings.
 --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
@@ -188,7 +148,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = smartBorders $ avoidStruts (tiled ||| Full)
+myLayoutHook = smartBorders $ avoidStruts (tiled ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -222,6 +182,7 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , className =? "Kazam"          --> doFloat
     , title =? "Picture in picture" --> doFloat     -- Naver Whale PiP
+    , title =? "Chat"               --> doFloat     -- Zoom Chat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore ]
 
@@ -274,14 +235,29 @@ myStartupHook = do
 main = do
   xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobarrc"
   xmonad $ docks def
-      { terminal           = myTerminal
-      , focusFollowsMouse  = myFocusFollowsMouse
-      , clickJustFocuses   = myClickJustFocuses
-      , borderWidth        = myBorderWidth
-      , modMask            = myModMask
-      , workspaces         = myWorkspaces
-      , normalBorderColor  = myNormalBorderColor
-      , focusedBorderColor = myFocusedBorderColor
+      -- The preferred terminal.
+      { terminal           = "kitty"
+
+      -- Whether focus follows the mouse pointer.
+      , focusFollowsMouse  = True
+
+      -- Whether clicking on a window to focus also passes the click to the window
+      , clickJustFocuses   = False
+
+      -- Width of the window border in pixels.
+      , borderWidth        = 2
+
+      -- Border colors for unfocused and focused windows, respectively.
+      , normalBorderColor  = "#dddddd"
+      , focusedBorderColor = "#ff0000"
+
+      -- Modkey to use.
+      --   e.g. Left alt (mod1Mask), right alt (mod3Mask), super (mod4Mask)
+      , modMask            = mod4Mask
+
+      -- Names of workspaces.
+      --   e.g. workspaces = ["web", "irc", "code"] ++ map show [4..9]
+      , workspaces         = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
       , keys               = myKeys
       , mouseBindings      = myMouseBindings
@@ -292,11 +268,11 @@ main = do
             , ppCurrent = xmobarColor "#1793d1" ""
             , ppHiddenNoWindows = xmobarColor "#535353" ""
             , ppHidden = xmobarColor "#ffffff" ""
-            , ppOrder = \(ws:_:t:_) -> [ws,t]
+            , ppOrder = \(ws:l:t:_) -> [ws,l,t]
             , ppSep = " | "
             }
       , manageHook         = myManageHook
       , handleEventHook    = myEventHook
-      , layoutHook         = myLayout
+      , layoutHook         = myLayoutHook
       , startupHook        = myStartupHook
     }
