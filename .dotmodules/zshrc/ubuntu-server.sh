@@ -1,7 +1,7 @@
 # Machine-specific Ubuntu server with CUDA
 # NVCC
-export PATH="/usr/local/cuda/bin:$PATH"
-export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+export PATH="$HOME/.local/cuda-10.2/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/.local/cuda-10.2/lib64:$LD_LIBRARY_PATH"
 
 # Assigned GPU
 export CUDA_DEVICE_ORDER=PCI_BUS_ID

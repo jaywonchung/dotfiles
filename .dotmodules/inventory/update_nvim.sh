@@ -1,25 +1,18 @@
-#!/bin/zsh
+#!/bin/bash
 
-pprint() {
-  printf "%*s\n" $(( (${#1} + $(tput cols) * 2 / 3) / 2 )) "$1"
-}
+set -ev
 
-installing() {
-  pprint "#################################################"
-  pprint "Installing $1"
-  pprint "#################################################"
-}
+# Remove
+bash "$HOME/.dotmodules/inventory/remove_nvim.sh" || true
 
-installing "neovim"
+# Install Neovim nightly
 cd /tmp
 curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz
 tar xzvf nvim-linux64.tar.gz
 mkdir -p ~/.local
 rsync -a nvim-linux64/* ~/.local/
 
-installing "vim-plug"
+# Install plugins
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-installing "vim plugins"
 nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!
