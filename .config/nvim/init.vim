@@ -198,6 +198,9 @@ autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
 " =============================================================================
 " Verilog
 autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
+" autocmd FileType man nnoremap q :q<CR>
+autocmd BufEnter man://* nnoremap qq :q<CR>
+echo 'autocmd registered'
 
 
 " =============================================================================
@@ -242,6 +245,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'ojroques/nvim-lspfuzzy'
+Plug 'RRethy/vim-illuminate'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -285,6 +289,15 @@ tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 
 " Wrappers
 command! Vifm FloatermNew vifm
+
+" Disable welcome message
+let g:floaterm_shell = 'WELCOME=no /usr/bin/zsh'
+
+
+" =============================================================================
+" markdown-preview
+" =============================================================================
+let g:mkdp_auto_close = 0
 
 
 " =============================================================================
@@ -504,10 +517,14 @@ nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
 
 lua << END
 local lspconfig = require'lspconfig'
+local on_attach = function(client)
+  require'completion'.on_attach(client)
+  require'illuminate'.on_attach(client)
+end
 
 if vim.fn.executable('ccls') == 1 then
   lspconfig.ccls.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
     init_options = {
       client = {snippetSupport = false},
       highlight = {lsRanges = true}
@@ -519,7 +536,7 @@ end
 
 if vim.fn.executable('pyls') == 1 then
   lspconfig.pyls.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
     settings = {
       pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
     }
@@ -530,7 +547,7 @@ end
 
 if vim.fn.executable('dotnet') == 1 then
   lspconfig.pyls_ms.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
     cmd = {
       "dotnet",
       "exec",
@@ -543,7 +560,7 @@ end
 
 if vim.fn.executable('rust-analyzer') == 1 then
   lspconfig.rust_analyzer.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
   }
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
