@@ -1,9 +1,13 @@
 #-------------------------------------------------------------------
 # Welcome message
 #-------------------------------------------------------------------
-fortune
-echo
-cal -n 3
+# NOTE: linked to nvim floaterm config g:floaterm_shell
+# NOTE: linked to xmonad named scratchpad command
+if [ ! "$WELCOME" = "no" ]; then
+  fortune
+  echo
+  cal -n 3
+fi
 
 #-------------------------------------------------------------------
 # Zsh and oh-my-zsh configs
