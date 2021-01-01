@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+echo "$(tput smul)Will remove$(tput sgr0):"
+echo
+echo "$(pacman -Qdtq)"
+echo
+
+echo -n "$(tput smul)Running$(tput sgr0): "
+echo 'sudo pacman -Rcns $(pacman -Qdtq)'
+echo
+
+sudo pacman -Rcns $(pacman -Qdtq)
