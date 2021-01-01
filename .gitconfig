@@ -17,3 +17,5 @@
   path = nvim
 [mergetool "fugitive"]
   cmd = nvim -f -c "Gvdiffsplit!" "$MERGED"
+[pull]
+	ff = only
