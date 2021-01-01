@@ -54,6 +54,9 @@ export GTK_IM_MODULE="xim"  # Fixes problems in Cromium
 export QT_IM_MODULE="scim"
 scim -d
 
+# Java applications in WMs
+export AWT_TOOLKIT=MToolkit
+
 # Caffeine for X
 xset -dpms
 
