@@ -97,7 +97,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: MesloLGS NF
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -108,10 +108,10 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: MesloLGS NF
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
-    #style: Bold
+    style: Bold
 
   # Italic font face
   italic:
@@ -119,24 +119,24 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: MesloLGS NF
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
-    #style: Italic
+    style: Italic
 
   # Bold italic font face
-  #bold_italic:
+  bold_italic:
     # Font family
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    #family: monospace
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
-    #style: Bold Italic
+    style: Bold Italic
 
   # Point size
-  size: 9.0
+  size: 9
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -452,36 +452,37 @@ cursor:
 # If the same trigger is assigned to multiple actions, all of them are executed
 # at once.
 key_bindings:
-  - { key: V,         mods: Control|Shift, action: Paste                                }
-  - { key: C,         mods: Control|Shift, action: Copy                                 }
-  - { key: N,         mods: Control|Shift, action: SpawnNewInstance                     }
-  - { key: Equals,    mods: Control,       action: IncreaseFontSize                     }
-  - { key: Subtract,  mods: Control,       action: DecreaseFontSize                     }
-  - { key: F11,                            action: ToggleFullscreen                     }
-  - { key: PageUp,    mods: Shift,         action: ScrollPageUp,        mode: ~Alt      }
-  - { key: PageDown,  mods: Shift,         action: ScrollPageDown,      mode: ~Alt      }
-  - { key: Home,      mods: Shift,         action: ScrollToTop,         mode: ~Alt      }
-  - { key: End,       mods: Shift,         action: ScrollToBottom,      mode: ~Alt      }
-  - { key: T,         mods: Control,       chars: "tmux a || tmux\x0d", mode: ~Alt      }
+  - { key: V,               mods: Control|Shift,  action: Paste                            }
+  - { key: C,               mods: Control|Shift,  action: Copy                             }
+  - { key: N,               mods: Control|Shift,  action: SpawnNewInstance                 }
+  - { key: Equals,          mods: Control,        action: IncreaseFontSize                 }
+  - { key: NumpadSubtract,  mods: Control,        action: DecreaseFontSize                 }
+  - { key: F11,                                   action: ToggleFullscreen                 }
+  - { key: U,               mods: Control|Shift,  action: ScrollPageUp,         mode: ~Alt }
+  - { key: D,               mods: Control|Shift,  action: ScrollPageDown,       mode: ~Alt }
+  - { key: K,               mods: Control|Shift,  action: ScrollLineUp,         mode: ~Alt }
+  - { key: J,               mods: Control|Shift,  action: ScrollLineDown,       mode: ~Alt }
+  - { key: Home,            mods: Shift,          action: ScrollToTop,          mode: ~Alt }
+  - { key: End,             mods: Shift,          action: ScrollToBottom,       mode: ~Alt }
+  - { key: T,               mods: Control,        chars: "tmux a || tmux\x0d",  mode: ~Alt }
 
   # inside tmux
-  - { key: N,         mods: Control,       chars: "\x02o",              mode: Alt       }
-  - { key: T,         mods: Control,       chars: "\x02c",              mode: Alt       }
-  - { key: W,         mods: Control|Shift, chars: "\x02&",              mode: Alt       }
-  - { key: Key1,      mods: Control,       chars: "\x021",              mode: Alt       }
-  - { key: Key2,      mods: Control,       chars: "\x022",              mode: Alt       }
-  - { key: Key3,      mods: Control,       chars: "\x023",              mode: Alt       }
-  - { key: Key4,      mods: Control,       chars: "\x024",              mode: Alt       }
-  - { key: Key5,      mods: Control,       chars: "\x025",              mode: Alt       }
-  - { key: Key6,      mods: Control,       chars: "\x026",              mode: Alt       }
-  - { key: Key7,      mods: Control,       chars: "\x027",              mode: Alt       }
-  - { key: Key8,      mods: Control,       chars: "\x028",              mode: Alt       }
-  - { key: Key9,      mods: Control,       chars: "\x029",              mode: Alt       }
-  - { key: Key0,      mods: Control,       chars: "\x020",              mode: Alt       }
-  - { key: LBracket,  mods: Control,       chars: "\x02[",              mode: Alt       }
+  - { key: T,               mods: Control,        chars: "\x02c",               mode: Alt  }
+  - { key: W,               mods: Control|Shift,  chars: "\x02&",               mode: Alt  }
+  - { key: Key1,            mods: Control,        chars: "\x021",               mode: Alt  }
+  - { key: Key2,            mods: Control,        chars: "\x022",               mode: Alt  }
+  - { key: Key3,            mods: Control,        chars: "\x023",               mode: Alt  }
+  - { key: Key4,            mods: Control,        chars: "\x024",               mode: Alt  }
+  - { key: Key5,            mods: Control,        chars: "\x025",               mode: Alt  }
+  - { key: Key6,            mods: Control,        chars: "\x026",               mode: Alt  }
+  - { key: Key7,            mods: Control,        chars: "\x027",               mode: Alt  }
+  - { key: Key8,            mods: Control,        chars: "\x028",               mode: Alt  }
+  - { key: Key9,            mods: Control,        chars: "\x029",               mode: Alt  }
+  - { key: Key0,            mods: Control,        chars: "\x020",               mode: Alt  }
+  - { key: LBracket,        mods: Control,        chars: "\x02[",               mode: Alt  }
 
   # toggle alacritty opacity
-  - { key: F3,        mods: Control,       command: ".config/alacritty/togg"            }
+  - { key: F3,              mods: Control,        command: ".config/alacritty/togg"        }
 
 
 #debug:
