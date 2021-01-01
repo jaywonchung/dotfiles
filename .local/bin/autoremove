@@ -1,14 +1,18 @@
 #!/bin/bash
 
-set -e
+QDTQ="$(yay -Qdtq)"
+if [ "$?" = 1 ]; then
+  echo "$(tput smul)Nothing to remove!$(tput sgr0)"
+  exit 1
+fi
 
 echo "$(tput smul)Will remove$(tput sgr0):"
 echo
-echo "$(pacman -Qdtq)"
+echo "$QDTQ"
 echo
 
 echo -n "$(tput smul)Running$(tput sgr0): "
-echo 'sudo pacman -Rcns $(pacman -Qdtq)'
+echo 'yay -Rcns $(yay -Qdtq)'
 echo
 
-sudo pacman -Rcns $(pacman -Qdtq)
+yay -Rcns "$QDTQ"
