@@ -7,6 +7,7 @@ import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+import XMonad.Util.NamedScratchpad
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.DynamicLog
@@ -21,7 +22,7 @@ import qualified Data.Map        as M
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+    [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "dmenu_run -fn xft:JetBrainMono:pixelsize=14:antialias=true:hinting=true")
@@ -54,7 +55,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_m     ), windows W.focusMaster  )
 
     -- Swap the focused window and the master window
-    , ((modm,               xK_Return), windows W.swapMaster)
+    , ((modm .|. shiftMask, xK_Return), windows W.swapMaster)
 
     -- Swap the focused window with the next window
     , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
@@ -115,6 +116,17 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --
     [ ((0, 0x1008FF13), spawn "amixer -q sset Master 5%+")
     , ((0, 0x1008FF11), spawn "amixer -q sset Master 5%-")
+    ]
+
+    ++
+
+    --
+    -- Scratchpad
+    --
+    [ ((modm .|. controlMask, xK_Return), namedScratchpadAction scratchpads "kitty")
+    , ((modm .|. controlMask, xK_h     ), namedScratchpadAction scratchpads "kitty_l")
+    , ((modm .|. controlMask, xK_l     ), namedScratchpadAction scratchpads "kitty_r")
+    , ((modm .|. controlMask, xK_v     ), namedScratchpadAction scratchpads "pavucontrol")
     ]
 
 
@@ -184,7 +196,19 @@ myManageHook = composeAll
     , title =? "Picture in picture" --> doFloat     -- Naver Whale PiP
     , title =? "Chat"               --> doFloat     -- Zoom Chat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore
+    , namedScratchpadManageHook scratchpads      ]
+
+scratchpads = 
+    [ NS "kitty" "WELCOME=no kitty --class=scratchpad" (className =? "scratchpad")
+          (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    , NS "kitty_r" "WELCOME=no kitty --class=scratchpad_r" (className =? "scratchpad_r")
+          (customFloating $ W.RationalRect (2/3) (0) (1/3) (1/2))
+    , NS "kitty_l" "WELCOME=no kitty --class=scratchpad_l" (className =? "scratchpad_l")
+          (customFloating $ W.RationalRect (0) (0) (1/3) (1/2))
+    , NS "pavucontrol" "pavucontrol" (className =? "Pavucontrol")
+          (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
+    ] 
 
 ------------------------------------------------------------------------
 -- Event handling
