@@ -102,16 +102,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     ++
 
     --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    --
-    -- [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-    --     | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-    --     , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-
-    -- ++
-
-    --
     -- Audio control with HHKB
     --
     [ ((0, 0x1008FF13), spawn "amixer -q sset Master 5%+")
@@ -127,6 +117,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. controlMask, xK_h     ), namedScratchpadAction scratchpads "kitty_l")
     , ((modm .|. controlMask, xK_l     ), namedScratchpadAction scratchpads "kitty_r")
     , ((modm .|. controlMask, xK_v     ), namedScratchpadAction scratchpads "pavucontrol")
+    ]
+
+    ++
+
+    --
+    -- Applications
+    --
+    [ ((modm .|. shiftMask,  xK_w      ), spawn "naver-whale-stable")
     ]
 
 
