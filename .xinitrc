@@ -59,5 +59,6 @@ export AWT_TOOLKIT=MToolkit
 
 # Caffeine for X
 xset -dpms
+xset s off
 
 exec xmonad
