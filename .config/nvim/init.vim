@@ -90,6 +90,7 @@ vnoremap <Leader>p "_dP
 
 " <C-c> and <ESC> are not the same
 inoremap <C-c> <ESC>
+vnoremap <C-c> <ESC>
 
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
@@ -245,7 +246,6 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'ojroques/nvim-lspfuzzy'
-Plug 'RRethy/vim-illuminate'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -519,7 +519,6 @@ lua << END
 local lspconfig = require'lspconfig'
 local on_attach = function(client)
   require'completion'.on_attach(client)
-  require'illuminate'.on_attach(client)
 end
 
 if vim.fn.executable('ccls') == 1 then
@@ -609,7 +608,7 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
   indent = {
-    enable = true,
+    enable = false,
   },
 }
 END
