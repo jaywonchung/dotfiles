@@ -1,4 +1,5 @@
 #!/bin/zsh
+# NOTE: path linked to ~/.xmonad/xmonad.hs
 
 export DISPLAY=":0"
 

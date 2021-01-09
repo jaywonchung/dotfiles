@@ -78,6 +78,9 @@ source "$HOME/.dotmodules/zshrc/python-env.sh"
 # I like keeping things here
 export PATH="$HOME/.local/bin:$PATH"
 
+# Some shell scripts
+export PATH="$HOME/.dotmodules/bin:$PATH"
+
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
