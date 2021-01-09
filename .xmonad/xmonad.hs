@@ -237,11 +237,10 @@ myEventHook = fullscreenEventHook
 --
 -- By default, do nothing.
 myStartupHook = do
-        spawnOnce "xsetroot -cursor_name left_ptr"
-        spawnOnce "nitrogen-refresh"
+        spawnOnce "~/.dotmodules/bin/nitrogen-refresh"
         spawnOnce "stalonetray &"
-        spawnOnce "dex -a -s ~/.config/autostart"
         spawnOnce "picom &"
+        spawnOnce "dex -a -s ~/.config/autostart"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
