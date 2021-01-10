@@ -199,9 +199,6 @@ autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
 " =============================================================================
 " Verilog
 autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
-" autocmd FileType man nnoremap q :q<CR>
-autocmd BufEnter man://* nnoremap qq :q<CR>
-echo 'autocmd registered'
 
 
 " =============================================================================
