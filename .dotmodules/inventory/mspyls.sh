@@ -10,6 +10,6 @@ tar xvzf dotnet-sdk-3.1.402-linux-x64.tar.gz -C ~/.local/dotnet
 ln -s ~/.local/dotnet/dotnet ~/.local/bin/dotnet
 
 # Build mypyls
-git clone --depth=1 https://github.com/microsoft/python-language-server.git ~/.local/python-language-server
-cd ~/.local/python-language-server/src/LanguageServer/Impl
+git clone --depth=1 https://github.com/microsoft/python-language-server.git ~/.local/src/python-language-server
+cd ~/.local/src/python-language-server/src/LanguageServer/Impl
 dotnet build
