@@ -1,57 +1,48 @@
 " =============================================================================
 " General and Miscellaneous
 " =============================================================================
-" Language settings
-set langmenu=en_US
-let $LANG='en_US'
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-
-" Editor settings
+" Options
 " whitespace
-set autoindent         " Insert indent on newline
-set cindent            " Autoindent for C
-set smartindent        " Aware of {, }, etc
-set scrolloff=2        " Lines between cursor and screen
-set softtabstop=2      " Width of <tab>
-set tabstop=2          " Width of interpretation of <tab>
-set shiftwidth=2       " Width of >> and <<
-set expandtab          " <Tab> to spaces, <C-v><Tab> for real tab
-set smarttab           " <Tab> at line start obeys shiftwidth
-set backspace=eol,start,indent " Backspace same as other programs
-" search
-set history=256        " History for commands, searches, etc
-set wildmode=longest,list " Command-mode autocompletion
-set ignorecase         " Case-insensitive search
-set smartcase          " Except when uppercase characters are typed
-set incsearch
+set autoindent                  " Insert indent on newline
+set cindent                     " Autoindent for C
+set smartindent                 " Aware of {, }, etc
+set scrolloff=2                 " Lines between cursor and screen
+set softtabstop=2               " Width of <tab>
+set tabstop=2                   " Width of interpretation of <tab>
+set shiftwidth=2                " Width of >> and <<
+set expandtab                   " <Tab> to spaces, <C-v><Tab> for real tab
+set smarttab                    " <Tab> at line start obeys shiftwidth
+set backspace=eol,start,indent  " Backspace same as other programs
+" command mode
+set wildmenu                    " Command mode autocompletion list
+set wildmode=longest:full,full  " <Tab> spawns wildmenu, then <Tab> to cycle list
+set ignorecase                  " Case-insensitive search
+set smartcase                   " ... except when uppercase characters are typed
+set incsearch                   " Search as I type
 " file
-set autoread           " Auto load when current file is edited somewhere
+set autoread                    " Auto load when current file is edited somewhere
 " performance
-set ttyfast
-set lazyredraw
-" difftool
-set diffopt+=iwhite    " Ignore whitespace
+set lazyredraw                  " Screen not updated during macros, etc
+" vimdiff
+set diffopt+=iwhite             " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
-set diffopt+=indent-heuristic " Internal diff lib for indents
-" Misc settings
-set number relativenumber " Show relative line number
-set exrc               " Execute .vimrc in the directory vim is started
-set showmatch          " Highlight matching braces
-set guicursor=         " Use terminal-default cursor shape
-set mouse=a            " Mouses are useful for visual selection
-packadd! matchit       " Lets % work better
-let g:vimsyn_embed = 'l' " Embed lua syntax highlight in vimscript
+set diffopt+=indent-heuristic   " Internal diff lib for indents
+" appearance
+set showmatch                   " Highlight matching braces
+set guicursor=                  " Use terminal-default cursor shape
+set background=dark             " Dark background
+set number relativenumber       " Show relative line number
+" misc
+set mouse=a                     " Mouses are useful for visual selection
+set history=256                 " History for commands, searches, etc
 
+" Embed lua syntax highlighting in vimscript
+let g:vimsyn_embed = 'l'
 
 " Set cursor line
 set cursorline
-autocmd BufEnter * setlocal cursorline    " Enable when entering window
-autocmd BufLeave * setlocal nocursorline  " Disable when leaving window
-highlight CursorLine cterm=NONE ctermbg=239
-
-" Color fix in tmux
-set background=dark
+autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
 
 " Syntax highlighting
 if has("syntax")
@@ -73,19 +64,29 @@ endif
 " =============================================================================
 " General
 nnoremap H ^
+vnoremap H ^
 nnoremap L $
+vnoremap L $
 nnoremap ; :
 
-nnoremap <C-z> :sus<CR>
+" Suspend vim
+nnoremap <C-z> :suspend<CR>
+
+" Unhighlight all search highlights
 nnoremap <silent> <C-c> :noh<CR>
 
+" Leader mappings
 let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
+nnoremap <Leader>qw :wq<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
 nnoremap <Leader>p :echo expand('%')<CR>
+
+" Delete selected area and replace with yanked content
+vnoremap <Leader>p "_dP
 
 " <C-c> and <ESC> are not the same
 inoremap <C-c> <ESC>
@@ -93,7 +94,12 @@ inoremap <C-c> <ESC>
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
-inoremap [<CR> [<CR>]<ESC>O
+inoremap ({<CR> (<bar><bar><space>{<CR>})<ESC>O<ESC>k$hhi
+
+" Surrounding with brackets
+nnoremap (<CR> i(<CR><ESC>o)<ESC>k^
+nnoremap {<CR> i{<CR><ESC>o}<ESC>k^
+nnoremap [<CR> i[<CR><ESC>o]<ESC>k^
 
 " Diff mappings
 nnoremap <Leader>dg :diffget<CR>
@@ -154,7 +160,7 @@ endfunction
 
 nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
 
-" Neovim terminal emulator
+" Neovim terminal
 tnoremap <Esc> <C-\><C-n>
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
@@ -165,13 +171,6 @@ tnoremap <C-l> <C-\><C-n><C-w>l
 " =============================================================================
 " Autocommands
 " =============================================================================
-" Highlight search results only in command mode
-augroup vimrc-incsearch-highlight
-  autocmd!
-  autocmd CmdlineEnter /,\? :set hlsearch
-  autocmd CmdlineLeave /,\? :set nohlsearch
-augroup END
-
 " Pick up where I left off
 autocmd BufReadPost *
   \   if line("'\"") > 0 && line("'\"") <= line("$")
@@ -204,6 +203,13 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " =============================================================================
 " Plugins
 " =============================================================================
+" Install vim-plugged if not already
+if filereadable(glob('~/.local/share/nvim/site/autoload/plug.vim')) == 0
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin(stdpath('data') . '/plugged')
 " editing
 Plug 'editorconfig/editorconfig-vim'
@@ -212,29 +218,34 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
+Plug 'ojroques/vim-oscyank'
+Plug 'voldikss/vim-floaterm'
+Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
 Plug 'vim-airline/vim-airline'
-Plug 'gruvbox-community/gruvbox'
+" Plug 'sainnhe/sonokai'
+Plug 'sainnhe/gruvbox-material'
+" Plug 'gruvbox-community/gruvbox'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 " navigation
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
-Plug 'junegunn/fzf', {'do': {-> fzf#install()}}
+Plug 'junegunn/fzf', {'do': { -> fzf#install()}}
 Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
-" semantic language support
+" language server protocol
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-lua/diagnostic-nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'ojroques/nvim-lspfuzzy'
+Plug 'RRethy/vim-illuminate'
 " syntactic language support
-Plug 'sheerun/vim-polyglot'
-Plug 'vim-syntastic/syntastic'
 Plug 'rust-lang/rust.vim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
 
@@ -254,28 +265,27 @@ let g:goyo_height = '90%'
 
 
 " =============================================================================
-" Syntastic
+" oscyank
 " =============================================================================
-" General configurations
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+vnoremap <silent> <Leader>c :OSCYank<CR>
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = {'mode': 'passive'}
 
-" Key bindings
-nnoremap <Leader>sc :SyntasticCheck<CR>
-nnoremap <Leader>sr :SyntasticReset<CR>
-nnoremap <Leader>si :SyntasticInfo<CR>
+" =============================================================================
+" vim-floaterm
+" =============================================================================
+" Size
+let g:floaterm_height = 0.7
+let g:floaterm_width = 0.7
 
-" C
-"let g:syntastic_c_compiler_options = ' -std=c11 -Wall -Wextra -Wpedantic -wbuiltin-declaration-mismatch'
-let g:syntastic_c_checkers = ['gcc', 'make']
-let g:syntastic_c_compiler_options = "-std=c11 -Wall -Wextra -Wpedantic"
+" Close window when process exits
+let g:floaterm_autoclose = 2
+
+" Open and hide. <C-d> to exit.
+nnoremap <Leader>x :FloatermToggle<CR>
+tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
+
+" Wrappers
+command! Vifm FloatermNew vifm
 
 
 " =============================================================================
@@ -300,32 +310,71 @@ nnoremap <Leader>gd :Gdiffsplit!<CR>
 
 
 " =============================================================================
+" colorscheme
+" =============================================================================
+" Copy from another highlight group
+function! CopyFrom(to, from, term, reset)
+  let terms = execute('highlight ' . a:from)
+  let target = matchstr(terms, a:term . '=\S*')
+  if a:reset
+    let command = 'highlight! '
+  else
+    let command = 'highlight '
+  endif
+  execute('silent ' . command . a:to . ' ' . target)
+endfunction
+
+" 24-bit RGB colors
+set termguicolors
+
+" Colorscheme-specific configs
+let g:sonokai_style = 'default'
+let g:gruvbox_material_enable_italic = 0
+let g:gruvbox_material_disable_italic_comment = 1
+let g:gruvbox_material_palette = 'original'
+let g:gruvbox_material_transparent_background = 1
+let g:gruvbox_material_statusline_style = 'original'
+
+colorscheme gruvbox-material
+
+let g:airline_theme = 'gruvbox_material'
+
+" Transparent tabline
+highlight! TabLineFill NONE
+
+" Search matches (from gruvbox-community)
+highlight! Search    cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+highlight! IncSearch cterm=reverse ctermfg=208 ctermbg=235 gui=reverse guifg=#fe8019 guibg=#282828
+
+" Vimdiff (from gruvbox-community)
+highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
+highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+
+" Current line number (fg from Yellow, bg from CursorLine)
+call CopyFrom('CursorLineNr', 'Yellow',     'ctermfg', 1)
+call CopyFrom('CursorLineNr', 'CursorLine', 'ctermbg', 0)
+call CopyFrom('CursorLineNr', 'Yellow',     'guifg',   0)
+call CopyFrom('CursorLineNr', 'CursorLine', 'guibg',   0)
+
+" Transparency fix for terminal emulators (Not needed for gruvbox_material)
+" highlight! Normal ctermbg=NONE guibg=NONE 
+" highlight! SignColumn ctermbg=NONE guibg=NONE
+" highlight! EndOfBuffer ctermbg=NONE guibg=NONE
+" highlight! NonText ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+
+
+" =============================================================================
 " vim-gitgutter
 " =============================================================================
 " Transparent git gutter backgrounds
 let g:gitgutter_set_sign_backgrounds = 1
 
 " The option above clears gutter icon foreground. Re-add.
-autocmd VimEnter * highlight GitGutterAdd ctermfg=142
-autocmd VimEnter * highlight GitGutterChange ctermfg=108
-autocmd VimEnter * highlight GitGutterDelete ctermfg=167
-
-
-" =============================================================================
-" gruvbox
-" =============================================================================
-let g:gruvbox_invert_selection = 0
-
-colorscheme gruvbox
-
-" Transparency fix for terminal emulators
-" This needed to be done after setting the colorscheme.
-highlight! Normal ctermbg=NONE guibg=NONE 
-highlight! SignColumn ctermbg=NONE guibg=NONE
-highlight! NonText ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
-
-" No error highlighting
-highlight! Error NONE
+autocmd VimEnter * highlight link GitGutterAdd Green
+autocmd VimEnter * highlight link GitGutterChange Yellow
+autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
+autocmd VimEnter * highlight link GitGutterDelete Red
 
 
 " =============================================================================
@@ -343,32 +392,36 @@ let g:tagbar_autoclose = 0
 " =============================================================================
 " NERDTree
 " =============================================================================
+nnoremap <silent> <C-f> :NERDTreeFind<CR>
+
 " NERDTreeToggle but does not move focus
-function! s:NERDTreeToggleNoFocus()
-  if exists("g:NERDTree_open_no_focus") && g:NERDTree_open_no_focus == 1
+function! NERDTreeToggleNoFocus()
+  if (exists("g:NERDTree") && g:NERDTree.IsOpen() == 1)
     NERDTreeClose
-    let g:NERDTree_open_no_focus = 0
   else
     NERDTreeFind
     wincmd p
-    let g:NERDTree_open_no_focus = 1
   endif
 endfunction
-nnoremap <silent> <C-f> :NERDTreeFind<CR>
-nnoremap <silent> <Leader>n :call <SID>NERDTreeToggleNoFocus()<CR>
+nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
 
 " Open NERDTree on startup
-function! s:NERDTreeStartup()
+function! NERDTreeStartup()
   if (&diff == 0 && &columns > 125)
-    call <SID>NERDTreeToggleNoFocus()
+    call NERDTreeToggleNoFocus()
   endif
 endfunction
 if argc() > 0 
-  autocmd VimEnter * silent call <SID>NERDTreeStartup()
+  autocmd VimEnter * silent call NERDTreeStartup()
 endif
 
 " Quit NERDTree when its the only window open
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+function! NERDTreeAutoQuit()
+  if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+    q
+  endif
+endfunction
+autocmd BufEnter * silent call NERDTreeAutoQuit()
 
 " Key mappings
 let NERDTreeMapOpenInTab='<C-g>'
@@ -397,10 +450,10 @@ else
 endif
 
 " Key bindings to be pressed on fzf list
-let g:fzf_action = {
-  \ 'ctrl-g': 'tab split',
-  \ 'ctrl-s': 'split',
-  \ 'ctrl-v': 'vsplit' }
+let g:fzf_action =
+  \ { 'ctrl-g': 'tab split',
+  \   'ctrl-s': 'split',
+  \   'ctrl-v': 'vsplit' }
 
 " Match fzf colors with current color scheme
 let g:fzf_colors =
@@ -418,9 +471,10 @@ let g:fzf_colors =
     \ 'spinner': ['fg', 'Label'],
     \ 'header':  ['fg', 'Comment'] }
 
-" let g:fzf_layout = { 'down': '~20%' }
-let g:fzf_layout = { 'up':'~90%', 'window':
-  \ { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' } }
+" Show in floating window
+let g:fzf_layout = 
+  \ { 'up':     '~90%',
+    \ 'window': { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' }}
 
 
 " =============================================================================
@@ -439,45 +493,22 @@ map T <Plug>Sneak_T
 " LSP
 " =============================================================================
 " key bindings
-nnoremap <F2> <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <F2>        :lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> K  :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gD :lua vim.lsp.buf.declaration()<CR>
 nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> ge :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
-
-sign define LspDiagnosticsErrorSign text=✖
-sign define LspDiagnosticsWarningSign text=⚠
-sign define LspDiagnosticsInformationSign text=ℹ
-sign define LspDiagnosticsHintSign text=➤
-
-highlight! LspDiagnosticsError cterm=italic gui=italic
-highlight! LspDiagnosticsErrorFloating cterm=italic gui=italic
-highlight! LspDiagnosticsWarning cterm=italic gui=italic
-highlight! LspDiagnosticsWarningFloating cterm=italic gui=italic
-highlight! LspDiagnosticsInformation cterm=italic gui=italic
-highlight! LspDiagnosticsInformationFloating cterm=italic gui=italic
-highlight! LspDiagnosticsHint cterm=italic gui=italic
-highlight! LspDiagnosticsHintFloating cterm=italic gui=italic
+nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
 
 lua << END
--- Whetehr to set up a specific language server
---   vim.fn.execuatble('ccls') doesn't seem to work.
-local setup_ccls = false;
-local setup_pyls = true;
-local setup_pyls_ms = true;
-local setup_rls = false;
+local lspconfig = require'lspconfig'
 
-local lsp = require'nvim_lsp'
-local on_attach = function(client)
-  require'diagnostic'.on_attach()
-  require'completion'.on_attach()
-end
-
-if setup_ccls then
-  lsp.ccls.setup{
-    on_attach = on_attach,
+if vim.fn.executable('ccls') == 1 then
+  lspconfig.ccls.setup{
+    on_attach = require'completion'.on_attach,
     init_options = {
       client = {snippetSupport = false},
       highlight = {lsRanges = true}
@@ -487,9 +518,9 @@ if setup_ccls then
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
-if setup_pyls then
-  lsp.pyls.setup{
-    on_attach = on_attach,
+if vim.fn.executable('pyls') == 1 then
+  lspconfig.pyls.setup{
+    on_attach = require'completion'.on_attach,
     settings = {
       pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
     }
@@ -498,9 +529,9 @@ if setup_pyls then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if setup_pyls_ms then
-  lsp.pyls_ms.setup{
-    on_attach = on_attach,
+if vim.fn.executable('dotnet') == 1 then
+  lspconfig.pyls_ms.setup{
+    on_attach = require'completion'.on_attach,
     cmd = {
       "dotnet",
       "exec",
@@ -511,19 +542,29 @@ if setup_pyls_ms then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if setup_rls then
-  lsp.rls.setup{
-    on_attach = on_attach,
-    settings = {rust = {clippy_preference = on}}
+if vim.fn.executable('rust-analyzer') == 1 then
+  lspconfig.rust_analyzer.setup{
+    on_attach = require'completion'.on_attach,
   }
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
 end
-END
 
-" completion-nvim
-" just enable for all buffers
-" autocmd BufEnter * lua require'completion'.on_attach()
+-- Configs for diagnostics
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    -- Virtual text appearance
+    virtual_text = {
+      spacing = 4,
+    },
+    -- Do not update in insert mode
+    update_in_insert = false,
+  }
+)
+
+-- Configs for lspfuzzy
+require'lspfuzzy'.setup{}
+END
 
 " Use tab to bring up and traverse completion list
 imap <Tab> <Plug>(completion_smart_tab)
@@ -532,9 +573,18 @@ imap <S-Tab> <Plug>(completion_smart_s_tab)
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
-" diagnostic-vim
-set updatetime=100
-autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
+" lsp_extensions.nvim
+autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
+
+" illuminate
+autocmd VimEnter * hi link illuminatedWord Underlined
+autocmd VimEnter * hi link illuminatedCurWord Underlined
+
+
+" =============================================================================
+" rust.vim
+" =============================================================================
+let g:rust_recommended_style = 0
 
 
 " =============================================================================
@@ -542,6 +592,18 @@ autocmd CursorHold * lua vim.lsp.util.show_line_diagnostics()
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  highlight = { "c", "cpp", "python", "rust" },
+  ensure_installed = { "c", "cpp", "python", "rust", "lua" },
+  highlight = {
+    enable = true,
+  },
+  indent = {
+    enable = true,
+  },
 }
 END
+
+
+" =============================================================================
+" Must-be-done-at-the-end config
+" =============================================================================
+set secure exrc                 " Execute .vimrc in the directory vim is started
