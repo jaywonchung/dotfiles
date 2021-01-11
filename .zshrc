@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------
-# Zsh and oh-my-zsh configs
+# Powerlevel10k instant prompt
 #-------------------------------------------------------------------
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -8,6 +8,20 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#-------------------------------------------------------------------
+# Welcome message
+#-------------------------------------------------------------------
+# NOTE: linked to nvim floaterm config g:floaterm_shell
+# NOTE: linked to xmonad named scratchpad command
+if [ ! "$WELCOME" = "no" ]; then
+  fortune
+  echo
+  cal -3
+fi
+
+#-------------------------------------------------------------------
+# Zsh and oh-my-zsh configs
+#-------------------------------------------------------------------
 # Path to oh-my-zsh installation
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -54,7 +68,7 @@ POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------
-# Rython environments
+# Language-specific
 #-------------------------------------------------------------------
 source "$HOME/.dotmodules/zshrc/python-env.sh"
 
@@ -64,10 +78,13 @@ source "$HOME/.dotmodules/zshrc/python-env.sh"
 # I like keeping things here
 export PATH="$HOME/.local/bin:$PATH"
 
+# Some shell scripts
+export PATH="$HOME/.dotmodules/bin:$PATH"
+
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# autojmp
+# autojump
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
 autoload -U compinit && compinit -u
@@ -92,18 +109,21 @@ alias dp='dotfiles push'
 alias dl='dotfiles pull'
 alias ddf='dotfiles difftool'
 
+# nvim
+alias nconf="nvim $HOME/.config/nvim/init.vim"
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
 # /usr/local/lib should be in LD_LIBRARY_PATH
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 
-# vim as manpage viewer
-export MANPAGER="/bin/sh -c \"unset PAGER;col -b -x | \
-    vim --noplugin -R -c 'set ft=man nomod nolist' -c 'map q :q<CR>' \
-    -c 'map <SPACE> <C-D>' -c 'map b <C-U>' \
-    -c 'set nonu' -c 'set nornu' \
-    -c 'nmap K :Man <C-R>=expand(\\\"<cword>\\\")<CR><CR>' -\""
+# nvim as editor
+export EDITOR="nvim"
+
+# nvim as manpage viewer
+export MANPAGER="nvim +Man!"
+export MANWIDTH=999
 
 #-------------------------------------------------------------------
 # Machine-specific
