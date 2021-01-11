@@ -181,12 +181,6 @@ autocmd BufReadPost *
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
 
-" Tmux window renaming
-if exists('$TMUX')
-  autocmd BufEnter,FocusGained * call system("tmux rename-window " . expand("%:t"))
-  autocmd VimLeave * call system("tmux rename-window zsh")
-endif
-
 " Resize splits when vim size changes
 autocmd VimResized * execute "normal! \<c-w>="
 
@@ -547,7 +541,8 @@ if vim.fn.executable('dotnet') == 1 then
     cmd = {
       "dotnet",
       "exec",
-      vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
+      -- NOTE: linked with path and mspyls.sh
+      vim.fn.expand("~") .. "/.local/src/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
     }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
