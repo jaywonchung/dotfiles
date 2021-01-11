@@ -90,6 +90,7 @@ vnoremap <Leader>p "_dP
 
 " <C-c> and <ESC> are not the same
 inoremap <C-c> <ESC>
+vnoremap <C-c> <ESC>
 
 " Closing brackets
 inoremap (<CR> (<CR>)<ESC>O
@@ -179,12 +180,6 @@ autocmd BufReadPost *
 
 " Fix autoread
 autocmd FocusGained,BufEnter * :checktime
-
-" Tmux window renaming
-if exists('$TMUX')
-  autocmd BufEnter,FocusGained * call system("tmux rename-window " . expand("%:t"))
-  autocmd VimLeave * call system("tmux rename-window zsh")
-endif
 
 " Resize splits when vim size changes
 autocmd VimResized * execute "normal! \<c-w>="
@@ -282,6 +277,18 @@ let g:floaterm_autoclose = 2
 " Open and hide. <C-d> to exit.
 nnoremap <Leader>x :FloatermToggle<CR>
 tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
+
+" Wrappers
+command! Vifm FloatermNew vifm
+
+" Disable welcome message
+let g:floaterm_shell = 'WELCOME=no /usr/bin/zsh'
+
+
+" =============================================================================
+" markdown-preview
+" =============================================================================
+let g:mkdp_auto_close = 0
 
 
 " =============================================================================
@@ -501,10 +508,13 @@ nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
 
 lua << END
 local lspconfig = require'lspconfig'
+local on_attach = function(client)
+  require'completion'.on_attach(client)
+end
 
 if vim.fn.executable('ccls') == 1 then
   lspconfig.ccls.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
     init_options = {
       client = {snippetSupport = false},
       highlight = {lsRanges = true}
@@ -516,7 +526,7 @@ end
 
 if vim.fn.executable('pyls') == 1 then
   lspconfig.pyls.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
     settings = {
       pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
     }
@@ -527,11 +537,12 @@ end
 
 if vim.fn.executable('dotnet') == 1 then
   lspconfig.pyls_ms.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
     cmd = {
       "dotnet",
       "exec",
-      vim.fn.expand("~") .. "/.local/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
+      -- NOTE: linked with path and mspyls.sh
+      vim.fn.expand("~") .. "/.local/src/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
     }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
@@ -540,7 +551,7 @@ end
 
 if vim.fn.executable('rust-analyzer') == 1 then
   lspconfig.rust_analyzer.setup{
-    on_attach = require'completion'.on_attach,
+    on_attach = on_attach,
   }
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
@@ -589,7 +600,7 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
   indent = {
-    enable = true,
+    enable = false,
   },
 }
 END
