@@ -20,7 +20,9 @@ make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX="$INSTALL_DIR"
 make install
 
 # Remove
-bash remove_nvim.sh || true
+rm -f ~/.local/bin/nvim     || true
+rm -rf ~/.local/lib/nvim    || true
+rm -rf ~/.local/share/nvim  || true
 
 # Install
 mkdir -p "$HOME/.local"
