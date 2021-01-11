@@ -9,7 +9,7 @@
 [diff]
   tool = vimdiff
 [merge]
-	tool = fugitive
+  tool = fugitive
 [difftool]
   prompt = false
   trustExitCode = true

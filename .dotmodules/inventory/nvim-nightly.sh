@@ -1,25 +1,22 @@
-#!/bin/zsh
+#!/bin/bash
 
-pprint() {
-  printf "%*s\n" $(( (${#1} + $(tput cols) * 2 / 3) / 2 )) "$1"
-}
+set -ev
 
-installing() {
-  pprint "#################################################"
-  pprint "Installing $1"
-  pprint "#################################################"
-}
-
-installing "neovim"
+# Get nightly release
 cd /tmp
 curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
 tar xzvf nvim-macos.tar.gz
 mkdir -p ~/.local
+
+# Remove
+rm -f ~/.local/bin/nvim    || true
+rm -rf ~/.local/lib/nvim   || true
+rm -rf ~/.local/share/nvim || true
+
+# Install nvim
 rsync -a nvim-macos/* ~/.local/
 
-installing "vim-plug"
+# Install plugins
 sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-installing "vim plugins"
 nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!
