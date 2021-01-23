@@ -108,6 +108,10 @@ export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
 
+# nvim-remote
+export NVIM_LISTEN_ADDRESS="$HOME/.local/nvimsocket"
+alias nvim="nvim --listen $NVIM_LISTEN_ADDRESS"
+
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
