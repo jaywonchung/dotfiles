@@ -125,6 +125,9 @@ export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
 
+# For xdg-open
+export BROWSER="naver-whale-stable"
+
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
