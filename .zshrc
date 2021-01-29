@@ -112,6 +112,9 @@ alias ddf='dotfiles difftool'
 # nvim
 alias nconf="nvim $HOME/.config/nvim/init.vim"
 
+# add flags
+alias cp='cp -i'
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
