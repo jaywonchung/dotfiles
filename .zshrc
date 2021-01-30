@@ -55,6 +55,14 @@ setopt nonomatch
 # Zsh autosuggestion color
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
+# Do not highlight comments
+FAST_HIGHLIGHT_STYLES[comment]='none'
+
+# Keybindings
+bindkey '^B'  backward-word
+bindkey '^F'  forward-word
+bindkey '^[#' pound-insert  # alt-#
+
 #-------------------------------------------------------------------
 # Powerlevel10k
 #-------------------------------------------------------------------
