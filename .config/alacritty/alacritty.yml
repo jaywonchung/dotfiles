@@ -465,6 +465,7 @@ key_bindings:
   - { key: Home,            mods: Shift,          action: ScrollToTop,          mode: ~Alt }
   - { key: End,             mods: Shift,          action: ScrollToBottom,       mode: ~Alt }
   - { key: T,               mods: Control,        chars: "tmux a || tmux\x0d",  mode: ~Alt }
+  - { key: T,               mods: Control|Shift,  chars: "tmux a || tmux\x0d",  mode: ~Alt }
 
   # inside tmux
   - { key: T,               mods: Control,        chars: "\x02c",               mode: Alt  }
