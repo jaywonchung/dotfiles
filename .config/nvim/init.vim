@@ -93,9 +93,7 @@ inoremap <C-c> <ESC>
 vnoremap <C-c> <ESC>
 
 " Closing brackets
-inoremap (<CR> (<CR>)<ESC>O
 inoremap {<CR> {<CR>}<ESC>O
-inoremap ({<CR> (<bar><bar><space>{<CR>})<ESC>O<ESC>k$hhi
 
 " Surrounding with brackets
 nnoremap (<CR> i(<CR><ESC>o)<ESC>k^
