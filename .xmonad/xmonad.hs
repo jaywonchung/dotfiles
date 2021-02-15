@@ -1,9 +1,8 @@
---
--- xmonad config file
---
+------------------------------------------------------------------------
+-- Jae-Won's Xmonad config file
+------------------------------------------------------------------------
 
 import XMonad
-import Data.Monoid
 import System.Exit
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
@@ -17,7 +16,7 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 ------------------------------------------------------------------------
--- Key bindings.
+-- Key bindings
 --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
@@ -27,17 +26,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch dmenu
     , ((modm,               xK_p     ), spawn "dmenu_run")
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
-
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
 
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
-
-    --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
@@ -79,9 +72,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    --
     , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
     -- Quit xmonad
@@ -101,35 +91,28 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
 
-    --
+    -- Miscellaneous custom bindings
     -- Audio control with HHKB
-    --
     [ ((0, 0x1008FF13), spawn "amixer -q sset Master 5%+")
     , ((0, 0x1008FF11), spawn "amixer -q sset Master 5%-")
-    ]
 
-    ++
-
-    --
-    -- Scratchpad
-    --
-    [ ((modm .|. controlMask, xK_Return), namedScratchpadAction scratchpads "kitty")
+    -- Scratchpads
+    , ((modm .|. controlMask, xK_Return), namedScratchpadAction scratchpads "kitty")
     , ((modm .|. controlMask, xK_h     ), namedScratchpadAction scratchpads "kitty_l")
     , ((modm .|. controlMask, xK_l     ), namedScratchpadAction scratchpads "kitty_r")
     , ((modm .|. controlMask, xK_v     ), namedScratchpadAction scratchpads "pavucontrol")
-    ]
 
-    ++
+    -- Taking screenshots
+    , ((modm .|. controlMask, xK_3), spawnOnce "import -window root Screenshots/`date +'%Y-%m-%dT%H:%M:%S%Z'`.png")
+    , ((modm .|. controlMask, xK_4), spawnOnce "import Screenshots/`date +'%Y-%m-%dT%H:%M:%S%Z'`.png")
 
-    --
-    -- Applications
-    --
-    [ ((modm .|. shiftMask,  xK_w      ), spawn "naver-whale-stable")
+    -- Application shortcuts
+    , ((modm .|. shiftMask,  xK_w      ), spawn "naver-whale-stable")
     ]
 
 
 ------------------------------------------------------------------------
--- Mouse bindings: default actions bound to mouse events
+-- Mouse bindings
 --
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
@@ -147,56 +130,18 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-------------------------------------------------------------------------
--- Layouts:
-
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
+-----------------------------------------------------------------------
+-- Clickable workspaces
 --
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
-myLayoutHook = smartBorders $ avoidStruts (tiled ||| Full)
+myWorkspaces = clickable $ ["1","2","3","4","5","6","7","8","9"]
   where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
+    clickable l = [ "<action=xdotool key super+" ++ show (n) ++ ">" ++ ws ++ "</action>" |
+                        (i,ws) <- zip [1..9] l,
+                       let n = i ]
 
-     -- The default number of windows in the master pane
-     nmaster = 1
-
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
-
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
-
-------------------------------------------------------------------------
--- Window rules:
-
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
+-----------------------------------------------------------------------
+-- Scratchpad definitions
 --
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
-myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , className =? "Kazam"          --> doFloat
-    , title =? "Picture in picture" --> doFloat     -- Naver Whale PiP
-    , title =? "Chat"               --> doFloat     -- Zoom Chat
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore
-    , namedScratchpadManageHook scratchpads      ]
-
 scratchpads = 
     [ NS "kitty" "WELCOME=no kitty --class=scratchpad" (className =? "scratchpad")
           (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
@@ -208,50 +153,8 @@ scratchpads =
           (customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3))
     ] 
 
-------------------------------------------------------------------------
--- Event handling
-
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
--- Fullscreen mode fix for Chromium (especially for YouTube)
-myEventHook = fullscreenEventHook
-
-------------------------------------------------------------------------
--- Status bars and logging
-
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
--- myLogHook = return ()
-
-------------------------------------------------------------------------
--- Startup hook
-
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
--- By default, do nothing.
-myStartupHook = do
-        spawnOnce "~/.dotmodules/bin/nitrogen-refresh"
-        spawnOnce "stalonetray &"
-        spawnOnce "picom &"
-        spawnOnce "dex -a -s ~/.config/autostart"
-
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
--- Run xmonad with the settings you specify. No need to modify this.
+-----------------------------------------------------------------------
+-- Main configuration
 --
 main = do
   xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobarrc"
@@ -276,14 +179,17 @@ main = do
       --   e.g. Left alt (mod1Mask), right alt (mod3Mask), super (mod4Mask)
       , modMask            = mod4Mask
 
-      -- Names of workspaces.
-      --   e.g. workspaces = ["web", "irc", "code"] ++ map show [4..9]
-      , workspaces         = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+      -- Workspaces.
+      , workspaces         = myWorkspaces
 
+      -- Key and mouse bindings.
       , keys               = myKeys
       , mouseBindings      = myMouseBindings
 
-      , logHook            = dynamicLogWithPP xmobarPP
+      -- Various hooks.
+        -- When an internal state changes or an X event occurs.
+        -- Send workspace info and window name to xmobar.
+      , logHook = dynamicLogWithPP xmobarPP
             { ppOutput = hPutStrLn xmproc
             , ppTitle = xmobarColor "grey" "" . shorten 50
             , ppCurrent = xmobarColor "#1793d1" ""
@@ -292,8 +198,31 @@ main = do
             , ppOrder = \(ws:l:t:_) -> [ws,l,t]
             , ppSep = " | "
             }
-      , manageHook         = myManageHook
-      , handleEventHook    = myEventHook
-      , layoutHook         = myLayoutHook
-      , startupHook        = myStartupHook
+
+        -- Custom handler functions for X events.
+        -- Fullscreen mode fix for Chromium (especially for YouTube).
+      , handleEventHook = fullscreenEventHook
+
+        -- When a new window is created.
+        -- The xprop tool can be helpful.
+      , manageHook = composeAll
+            [ className =? "MPlayer"        --> doFloat
+            , className =? "Gimp"           --> doFloat
+            , className =? "Kazam"          --> doFloat
+            , title =? "Picture in picture" --> doFloat     -- Naver Whale PiP
+            , title =? "Chat"               --> doFloat     -- Zoom Chat
+            , resource  =? "desktop_window" --> doIgnore
+            , resource  =? "kdesktop"       --> doIgnore
+            , namedScratchpadManageHook scratchpads
+            ]
+
+      , layoutHook = smartBorders $ avoidStruts (Tall (1) (1/2) (3/100) ||| Full)
+
+        -- When Xmonad starts or restarts with mod-q.
+        -- spawnOnce: only on fresh start, spawn: always.
+      , startupHook = do
+            spawn     "~/.dotmodules/bin/nitrogen-refresh"
+            spawnOnce "stalonetray &"
+            spawnOnce "picom &"
+            spawnOnce "dex -a -s ~/.config/autostart"
     }

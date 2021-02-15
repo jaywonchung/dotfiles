@@ -25,9 +25,9 @@ Config { font = "xft:D2Coding:pixelsize=15:antialias=true:hinting=true"
                     , Run DiskU [("/", "Disk: <used>/<size>")] [] 20
                     , Run Volume "default" "Master" ["-t","Vol: <volumevbar>"] 10
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 10
-                    , Run StdinReader
+                    , Run UnsafeStdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% } %date1% <fc=#1793d1>%date2%</fc> %date3% { %cpu% | %memory% | %disku% | %default:Master% | %uname% | %trayerpad% "
+       , template = " %UnsafeStdinReader% } %date1% <fc=#1793d1>%date2%</fc> %date3% { %cpu% | %memory% | %disku% | %default:Master% | %uname% | %trayerpad% "
        }
