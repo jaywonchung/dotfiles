@@ -32,6 +32,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
      -- Rotate through the available layout algorithms
     , ((modm,               xK_space ), sendMessage NextLayout)
 
+    --  Reset the layouts on the current workspace to default
+    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+
     -- Resize viewed windows to the correct size
     , ((modm,               xK_n     ), refresh)
 
@@ -216,7 +219,7 @@ main = do
             , namedScratchpadManageHook scratchpads
             ]
 
-      , layoutHook = smartBorders $ avoidStruts (Tall (1) (1/2) (3/100) ||| Full)
+      , layoutHook = smartBorders $ avoidStruts (Tall (1) (3/100) (1/2) ||| Full)
 
         -- When Xmonad starts or restarts with mod-q.
         -- spawnOnce: only on fresh start, spawn: always.
