@@ -601,8 +601,8 @@ set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
 " lsp_extensions.nvim
-autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs \
-  :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
+autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs
+  \ :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
 
 
 " =============================================================================
