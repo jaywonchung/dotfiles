@@ -461,17 +461,36 @@ let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':
 nnoremap <Leader>f  :Telescope find_files<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
 nnoremap <Leader>gr :Telescope live_grep<CR>
+nnoremap <Leader>gc :Telescope git_bcommits<CR>
 
 lua << END
+local action_state = require('telescope.actions.state')
+function preview_scroll_up_one(prompt_bufnr)
+  action_state.get_current_picker(prompt_bufnr).previewer:scroll_fn(-1)
+end
+function preview_scroll_down_one(prompt_bufnr)
+  action_state.get_current_picker(prompt_bufnr).previewer:scroll_fn(1)
+end
+
 local actions = require'telescope.actions'
 require'telescope'.setup{
   defaults = {
+    prompt_prefix = '',
     mappings = {
+      n = {
+        ["H"]     = false,
+        ["L"]     = false,
+        ["<C-c>"] = actions.close,
+        ["<C-y>"] = preview_scroll_up_one,
+        ["<C-e>"] = preview_scroll_down_one,
+      },
       i = {
-        ["<c-u>"] = false,
-        ["<c-s>"] = actions.select_horizontal,
-        ["<c-v>"] = actions.select_vertical,
-        ["<c-g>"] = actions.select_tab,
+        ["<C-c>"] = actions.close,
+        ["<C-g>"] = actions.select_tab,
+        ["<C-y>"] = preview_scroll_up_one,
+        ["<C-e>"] = preview_scroll_down_one,
+        ["<C-v>"] = actions.select_vertical,
+        ["<C-s>"] = actions.select_horizontal,
       }
     }
   }
