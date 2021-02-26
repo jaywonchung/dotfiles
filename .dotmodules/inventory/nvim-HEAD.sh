@@ -24,7 +24,7 @@ rm -rf ~/.local/lib/nvim   || true
 rm -rf ~/.local/share/nvim || true
 
 # Install
-rsync -a $INSTALL_DIR/* "$HOME/.local/"
+rsync -a "$INSTALL_DIR/*" "$HOME/.local/"
 
 # Cleanup
 rm -rf "$INSTALL_DIR"
