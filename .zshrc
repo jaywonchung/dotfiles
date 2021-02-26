@@ -9,15 +9,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 #-------------------------------------------------------------------
-# Welcome message
-#-------------------------------------------------------------------
-# NOTE: linked to nvim floaterm config g:floaterm_shell
-# NOTE: linked to xmonad named scratchpad command
-if [ ! "$WELCOME" = "no" ]; then
-  cal -n 3
-fi
-
-#-------------------------------------------------------------------
 # Zsh and oh-my-zsh configs
 #-------------------------------------------------------------------
 # Path to oh-my-zsh installation
