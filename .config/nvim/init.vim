@@ -13,6 +13,8 @@ set shiftwidth=2                " Width of >> and <<
 set expandtab                   " <Tab> to spaces, <C-v><Tab> for real tab
 set smarttab                    " <Tab> at line start obeys shiftwidth
 set backspace=eol,start,indent  " Backspace same as other programs
+set list!                       " Show invisible characters (usually whitespace)
+set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 " command mode
 set wildmenu                    " Command mode autocompletion list
 set wildmode=longest:full,full  " <Tab> spawns wildmenu, then <Tab> to cycle list
@@ -20,6 +22,7 @@ set ignorecase                  " Case-insensitive search
 set smartcase                   " ... except when uppercase characters are typed
 set incsearch                   " Search as I type
 " file
+set hidden                      " Allow switching to other buffers without saving
 set autoread                    " Auto load when current file is edited somewhere
 " performance
 set lazyredraw                  " Screen not updated during macros, etc
@@ -226,8 +229,9 @@ Plug 'airblade/vim-gitgutter'
 " navigation
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
-Plug 'junegunn/fzf', {'do': { -> fzf#install()}}
-Plug 'junegunn/fzf.vim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
 Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
@@ -235,12 +239,12 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'ojroques/nvim-lspfuzzy'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
+let g:EditorConfig_verbose = 1
 
 " =============================================================================
 " vim-argwrap
@@ -447,54 +451,38 @@ autocmd BufEnter * silent call NERDTreeAutoQuit()
 let NERDTreeMapOpenInTab='<C-g>'
 let NERDTreeMapOpenSplit='<C-s>'
 let NERDTreeMapOpenVSplit='<C-v>'
-
-" For systems without pretty arrows
-" let g:NERDTreeDirArrowExpandable = '>'
-" let g:NERDTreeDirArrowCollapsible = 'v'
+let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':1,'stay':0}}
 
 
 " =============================================================================
-" fzf
+" Telescope.nvim
 " =============================================================================
-" Open fzf window
-nnoremap <leader>f :Files<CR>
-if executable('ag')
-  nnoremap <Leader>ag :Ag<CR>
-endif
+" Mappings. live_grep uses rg by default.
+nnoremap <Leader>f  :Telescope find_files<CR>
+nnoremap <Leader>b  :Telescope buffers<CR>
+nnoremap <Leader>gr :Telescope live_grep<CR>
 
-" fzf command
-if executable('ag')
-  let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
-else
-  let $FZF_DEFAULT_COMMAND = 'find . -type f -not -path "*/.git/*"'
-endif
+lua << END
+local actions = require'telescope.actions'
+require'telescope'.setup{
+  defaults = {
+    mappings = {
+      i = {
+        ["<c-u>"] = false,
+        ["<c-s>"] = actions.select_horizontal,
+        ["<c-v>"] = actions.select_vertical,
+        ["<c-g>"] = actions.select_tab,
+      }
+    }
+  }
+}
+END
 
-" Key bindings to be pressed on fzf list
-let g:fzf_action =
-  \ { 'ctrl-g': 'tab split',
-  \   'ctrl-s': 'split',
-  \   'ctrl-v': 'vsplit' }
 
-" Match fzf colors with current color scheme
-let g:fzf_colors =
-  \ { 'fg':      ['fg', 'Normal'],
-    \ 'bg':      ['bg', 'Normal'],
-    \ 'hl':      ['fg', 'Comment'],
-    \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-    \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-    \ 'hl+':     ['fg', 'Statement'],
-    \ 'info':    ['fg', 'PreProc'],
-    \ 'border':  ['fg', 'Ignore'],
-    \ 'prompt':  ['fg', 'Conditional'],
-    \ 'pointer': ['fg', 'Exception'],
-    \ 'marker':  ['fg', 'Keyword'],
-    \ 'spinner': ['fg', 'Label'],
-    \ 'header':  ['fg', 'Comment'] }
-
-" Show in floating window
-let g:fzf_layout = 
-  \ { 'up':     '~90%',
-    \ 'window': { 'width': 0.8, 'height': 0.8, 'yoffset': 0.5, 'xoffset': 0.5, 'border': 'sharp' }}
+" =============================================================================
+" vim-rooter
+" =============================================================================
+let g:rooter_patterns = ['.git']
 
 
 " =============================================================================
@@ -516,9 +504,9 @@ map T <Plug>Sneak_T
 nnoremap <F2>        :lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> K  :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> gr :lua vim.lsp.buf.references()<CR>
+nnoremap <silent> gr :Telescope lsp_references<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> gw :lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> gw :Telescope lsp_workspace_symbols<CR>
 nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
@@ -533,8 +521,7 @@ if vim.fn.executable('ccls') == 1 then
   lspconfig.ccls.setup{
     on_attach = on_attach,
     init_options = {
-      client = {snippetSupport = false},
-      highlight = {lsRanges = true}
+      client = { snippetSupport = false }
     }
   }
   vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
@@ -582,12 +569,9 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
       spacing = 4,
     },
     -- Do not update in insert mode
-    update_in_insert = false,
+    update_in_insert = true,
   }
 )
-
--- Configs for lspfuzzy
-require'lspfuzzy'.setup{}
 END
 
 " Use tab to bring up and traverse completion list
@@ -598,7 +582,8 @@ set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
 " lsp_extensions.nvim
-autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
+autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs \
+  :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
 
 
 " =============================================================================

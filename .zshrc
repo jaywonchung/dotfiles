@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------
-# Zsh and oh-my-zsh configs
+# Powerlevel10k instant prompt
 #-------------------------------------------------------------------
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -8,6 +8,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#-------------------------------------------------------------------
+# Zsh and oh-my-zsh configs
+#-------------------------------------------------------------------
 # Path to oh-my-zsh installation
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -41,6 +44,14 @@ setopt nonomatch
 # Zsh autosuggestion color
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
+# Do not highlight comments
+FAST_HIGHLIGHT_STYLES[comment]='none'
+
+# Keybindings
+bindkey '^B'  backward-word
+bindkey '^F'  forward-word
+bindkey '^[#' pound-insert  # alt-#
+
 #-------------------------------------------------------------------
 # Powerlevel10k
 #-------------------------------------------------------------------
@@ -63,6 +74,9 @@ source "$HOME/.dotmodules/zshrc/python-env.sh"
 #-------------------------------------------------------------------
 # I like keeping things here
 export PATH="$HOME/.local/bin:$PATH"
+
+# Some shell scripts
+export PATH="$HOME/.dotmodules/bin:$PATH"
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -95,6 +109,12 @@ alias ddf='dotfiles difftool'
 # nvim
 alias nconf="nvim $HOME/.config/nvim/init.vim"
 
+# add flags
+alias cp='cp -i'
+
+# mkdir then cd
+alias mkcd='mkdir -p $1 && cd $1'
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
@@ -107,6 +127,9 @@ export EDITOR="nvim"
 # nvim as manpage viewer
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
+
+# For xdg-open
+export BROWSER="naver-whale-stable"
 
 # nvim-remote
 export NVIM_LISTEN_ADDRESS="$HOME/.local/nvimsocket"
