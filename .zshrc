@@ -14,8 +14,6 @@ fi
 # NOTE: linked to nvim floaterm config g:floaterm_shell
 # NOTE: linked to xmonad named scratchpad command
 if [ ! "$WELCOME" = "no" ]; then
-  fortune
-  echo
   cal -n 3
 fi
 
@@ -122,6 +120,9 @@ alias nconf="nvim $HOME/.config/nvim/init.vim"
 
 # add flags
 alias cp='cp -i'
+
+# mkdir then cd
+alias mkcd='mkdir -p $1 && cd $1'
 
 #-------------------------------------------------------------------
 # Environment variables
