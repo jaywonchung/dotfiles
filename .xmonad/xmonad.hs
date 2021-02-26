@@ -106,8 +106,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. controlMask, xK_v     ), namedScratchpadAction scratchpads "pavucontrol")
 
     -- Taking screenshots
-    , ((modm .|. controlMask, xK_3), spawnOnce "import -window root Screenshots/`date +'%Y-%m-%dT%H:%M:%S%Z'`.png")
-    , ((modm .|. controlMask, xK_4), spawnOnce "import Screenshots/`date +'%Y-%m-%dT%H:%M:%S%Z'`.png")
+    , ((modm .|. controlMask, xK_3), spawn "import -window root Screenshots/`date +'%Y-%m-%dT%H:%M:%S%Z'`.png")
+    , ((modm .|. controlMask, xK_4), spawn "import Screenshots/`date +'%Y-%m-%dT%H:%M:%S%Z'`.png")
 
     -- Application shortcuts
     , ((modm .|. shiftMask,  xK_w      ), spawn "naver-whale-stable")
@@ -134,7 +134,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     ]
 
 -----------------------------------------------------------------------
--- Clickable workspaces
+-- Clickable workspaces (requires xdotool)
 --
 myWorkspaces = clickable $ ["1","2","3","4","5","6","7","8","9"]
   where
@@ -225,6 +225,7 @@ main = do
         -- spawnOnce: only on fresh start, spawn: always.
       , startupHook = do
             spawn     "~/.dotmodules/bin/nitrogen-refresh"
+            spawnOnce "dunst &"
             spawnOnce "stalonetray &"
             spawnOnce "picom &"
             spawnOnce "dex -a -s ~/.config/autostart"
