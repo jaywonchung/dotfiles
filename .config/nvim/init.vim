@@ -13,6 +13,8 @@ set shiftwidth=2                " Width of >> and <<
 set expandtab                   " <Tab> to spaces, <C-v><Tab> for real tab
 set smarttab                    " <Tab> at line start obeys shiftwidth
 set backspace=eol,start,indent  " Backspace same as other programs
+set list!                       " Show invisible characters (usually whitespace)
+set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 " command mode
 set wildmenu                    " Command mode autocompletion list
 set wildmode=longest:full,full  " <Tab> spawns wildmenu, then <Tab> to cycle list
@@ -20,6 +22,7 @@ set ignorecase                  " Case-insensitive search
 set smartcase                   " ... except when uppercase characters are typed
 set incsearch                   " Search as I type
 " file
+set hidden                      " Allow switching to other buffers without saving
 set autoread                    " Auto load when current file is edited somewhere
 " performance
 set lazyredraw                  " Screen not updated during macros, etc
@@ -241,6 +244,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
+let g:EditorConfig_verbose = 1
 
 " =============================================================================
 " vim-argwrap
@@ -447,17 +451,15 @@ autocmd BufEnter * silent call NERDTreeAutoQuit()
 let NERDTreeMapOpenInTab='<C-g>'
 let NERDTreeMapOpenSplit='<C-s>'
 let NERDTreeMapOpenVSplit='<C-v>'
-
-" For systems without pretty arrows
-" let g:NERDTreeDirArrowExpandable = '>'
-" let g:NERDTreeDirArrowCollapsible = 'v'
+let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':1,'stay':0}}
 
 
 " =============================================================================
 " fzf
 " =============================================================================
 " Open fzf window
-nnoremap <leader>f :Files<CR>
+nnoremap <Leader>f :Files<CR>
+nnoremap <Leader>b :Buffers<CR>
 if executable('ag')
   nnoremap <Leader>ag :Ag<CR>
 endif
@@ -498,6 +500,12 @@ let g:fzf_layout =
 
 
 " =============================================================================
+" vim-rooter
+" =============================================================================
+let g:rooter_patterns = ['.git']
+
+
+" =============================================================================
 " vim-sneak
 " =============================================================================
 let g:sneak#label = 1
@@ -533,8 +541,7 @@ if vim.fn.executable('ccls') == 1 then
   lspconfig.ccls.setup{
     on_attach = on_attach,
     init_options = {
-      client = {snippetSupport = false},
-      highlight = {lsRanges = true}
+      client = { snippetSupport = false }
     }
   }
   vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
@@ -617,7 +624,7 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
   indent = {
-    enable = true,
+    enable = false,
   },
 }
 END
