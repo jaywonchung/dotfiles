@@ -232,6 +232,7 @@ Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'airblade/vim-rooter'
 Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
@@ -460,7 +461,8 @@ let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':
 " Mappings. live_grep uses rg by default.
 nnoremap <Leader>f  :Telescope find_files<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
-nnoremap <Leader>gr :Telescope live_grep<CR>
+nnoremap <Leader>gr :lua require'telescope.builtin'.grep_string{word_match = "-w", only_sort_text = true, search = ''}<CR>
+nnoremap <Leader>gs :lua require'telescope.builtin'.grep_string{search = vim.fn.input("Grep for > ")}<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
 
 lua << END
@@ -486,15 +488,23 @@ require'telescope'.setup{
       },
       i = {
         ["<C-c>"] = actions.close,
-        ["<C-g>"] = actions.select_tab,
+        ["<C-g>"] = actions.file_tab,
         ["<C-y>"] = preview_scroll_up_one,
         ["<C-e>"] = preview_scroll_down_one,
         ["<C-v>"] = actions.select_vertical,
         ["<C-s>"] = actions.select_horizontal,
       }
     }
+  },
+  extensions = {
+    fzy_native = {
+      override_generic_sorter = true,
+      --override_file_sorter = true,
+    }
   }
 }
+
+require'telescope'.load_extension('fzy_native')
 END
 
 
