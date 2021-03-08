@@ -89,6 +89,9 @@ autoload -U compinit && compinit -u
 # direnv
 eval "$(direnv hook zsh)"
 
+# node
+export PATH="$HOME/.local/src/node/bin:$PATH"
+
 #-------------------------------------------------------------------
 # Aliases
 #-------------------------------------------------------------------
