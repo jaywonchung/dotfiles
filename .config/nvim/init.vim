@@ -561,6 +561,15 @@ end
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
     on_attach = on_attach,
+    settings = {
+      python = {
+        analysis = {
+          typeCheckingMode = "off",
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+        }
+      }
+    }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
