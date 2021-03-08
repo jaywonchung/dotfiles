@@ -539,6 +539,7 @@ nnoremap <silent> gw :Telescope lsp_workspace_symbols<CR>
 nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> ga :Telescope lsp_code_actions<CR>
 
 lua << END
 local lspconfig = require'lspconfig'
@@ -557,7 +558,15 @@ if vim.fn.executable('ccls') == 1 then
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
-if vim.fn.executable('pyls') == 1 then
+if vim.fn.executable('pyright') == 1 then
+  lspconfig.pyright.setup{
+    on_attach = on_attach,
+  }
+  vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType python setlocal signcolumn=yes')
+end
+
+if vim.fn.executable('pyls') == 0 then
   lspconfig.pyls.setup{
     on_attach = on_attach,
     settings = {
@@ -568,7 +577,7 @@ if vim.fn.executable('pyls') == 1 then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if vim.fn.executable('dotnet') == 1 then
+if vim.fn.executable('dotnet') == 0 then
   lspconfig.pyls_ms.setup{
     on_attach = on_attach,
     cmd = {
@@ -576,6 +585,13 @@ if vim.fn.executable('dotnet') == 1 then
       "exec",
       -- NOTE: linked with path and mspyls.sh
       vim.fn.expand("~") .. "/.local/src/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
+    },
+    settings = {
+      python = {
+        analysis = {
+          disabled = { "E111" },
+        }
+      }
     }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
