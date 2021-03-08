@@ -595,13 +595,6 @@ if vim.fn.executable('dotnet') == 0 then
       -- NOTE: linked with path and mspyls.sh
       vim.fn.expand("~") .. "/.local/src/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
     },
-    settings = {
-      python = {
-        analysis = {
-          disabled = { "E111" },
-        }
-      }
-    }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
