@@ -13,3 +13,7 @@ export PATH="/usr/local/clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04/bin:$PATH
 
 # rust cargo
 export PATH="$HOME/.cargo/bin:$PATH"
+
+# opam configuration
+test -r /home/jaywonchung/.opam/opam-init/init.zsh && \
+  . /home/jaywonchung/.opam/opam-init/init.zsh 2>&1 /dev/null || true
