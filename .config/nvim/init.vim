@@ -532,7 +532,7 @@ map T <Plug>Sneak_T
 " key bindings
 nnoremap <F2>        :lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> K  :lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gd :lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gd :Telescope lsp_definitions<CR>
 nnoremap <silent> gr :Telescope lsp_references<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> gw :Telescope lsp_workspace_symbols<CR>
