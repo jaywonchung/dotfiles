@@ -13,8 +13,7 @@ set shiftwidth=2                " Width of >> and <<
 set expandtab                   " <Tab> to spaces, <C-v><Tab> for real tab
 set smarttab                    " <Tab> at line start obeys shiftwidth
 set backspace=eol,start,indent  " Backspace same as other programs
-set list!                       " Show invisible characters (usually whitespace)
-set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
+set listchars=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:· " For invisible chars
 " command mode
 set wildmenu                    " Command mode autocompletion list
 set wildmode=longest:full,full  " <Tab> spawns wildmenu, then <Tab> to cycle list
@@ -152,7 +151,7 @@ nnoremap <silent> g* :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR
 nnoremap <silent> g# :let @/='\v'.expand('<cword>')<CR>:let v:searchforward=0<CR>n
 
 " Toggle relativenumber
-function! s:toggle_relnum() abort
+function! ToggleRelnum() abort
   if &relativenumber
     set norelativenumber
   else
@@ -160,7 +159,7 @@ function! s:toggle_relnum() abort
   endif
 endfunction
 
-nnoremap <silent> <Leader>r :call <SID>toggle_relnum()<CR>
+nnoremap <silent> <Leader>r :call ToggleRelnum()<CR>
 
 " Neovim terminal
 tnoremap <Esc> <C-\><C-n>
@@ -392,6 +391,7 @@ function! Plain()
 endfunction
 
 call Plain()
+" call GruvboxMaterial()
 
 
 " =============================================================================
@@ -462,7 +462,7 @@ let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':
 nnoremap <Leader>f  :Telescope find_files<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
-nnoremap gs         :Telescope live_grep<CR>
+nnoramap gs         :Telescope live_grep<CR>
 
 lua << END
 local action_state = require('telescope.actions.state')
@@ -498,7 +498,7 @@ require'telescope'.setup{
   extensions = {
     fzy_native = {
       override_generic_sorter = true,
-      --override_file_sorter = true,
+      override_file_sorter = true,
     }
   }
 }
@@ -534,7 +534,7 @@ nnoremap <silent> K  :lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd :Telescope lsp_definitions<CR>
 nnoremap <silent> gr :Telescope lsp_references<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> gw :Telescope lsp_workspace_symbols<CR>
+nnoremap <silent> gw :lua require'telescope.builtin'.lsp_workspace_symbols{query = vim.fn.input("Query: ")}<CR>
 nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
