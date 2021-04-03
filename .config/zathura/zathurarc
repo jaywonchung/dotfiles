@@ -26,3 +26,6 @@ map [fullscreen]    <C-y>      scroll up
 # View
 map [normal]        =          zoom in
 map [fullscreen]    =          zoom in
+
+# Copy to clipboard
+set selection-clipboard clipboard
