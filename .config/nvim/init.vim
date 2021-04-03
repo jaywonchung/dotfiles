@@ -461,9 +461,8 @@ let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':
 " Mappings. live_grep uses rg by default.
 nnoremap <Leader>f  :Telescope find_files<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
-nnoremap <Leader>gr :lua require'telescope.builtin'.grep_string{word_match="-w", only_sort_text=true, search=''}<CR>
-nnoremap <Leader>gs :lua require'telescope.builtin'.grep_string{search = vim.fn.input("Grep for: ")}<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
+nnoramap gs         :Telescope live_grep<CR>
 
 lua << END
 local action_state = require('telescope.actions.state')
