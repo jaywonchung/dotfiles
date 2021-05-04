@@ -217,7 +217,8 @@ Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
 Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
-Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline'
+Plug 'hoob3rt/lualine.nvim'
 " Plug 'sainnhe/sonokai'
 Plug 'sainnhe/gruvbox-material'
 " Plug 'gruvbox-community/gruvbox'
@@ -301,10 +302,23 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*'] " for compatibility with
 
 
 " =============================================================================
+" lualine
+" =============================================================================
+lua <<EOF
+require('lualine').setup{
+  sections = {
+    lualine_a = { {'mode', upper = true} },
+    lualine_b = { {'branch'} },
+  },
+}
+EOF
+
+
+" =============================================================================
 " vim-airline
 " =============================================================================
 " Show max line number
-let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinenr', ':%3v'])
+" let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinenr', ':%3v'])
 
 
 " =============================================================================
@@ -462,7 +476,7 @@ let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':
 nnoremap <Leader>f  :Telescope find_files<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
-nnoramap gs         :Telescope live_grep<CR>
+nnoremap gs         :Telescope live_grep<CR>
 
 lua << END
 local action_state = require('telescope.actions.state')
