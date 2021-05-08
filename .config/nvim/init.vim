@@ -217,7 +217,6 @@ Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
 Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
-" Plug 'vim-airline/vim-airline'
 Plug 'hoob3rt/lualine.nvim'
 " Plug 'sainnhe/sonokai'
 Plug 'sainnhe/gruvbox-material'
@@ -305,20 +304,25 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*'] " for compatibility with
 " lualine
 " =============================================================================
 lua <<EOF
+local function my_location()
+  local data = [[%3l/%L]]
+  return data
+end
+
+local function my_filename()
+  local data = vim.fn.expand('%:~:.')
+  return data
+end
+
 require('lualine').setup{
   sections = {
     lualine_a = { {'mode', upper = true} },
     lualine_b = { {'branch'} },
+    lualine_c = { my_filename },
+    lualine_z = { my_location },
   },
 }
 EOF
-
-
-" =============================================================================
-" vim-airline
-" =============================================================================
-" Show max line number
-" let g:airline_section_z = airline#section#create(['%3p%%: ', 'linenr', 'maxlinenr', ':%3v'])
 
 
 " =============================================================================
