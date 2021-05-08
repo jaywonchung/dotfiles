@@ -182,7 +182,7 @@ autocmd BufReadPost *
 autocmd FocusGained,BufEnter * :checktime
 
 " Resize splits when vim size changes
-autocmd VimResized * execute "normal! \<c-w>="
+autocmd VimResized * wincmd =
 
 " Highlight yanked text
 autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
