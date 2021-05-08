@@ -65,11 +65,6 @@ POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------
-# Language-specific
-#-------------------------------------------------------------------
-source "$HOME/.dotmodules/zshrc/python-env.sh"
-
-#-------------------------------------------------------------------
 # Command-line tools
 #-------------------------------------------------------------------
 # I like keeping things here
@@ -77,6 +72,17 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Some shell scripts
 export PATH="$HOME/.dotmodules/bin:$PATH"
+
+# Launch and close terminal
+function launch {
+    nohup "$@" >/dev/null 2>/dev/null & disown; exit
+}
+
+# SNU network is wierd
+function sssh {
+    ssh $1 || ssh $1
+}
+compdef sssh=ssh
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -91,6 +97,11 @@ eval "$(direnv hook zsh)"
 
 # node
 export PATH="$HOME/.local/src/node/bin:$PATH"
+
+#-------------------------------------------------------------------
+# Language-specific
+#-------------------------------------------------------------------
+source "$HOME/.dotmodules/zshrc/python-env.sh"
 
 #-------------------------------------------------------------------
 # Aliases
