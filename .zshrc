@@ -129,6 +129,9 @@ alias cp='cp -i'
 # mkdir then cd
 alias mkcd='mkdir -p $1 && cd $1'
 
+# kubectl
+alias k=kubectl
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
