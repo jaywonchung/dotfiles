@@ -61,7 +61,11 @@ bindkey '^[#' pound-insert  # alt-#
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="Default"
 POWERLEVEL9K_SHORTEN_DELIMITER=".."
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
+if [ -n "$NOGIT" ]; then
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir)
+else
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
+fi
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------

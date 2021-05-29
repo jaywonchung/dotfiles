@@ -277,7 +277,7 @@ let g:floaterm_width = 0.7
 " Close window when process exits
 let g:floaterm_autoclose = 2
 
-" Open and hide. <C-d> to exit.
+" Open and hide.
 nnoremap <CR> :FloatermToggle<CR>
 tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 
@@ -285,7 +285,7 @@ tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 command! Vifm FloatermNew vifm
 
 " Disable welcome message
-let g:floaterm_shell = 'WELCOME=no /usr/bin/zsh'
+let g:floaterm_shell = 'NOGIT=1 /usr/bin/zsh'
 
 
 " =============================================================================
