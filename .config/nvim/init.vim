@@ -194,6 +194,9 @@ autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
 " Verilog
 autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 
+" Rust
+autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
+
 
 " =============================================================================
 " Plugins
@@ -646,8 +649,9 @@ set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
 " lsp_extensions.nvim
-autocmd InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs
-  \ :lua require'lsp_extensions'.inlay_hints{ prefix = '  » '}
+autocmd BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ 
+\   prefix = '  » ', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"}
+\ }
 
 
 " =============================================================================
