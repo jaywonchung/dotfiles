@@ -1,5 +1,8 @@
 #!/bin/bash
 
-curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-linux \
-     -o ~/.local/bin/rust-analyzer
-chmod +x ~/.local/bin/rust-analyzer
+cd /tmp
+curl -LO https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz
+gzip -d rust-analyzer-x86_64-unknown-linux-gnu.gz
+mv rust-analyzer-x86_64-unknown-linux-gnu rust-analyzer
+chmod +x rust-analyzer
+mv rust-analyzer ~/.local/bin
