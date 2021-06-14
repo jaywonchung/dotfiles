@@ -584,7 +584,7 @@ if vim.fn.executable('pyright') == 1 then
     settings = {
       python = {
         analysis = {
-          typeCheckingMode = "off",
+          typeCheckingMode = "basic",
           autoSearchPaths = true,
           useLibraryCodeForTypes = true,
         }
