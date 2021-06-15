@@ -9,17 +9,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 #-------------------------------------------------------------------
-# Welcome message
-#-------------------------------------------------------------------
-# NOTE: linked to nvim floaterm config g:floaterm_shell
-# NOTE: linked to xmonad named scratchpad command
-if [ ! "$WELCOME" = "no" ]; then
-  fortune
-  echo
-  cal -3
-fi
-
-#-------------------------------------------------------------------
 # Zsh and oh-my-zsh configs
 #-------------------------------------------------------------------
 # Path to oh-my-zsh installation
@@ -55,6 +44,14 @@ setopt nonomatch
 # Zsh autosuggestion color
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 
+# Do not highlight comments
+FAST_HIGHLIGHT_STYLES[comment]='none'
+
+# Keybindings
+bindkey '^B'  backward-word
+bindkey '^F'  forward-word
+bindkey '^[#' pound-insert  # alt-#
+
 #-------------------------------------------------------------------
 # Powerlevel10k
 #-------------------------------------------------------------------
@@ -64,13 +61,12 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="Default"
 POWERLEVEL9K_SHORTEN_DELIMITER=".."
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
+if [ -n "$NOGIT" ]; then
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir)
+else
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
+fi
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
-
-#-------------------------------------------------------------------
-# Language-specific
-#-------------------------------------------------------------------
-source "$HOME/.dotmodules/zshrc/python-env.sh"
 
 #-------------------------------------------------------------------
 # Command-line tools
@@ -80,6 +76,17 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Some shell scripts
 export PATH="$HOME/.dotmodules/bin:$PATH"
+
+# Launch and close terminal
+function launch {
+    nohup "$@" >/dev/null 2>/dev/null & disown; exit
+}
+
+# SNU network is wierd
+function sssh {
+    ssh $1 || ssh $1
+}
+compdef sssh=ssh
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -91,6 +98,14 @@ autoload -U compinit && compinit -u
 
 # direnv
 eval "$(direnv hook zsh)"
+
+# node
+export PATH="$HOME/.local/src/node/bin:$PATH"
+
+#-------------------------------------------------------------------
+# Language-specific
+#-------------------------------------------------------------------
+source "$HOME/.dotmodules/zshrc/python-env.sh"
 
 #-------------------------------------------------------------------
 # Aliases
@@ -112,6 +127,12 @@ alias ddf='dotfiles difftool'
 # nvim
 alias nconf="nvim $HOME/.config/nvim/init.vim"
 
+# add flags
+alias cp='cp -i'
+
+# mkdir then cd
+alias mkcd='mkdir -p $1 && cd $1'
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
@@ -124,6 +145,13 @@ export EDITOR="nvim"
 # nvim as manpage viewer
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
+
+# For xdg-open
+export BROWSER="naver-whale-stable"
+
+# nvim-remote
+export NVIM_LISTEN_ADDRESS="$HOME/.local/nvimsocket"
+alias nvim="nvim --listen $NVIM_LISTEN_ADDRESS"
 
 #-------------------------------------------------------------------
 # Machine-specific
