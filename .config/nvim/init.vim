@@ -497,7 +497,6 @@ end
 local actions = require'telescope.actions'
 require'telescope'.setup{
   defaults = {
-    prompt_prefix = '',
     mappings = {
       n = {
         ["H"]     = false,
@@ -623,6 +622,13 @@ end
 if vim.fn.executable('rust-analyzer') == 1 then
   lspconfig.rust_analyzer.setup{
     on_attach = on_attach,
+    settings = {
+      ["rust-analyzer"] = {
+        completion = {
+          addCallArgumentSnippets = false
+        }
+      }
+    },
   }
   vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
