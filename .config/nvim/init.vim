@@ -288,7 +288,7 @@ tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 command! Vifm FloatermNew vifm
 
 " Disable welcome message
-let g:floaterm_shell = 'NOGIT=1 /usr/bin/zsh'
+let g:floaterm_shell = 'NOGIT=1 zsh'
 
 
 " =============================================================================
