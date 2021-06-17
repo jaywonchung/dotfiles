@@ -242,8 +242,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'simrat39/rust-tools.nvim'
 " syntactic language support
-Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
@@ -288,7 +288,7 @@ tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 command! Vifm FloatermNew vifm
 
 " Disable welcome message
-let g:floaterm_shell = 'NOGIT=1 /usr/bin/zsh'
+let g:floaterm_shell = 'NOGIT=1 zsh'
 
 
 " =============================================================================
@@ -497,7 +497,6 @@ end
 local actions = require'telescope.actions'
 require'telescope'.setup{
   defaults = {
-    prompt_prefix = '',
     mappings = {
       n = {
         ["H"]     = false,
@@ -620,13 +619,24 @@ if vim.fn.executable('dotnet') == 0 then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
-if vim.fn.executable('rust-analyzer') == 1 then
-  lspconfig.rust_analyzer.setup{
-    on_attach = on_attach,
-  }
-  vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
-end
+--if vim.fn.executable('rust-analyzer') == 1 then
+--  lspconfig.rust_analyzer.setup{
+--    on_attach = on_attach,
+--    settings = {
+--      ["rust-analyzer"] = {
+--        completion = {
+--          addCallArgumentSnippets = false,
+--          addCallParenthesis = false,
+--        },
+--        diagnostics = {
+--          disabled = {"inactive-code"},
+--        },
+--      },
+--    },
+--  }
+--  vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+--  vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
+--end
 
 -- Configs for diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -649,15 +659,40 @@ set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
 " lsp_extensions.nvim
-autocmd BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ 
-\   prefix = '  » ', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"}
-\ }
+" autocmd BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ 
+" \   prefix = '  » ', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"}
+" \ }
 
 
 " =============================================================================
-" rust.vim
+" rust-tools.nvim
 " =============================================================================
-let g:rust_recommended_style = 0
+lua << END
+require'rust-tools'.setup {
+  tools = {
+    inlay_hints = {
+      show_parameter_hints = false,
+      other_hints_prefix = '  » ',
+    }
+  },
+  server = {
+    on_attach = require'completion'.on_attach,
+    settings = {
+      ["rust-analyzer"] = {
+        completion = {
+          addCallArgumentSnippets = false,
+          addCallParenthesis = false,
+        },
+        diagnostics = {
+          disabled = {"inactive-code"},
+        },
+      },
+    },
+  },
+}
+END
+autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd FileType rust setlocal signcolumn=yes
 
 
 " =============================================================================
