@@ -149,10 +149,6 @@ export MANWIDTH=999
 # For xdg-open
 export BROWSER="naver-whale-stable"
 
-# nvim-remote
-export NVIM_LISTEN_ADDRESS="$HOME/.local/nvimsocket"
-alias nvim="nvim --listen $NVIM_LISTEN_ADDRESS"
-
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
