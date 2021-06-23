@@ -425,6 +425,7 @@ function! Base16()
   highlight! LineNR NONE
   highlight! CursorLineNr NONE
   highlight! SignColumn NONE
+  highlight! Error NONE
 
   " Sneak (from gruvbox-material)
   highlight! link Sneak Search
@@ -436,9 +437,6 @@ function! Base16()
 
   " Make comment more visible
   highlight Comment guifg=#80756c
-
-  " ModeMsg
-  highlight! link ModeMsg Comment
 endfunction
 
 " call Plain()
