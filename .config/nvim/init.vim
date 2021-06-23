@@ -33,6 +33,7 @@ set diffopt+=indent-heuristic   " Internal diff lib for indents
 set showmatch                   " Highlight matching braces
 set background=dark             " Dark background
 set number relativenumber       " Show relative line number
+set noshowmode                  " Do not show current mode at the bottom
 " misc
 set mouse=a                     " Mouses are useful for visual selection
 set history=256                 " History for commands, searches, etc
@@ -45,9 +46,9 @@ set cursorline
 autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
 
-" Cursor shape
+" Cursor shape: Changes shape based on current mode
 set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-" Uncomment this to use the terminal-default cursor shape
+" Use the following to use the terminal-default cursor shape
 " set guicursor=
 
 " Syntax highlighting
@@ -226,9 +227,7 @@ Plug 'voldikss/vim-floaterm'
 Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
 Plug 'hoob3rt/lualine.nvim'
-" Plug 'sainnhe/sonokai'
-" Plug 'sainnhe/gruvbox-material'
-" Plug 'gruvbox-community/gruvbox'
+Plug 'sainnhe/gruvbox-material'
 Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 " git integration
@@ -418,7 +417,6 @@ function! Plain()
 endfunction
 
 function! Base16()
-  set background=dark
   let base16colorspace=256
   colorscheme base16-gruvbox-dark-hard
   " colorscheme base16-default-dark
@@ -436,8 +434,11 @@ function! Base16()
   " Transparent background
   highlight Normal guibg=NONE
 
-  " Comment
+  " Make comment more visible
   highlight Comment guifg=#80756c
+
+  " ModeMsg
+  highlight! link ModeMsg Comment
 endfunction
 
 " call Plain()
