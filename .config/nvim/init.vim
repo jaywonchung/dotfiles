@@ -31,9 +31,9 @@ set diffopt+=algorithm:patience " Use the patience algorithm
 set diffopt+=indent-heuristic   " Internal diff lib for indents
 " appearance
 set showmatch                   " Highlight matching braces
-set guicursor=                  " Use terminal-default cursor shape
 set background=dark             " Dark background
 set number relativenumber       " Show relative line number
+set noshowmode                  " Do not show current mode at the bottom
 " misc
 set mouse=a                     " Mouses are useful for visual selection
 set history=256                 " History for commands, searches, etc
@@ -45,6 +45,11 @@ let g:vimsyn_embed = 'l'
 set cursorline
 autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
+
+" Cursor shape: Changes shape based on current mode
+set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+" Use the following to use the terminal-default cursor shape
+" set guicursor=
 
 " Syntax highlighting
 if has("syntax")
@@ -196,6 +201,7 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 
 " Rust
 autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
+let g:rustfmt_fail_silently = 1
 
 
 " =============================================================================
@@ -221,9 +227,8 @@ Plug 'voldikss/vim-floaterm'
 Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
 Plug 'hoob3rt/lualine.nvim'
-" Plug 'sainnhe/sonokai'
 Plug 'sainnhe/gruvbox-material'
-" Plug 'gruvbox-community/gruvbox'
+Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 " git integration
 Plug 'tpope/vim-fugitive'
@@ -411,8 +416,32 @@ function! Plain()
   highlight! link SneakScope DiffText
 endfunction
 
-call Plain()
+function! Base16()
+  let base16colorspace=256
+  colorscheme base16-gruvbox-dark-hard
+  " colorscheme base16-default-dark
+
+  highlight! link VertSplit SignColumn
+  highlight! LineNR NONE
+  highlight! CursorLineNr NONE
+  highlight! SignColumn NONE
+  highlight! Error NONE
+
+  " Sneak (from gruvbox-material)
+  highlight! link Sneak Search
+  highlight! link SneakLabel Search
+  highlight! link SneakScope DiffText
+
+  " Transparent background
+  highlight Normal guibg=NONE
+
+  " Make comment more visible
+  highlight Comment guifg=#80756c
+endfunction
+
+" call Plain()
 " call GruvboxMaterial()
+call Base16()
 
 
 " =============================================================================
@@ -619,25 +648,6 @@ if vim.fn.executable('dotnet') == 0 then
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
---if vim.fn.executable('rust-analyzer') == 1 then
---  lspconfig.rust_analyzer.setup{
---    on_attach = on_attach,
---    settings = {
---      ["rust-analyzer"] = {
---        completion = {
---          addCallArgumentSnippets = false,
---          addCallParenthesis = false,
---        },
---        diagnostics = {
---          disabled = {"inactive-code"},
---        },
---      },
---    },
---  }
---  vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
---  vim.cmd('autocmd FileType rust setlocal signcolumn=yes')
---end
-
 -- Configs for diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -657,11 +667,6 @@ imap <S-Tab> <Plug>(completion_smart_s_tab)
 
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
-
-" lsp_extensions.nvim
-" autocmd BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs :lua require'lsp_extensions'.inlay_hints{ 
-" \   prefix = '  » ', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"}
-" \ }
 
 
 " =============================================================================
@@ -700,12 +705,9 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust", "lua" },
+  ensure_installed = { "c", "cpp", "python" },
   highlight = {
     enable = true,
-  },
-  indent = {
-    enable = false,
   },
 }
 END
