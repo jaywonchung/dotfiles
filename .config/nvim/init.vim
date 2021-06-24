@@ -292,8 +292,11 @@ tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 " Wrappers
 command! Vifm FloatermNew vifm
 
-" Disable welcome message
+" Disable git plugin inside floaterm
 let g:floaterm_shell = 'NOGIT=1 zsh'
+
+" Prettier borders
+let g:floaterm_borderchars = '─│─│╭╮╯╰'
 
 
 " =============================================================================
@@ -437,6 +440,9 @@ function! Base16()
 
   " Make comment more visible
   highlight Comment guifg=#80756c
+
+  " Floaterm transparent border background
+  autocmd VimEnter * highlight! FloatermBorder guibg=NONE
 endfunction
 
 " call Plain()
