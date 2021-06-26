@@ -86,7 +86,7 @@ function launch {
 function sssh {
     ssh $1 || ssh $1
 }
-compdef sssh=ssh
+# compdef sssh=ssh
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -115,7 +115,7 @@ alias gcm='git commit -m'
 
 # dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-compdef dotfiles=git
+# compdef dotfiles=git
 alias dst='dotfiles status'
 alias da='dotfiles add'
 alias dcm='dotfiles commit -m'
@@ -151,10 +151,6 @@ export MANWIDTH=999
 
 # For xdg-open
 export BROWSER="naver-whale-stable"
-
-# nvim-remote
-export NVIM_LISTEN_ADDRESS="$HOME/.local/nvimsocket"
-alias nvim="nvim --listen $NVIM_LISTEN_ADDRESS"
 
 #-------------------------------------------------------------------
 # Machine-specific
