@@ -230,6 +230,7 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
+Plug 'tpope/vim-markdown'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -448,6 +449,13 @@ endfunction
 " call Plain()
 " call GruvboxMaterial()
 call Base16()
+
+
+" =============================================================================
+" vim-markdown
+" =============================================================================
+" Syntax highlighting for code embedded in markdown
+let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
 
 
 " =============================================================================
