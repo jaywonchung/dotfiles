@@ -102,6 +102,9 @@ eval "$(direnv hook zsh)"
 # node
 export PATH="$HOME/.local/src/node/bin:$PATH"
 
+# TeX Live
+export PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
+
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
