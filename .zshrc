@@ -105,6 +105,9 @@ export PATH="$HOME/.local/src/node/bin:$PATH"
 # TeX Live
 export PATH="/usr/local/texlive/2021/bin/x86_64-linux:$PATH"
 
+# Gem
+export PATH="$HOME/.local/share/gem/ruby/2.7.0/bin:$PATH"
+
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
