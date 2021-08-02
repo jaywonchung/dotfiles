@@ -173,6 +173,24 @@ tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
+" Consistency with C and D
+nnoremap Y y$
+
+" Keeping things centered
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+
+" Undo breakpoints
+inoremap , ,<C-g>u
+inoremap . .<C-g>u
+inoremap ! !<C-g>u
+inoremap ? ?<C-g>u
+
+" Ups and downs farther than 5 lines adds to the jump list
+nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
+nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
+
 
 " =============================================================================
 " Autocommands
@@ -251,6 +269,7 @@ Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 " syntactic language support
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'cespare/vim-toml'
 call plug#end()
 
 let g:EditorConfig_verbose = 1
