@@ -173,6 +173,24 @@ tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
+" Consistency with C and D
+nnoremap Y y$
+
+" Keeping things centered
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+
+" Undo breakpoints
+inoremap , ,<C-g>u
+inoremap . .<C-g>u
+inoremap ! !<C-g>u
+inoremap ? ?<C-g>u
+
+" Ups and downs farther than 5 lines adds to the jump list
+nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
+nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
+
 
 " =============================================================================
 " Autocommands
@@ -230,6 +248,7 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
+Plug 'tpope/vim-markdown'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -250,6 +269,7 @@ Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 " syntactic language support
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'cespare/vim-toml'
 call plug#end()
 
 let g:EditorConfig_verbose = 1
@@ -327,10 +347,10 @@ end
 
 require('lualine').setup{
   sections = {
-    lualine_a = { {'mode', upper = true} },
-    lualine_b = { {'branch'} },
-    lualine_c = { my_filename },
-    lualine_z = { my_location },
+    lualine_a = { { 'mode', upper = true } },
+    lualine_b = { { 'branch' } },
+    lualine_c = { { my_filename } },
+    lualine_z = { { my_location } },
   },
 }
 EOF
@@ -451,6 +471,13 @@ call Base16()
 
 
 " =============================================================================
+" vim-markdown
+" =============================================================================
+" Syntax highlighting for code embedded in markdown
+let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
+
+
+" =============================================================================
 " vim-gitgutter
 " =============================================================================
 " Transparent git gutter backgrounds
@@ -565,7 +592,7 @@ END
 " =============================================================================
 " vim-rooter
 " =============================================================================
-let g:rooter_patterns = ['.git']
+let g:rooter_patterns = ['.git', 'Cargo.toml']
 
 
 " =============================================================================
@@ -624,31 +651,6 @@ if vim.fn.executable('pyright') == 1 then
         }
       }
     }
-  }
-  vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd FileType python setlocal signcolumn=yes')
-end
-
-if vim.fn.executable('pyls') == 0 then
-  lspconfig.pyls.setup{
-    on_attach = on_attach,
-    settings = {
-      pyls = {plugins = {pycodestyle = {ignore = {"E501"}}}}
-    }
-  }
-  vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd FileType python setlocal signcolumn=yes')
-end
-
-if vim.fn.executable('dotnet') == 0 then
-  lspconfig.pyls_ms.setup{
-    on_attach = on_attach,
-    cmd = {
-      "dotnet",
-      "exec",
-      -- NOTE: linked with path and mspyls.sh
-      vim.fn.expand("~") .. "/.local/src/python-language-server/output/bin/Debug/Microsoft.Python.LanguageServer.dll"
-    },
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
