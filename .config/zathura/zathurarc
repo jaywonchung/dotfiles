@@ -1,0 +1,33 @@
+# Navigation
+map [normal]        h          navigate previous
+map [fullscreen]    h          navigate previous
+map [normal]        <Left>     navigate previous
+map [fullscreen]    <Left>     navigate previous
+map [normal]        <ShiftTab> navigate previous
+map [fullscreen]    <ShiftTab> navigate previous
+
+map [normal]        l          navigate next
+map [fullscreen]    l          navigate next
+map [normal]        <Right>    navigate next
+map [fullscreen]    <Right>    navigate next
+map [normal]        <Tab>      navigate next
+map [fullscreen]    <Tab>      navigate next
+
+map [normal]        d          scroll half-down
+map [fullscreen]    d          scroll half-down
+map [normal]        u          scroll half-up
+map [fullscreen]    u          scroll half-up
+
+map [normal]        <C-e>      scroll down
+map [fullscreen]    <C-e>      scroll down
+map [normal]        <C-y>      scroll up
+map [fullscreen]    <C-y>      scroll up
+
+# View
+map [normal]        =          zoom in
+map [fullscreen]    =          zoom in
+map [normal]        <Return>   toggle_fullscreen
+map [fullscreen]    <Return>   toggle_fullscreen
+
+# Copy to clipboard
+set selection-clipboard clipboard
