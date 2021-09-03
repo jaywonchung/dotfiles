@@ -268,6 +268,7 @@ Plug 'nvim-lua/completion-nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 " syntactic language support
+Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'cespare/vim-toml'
 call plug#end()
