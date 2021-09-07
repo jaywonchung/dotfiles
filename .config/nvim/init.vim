@@ -456,6 +456,11 @@ function! Nightfly()
   colorscheme nightfly
 
   let g:lualine_theme = 'nightfly'
+
+  " Vimdiff (from gruvbox-community)
+  highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+  highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
+  highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
 endfunction
 
 " call Plain()
@@ -467,6 +472,7 @@ call Nightfly()
 " =============================================================================
 " lualine
 " =============================================================================
+" NOTE: Depends on g:lualine_theme being set in the 'colorscheme' section.
 lua <<EOF
 local function my_location()
   local data = [[%3l/%L]]
