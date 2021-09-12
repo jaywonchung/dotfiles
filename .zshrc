@@ -131,7 +131,10 @@ alias nconf="nvim $HOME/.config/nvim/init.vim"
 alias cp='cp -i'
 
 # mkdir then cd
-alias mkcd='mkdir -p $1 && cd $1'
+function mkcd() {
+  mkdir -p $1
+  cd $1
+}
 
 #-------------------------------------------------------------------
 # Environment variables
