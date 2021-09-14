@@ -207,6 +207,16 @@ autocmd FocusGained,BufEnter * :checktime
 " Resize splits when vim size changes
 autocmd VimResized * wincmd =
 
+" Turn off row numbers when window is small
+autocmd VimResized *
+  \   if &columns < 75
+  \ |   set nonumber norelativenumber
+  \ | endif
+autocmd VimResized *
+  \   if &columns >= 75
+  \ |   set number relativenumber
+  \ | endif
+
 " Highlight yanked text
 autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
 
