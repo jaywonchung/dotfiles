@@ -79,7 +79,7 @@ export PATH="$HOME/.dotmodules/bin:$PATH"
 
 # Launch and close terminal
 function launch {
-    nohup "$@" >/dev/null 2>/dev/null & disown; exit
+    nohup "$@" >/dev/null 2>/dev/null & disown
 }
 
 # SNU network is wierd
