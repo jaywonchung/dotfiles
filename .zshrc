@@ -79,7 +79,16 @@ export PATH="$HOME/.dotmodules/bin:$PATH"
 
 # Launch and close terminal
 function launch {
-    nohup "$@" >/dev/null 2>/dev/null & disown
+    nohup "$@" >/dev/null 2>/dev/null &
+    disown
+}
+
+# Install dotfiles in a remote machine
+function dotfiles-install {
+  (
+    cd;
+    dotfiles show origin/master:install.sh | ssh -tt $1 'cat | TERM=xterm-256color zsh';
+  )
 }
 
 # SNU network is wierd
