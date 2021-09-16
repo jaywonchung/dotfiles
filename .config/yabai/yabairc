@@ -45,6 +45,9 @@ yabai -m config right_padding                12
 yabai -m config window_gap                   06
 
 # rules
-yabai -m rule --add app="^카카오톡$" manage=off
+yabai -m rule --add title="카카오톡" manage=off
+yabai -m rule --add title="사전" manage=off
+yabai -m rule --add label='preferences' title='^.*Preferences.*$' manage='off'
+yabai -m rule --add label='zoom' title='^Zoom$' app='^zoom.us$' manage='off'
 
 echo "yabai configuration loaded.."

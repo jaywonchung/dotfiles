@@ -83,7 +83,6 @@ cmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d
 cmd - j : yabai -m window --focus next || yabai -m window --focus first
 cmd - k : yabai -m window --focus prev || yabai -m window --focus last
 
-
 # swap managed window
 cmd + shift - h : yabai -m window --swap west
 cmd + shift - j : yabai -m window --swap south
@@ -100,13 +99,24 @@ alt + shift - l : yabai -m window --warp east
 cmd + shift - a : yabai -m space --balance
 
 # make floating window fill screen
-cmd - space     : yabai -m window --grid 1:1:0:0:1:1
+cmd - space : yabai -m window --grid 1:1:0:0:1:1
+
+# toggle zoom-fullscreen
+cmd + shift - space : yabai -m window --toggle zoom-fullscreen
 
 # create space, move window and follow focus
 cmd + shift - n : yabai -m space --create && \
                   index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
                   yabai -m window --space "${index}" && \
                   yabai -m space --focus "${index}"
+
+# toggle focus_follows_mouse
+cmd + shift - m : [[ $(yabai -m config focus_follows_mouse) = "disabled" ]] && \
+                  yabai -m config focus_follows_mouse autofocus || \
+                  yabai -m config focus_follows_mouse off
+
+# create a new space
+cmd + shift - t : yabai -m space --create
 
 # destroy focused space
 cmd + shift - c : yabai -m space --destroy
@@ -117,6 +127,11 @@ cmd - 2 : yabai -m space --focus 2
 cmd - 3 : yabai -m space --focus 3
 cmd - 4 : yabai -m space --focus 4
 cmd - 5 : yabai -m space --focus 5
+cmd - 6 : yabai -m space --focus 6
+cmd - 7 : yabai -m space --focus 7
+cmd - 8 : yabai -m space --focus 8
+cmd - 9 : yabai -m space --focus 9
+cmd - 0 : yabai -m space --focus 10
 
 # send window to space
 cmd + shift - 1 : yabai -m window --space  1
@@ -125,17 +140,17 @@ cmd + shift - 3 : yabai -m window --space  3
 cmd + shift - 4 : yabai -m window --space  4
 cmd + shift - 5 : yabai -m window --space  5
 
-# focus monitor
+# focus monitor (assumes two monitors)
 # cmd - [
-cmd - 0x21 : yabai -m display --focus prev
+cmd - 0x1E : yabai -m display --focus recent
 # cmd - ]
-cmd - 0x1E : yabai -m display --focus next
+cmd - 0x21 : yabai -m display --focus recent
 
 # send window to monitor
 # cmd + shift - [
-cmd + shift - 0x21  : yabai -m window --display prev; yabai -m display --focus prev
+cmd + shift - 0x1E  : yabai -m window --display recent
 # cmd + shift - ]
-cmd + shift - 0x1E  : yabai -m window --display next; yabai -m display --focus next
+cmd + shift - 0x21  : yabai -m window --display recent
 
 # change window size
 cmd - h : yabai -m window --resize left:-20:0 || yabai -m window --resize right:-20:0
@@ -153,7 +168,7 @@ cmd - l : yabai -m window --resize right:20:0 || yabai -m window --resize left:2
 # alt - e : yabai -m window --toggle split
 
 # float / unfloat window and center on screen
-cmd + shift - t : yabai -m window --toggle float;\
+cmd + shift - f : yabai -m window --toggle float;\
                   yabai -m window --grid 4:4:1:1:2:2
 
 # toggle sticky(+float), topmost, picture-in-picture
