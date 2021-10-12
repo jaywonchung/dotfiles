@@ -26,6 +26,11 @@ Finally, run the installation script.
 zsh ~/.dotmodules/install/all.sh
 ```
 
+Or just to everything at once. Very secure, obviously.
+```bash
+source <(curl https://raw.githubusercontent.com/jaywonchung/dotfiles/master/install.sh)
+```
+
 Restarting the shell will finish the installation.
 
 **Warning.** Don't forget to change `.gitconfig` to reflect your identity (use the `git config` command).
