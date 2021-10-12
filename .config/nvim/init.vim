@@ -207,6 +207,16 @@ autocmd FocusGained,BufEnter * :checktime
 " Resize splits when vim size changes
 autocmd VimResized * wincmd =
 
+" Turn off row numbers when window is small
+autocmd VimResized *
+  \   if &columns < 75
+  \ |   set nonumber norelativenumber
+  \ | endif
+autocmd VimResized *
+  \   if &columns >= 75
+  \ |   set number relativenumber
+  \ | endif
+
 " Highlight yanked text
 autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
 
@@ -249,6 +259,7 @@ Plug 'sainnhe/gruvbox-material'
 Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'tpope/vim-markdown'
+Plug 'bluz71/vim-nightfly-guicolors'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -333,31 +344,6 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*'] " for compatibility with
 
 
 " =============================================================================
-" lualine
-" =============================================================================
-lua <<EOF
-local function my_location()
-  local data = [[%3l/%L]]
-  return data
-end
-
-local function my_filename()
-  local data = vim.fn.expand('%:~:.')
-  return data
-end
-
-require('lualine').setup{
-  sections = {
-    lualine_a = { { 'mode', upper = true } },
-    lualine_b = { { 'branch' } },
-    lualine_c = { { my_filename } },
-    lualine_z = { { my_location } },
-  },
-}
-EOF
-
-
-" =============================================================================
 " fugitive
 " =============================================================================
 nnoremap <Leader>gs :G<CR>
@@ -394,7 +380,7 @@ function! GruvboxMaterial()
 
   colorscheme gruvbox-material
 
-  let g:airline_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox_material'
 
   " Transparent tabline
   highlight! TabLineFill NONE
@@ -423,7 +409,7 @@ function! Plain()
   hi! link LspDiagnosticsDefaultInformation Constant
   hi! link LspDiagnosticsDefaultHint Constant
 
-  let g:airline_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox_material'
 
   " Search matches (from gruvbox-community)
   highlight! Search     cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
@@ -445,6 +431,8 @@ function! Base16()
   colorscheme base16-gruvbox-dark-hard
   " colorscheme base16-default-dark
 
+  let g:lualine_theme = 'gruvbox_material'
+
   highlight! link VertSplit SignColumn
   highlight! LineNR NONE
   highlight! CursorLineNr NONE
@@ -462,13 +450,62 @@ function! Base16()
   " Make comment more visible
   highlight Comment guifg=#80756c
 
+  " Lsp diagnostics
+  highlight LspDiagnosticsVirtualTextHint        gui=italic guifg=LightGray
+  highlight LspDiagnosticsVirtualTextInformation gui=italic guifg=LightBlue
+  highlight LspDiagnosticsVirtualTextWarning     gui=italic guifg=Orange
+  highlight LspDiagnosticsVirtualTextError       gui=italic guifg=Red
+
   " Floaterm transparent border background
   autocmd VimEnter * highlight! FloatermBorder guibg=NONE
 endfunction
 
+function! Nightfly() 
+  let g:nightflyTransparent = 1
+
+  colorscheme nightfly
+
+  let g:lualine_theme = 'nightfly'
+
+  " Vimdiff (from gruvbox-community)
+  highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+  highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
+  highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+endfunction
+
 " call Plain()
 " call GruvboxMaterial()
-call Base16()
+" call Base16()
+call Nightfly()
+
+
+" =============================================================================
+" lualine
+" =============================================================================
+" NOTE: Depends on g:lualine_theme being set in the 'colorscheme' section.
+lua <<EOF
+local function my_location()
+  local data = [[%3l/%L]]
+  return data
+end
+
+local function my_filename()
+  local data = vim.fn.expand('%:~:.')
+  return data
+end
+
+require('lualine').setup{
+  options = {
+    theme = vim.g.lualine_theme
+  },
+  sections = {
+    lualine_a = { { 'mode', upper = true } },
+    lualine_b = { { 'branch' } },
+    lualine_c = { { my_filename } },
+    lualine_z = { { my_location } },
+  },
+}
+EOF
 
 
 " =============================================================================
