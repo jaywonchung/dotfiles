@@ -93,12 +93,6 @@ function launch {
     nohup "$@" >/dev/null 2>/dev/null & disown; exit
 }
 
-# SNU network is wierd
-function sssh {
-    ssh $1 || ssh $1
-}
-# compdef sssh=ssh
-
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
