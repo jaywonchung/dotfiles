@@ -229,7 +229,6 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 
 " Rust
 autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
-let g:rustfmt_fail_silently = 1
 
 
 " =============================================================================
@@ -245,7 +244,7 @@ endif
 call plug#begin(stdpath('data') . '/plugged')
 " editing
 Plug 'editorconfig/editorconfig-vim'
-Plug 'tpope/vim-commentary'
+Plug 'numToStr/Comment.nvim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
@@ -275,7 +274,10 @@ Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
 " language server protocol
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-path'
+Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 " syntactic language support
@@ -284,7 +286,17 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'cespare/vim-toml'
 call plug#end()
 
+" =============================================================================
+" editorconfig-vim
+" =============================================================================
 let g:EditorConfig_verbose = 1
+
+
+" =============================================================================
+" comment.nvim
+" =============================================================================
+lua require'Comment'.setup()
+
 
 " =============================================================================
 " vim-argwrap
@@ -325,7 +337,7 @@ tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 command! Vifm FloatermNew vifm
 
 " Disable git plugin inside floaterm
-let g:floaterm_shell = 'NOGIT=1 zsh'
+let g:floaterm_shell = 'zsh'
 
 " Prettier borders
 let g:floaterm_borderchars = '─│─│╭╮╯╰'
@@ -661,17 +673,46 @@ nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
 nnoremap <silent> ga :Telescope lsp_code_actions<CR>
 
 lua << END
-local lspconfig = require'lspconfig'
-local on_attach = function(client)
-  require'completion'.on_attach(client)
+local cmp = require'cmp';
+
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line-1, line, true)[1]:sub(col, col):match("%s") == nil
 end
+
+cmp.setup({
+  mapping = {
+    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'path' },
+  }
+})
+
+require'lsp_signature'.setup({ hint_prefix = "@" })
+
+local lspconfig = require'lspconfig'
+local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 if vim.fn.executable('ccls') == 1 then
   lspconfig.ccls.setup{
-    on_attach = on_attach,
+    capabilities = capabilities,
     init_options = {
-      client = { snippetSupport = false }
-    }
+      client = { snippetSupport = false },
+    },
   }
   vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
@@ -679,7 +720,7 @@ end
 
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
-    on_attach = on_attach,
+    capabilities = capabilities,
     settings = {
       python = {
         analysis = {
@@ -707,10 +748,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 END
 
-" Use tab to bring up and traverse completion list
-imap <Tab> <Plug>(completion_smart_tab)
-imap <S-Tab> <Plug>(completion_smart_s_tab)
-
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
@@ -719,6 +756,8 @@ set shortmess+=c
 " rust-tools.nvim
 " =============================================================================
 lua << END
+local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()) 
+
 require'rust-tools'.setup {
   tools = {
     inlay_hints = {
@@ -727,7 +766,7 @@ require'rust-tools'.setup {
     }
   },
   server = {
-    on_attach = require'completion'.on_attach,
+    capabilities = capabilities,
     settings = {
       ["rust-analyzer"] = {
         completion = {
