@@ -11,6 +11,16 @@ fi
 #-------------------------------------------------------------------
 # Zsh and oh-my-zsh configs
 #-------------------------------------------------------------------
+# A kind reminder for others using my dotfiles
+JW_USERS=(jaywonchung jwnchung JWC)
+if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
+  # Username is not Jae-Won's
+  if [[ "$(git config --global --get user.name)" = "Jae-Won Chung" ]]; then
+    # But git username is Jae-Won
+    echo Hey, $USER. Remember to run git config with your idendity!
+  fi
+fi
+
 # Path to oh-my-zsh installation
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -87,15 +97,14 @@ function launch {
 function dotfiles-install {
   (
     cd;
-    dotfiles show origin/master:install.sh | ssh -tt $1 'cat | TERM=xterm-256color zsh';
+    dotfiles show origin/master:install.sh | kitty +kitten ssh -tt $1 'cat | zsh';
   )
 }
 
-# SNU network is wierd
-function sssh {
-    ssh $1 || ssh $1
+# Kitty ssh
+function kssh {
+  kitty +kitten ssh $@
 }
-compdef sssh=ssh
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
