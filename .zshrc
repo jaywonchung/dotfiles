@@ -20,6 +20,7 @@ if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
     echo Hey, $USER. Remember to run git config with your idendity!
   fi
 fi
+unset JW_USERS
 
 # Path to oh-my-zsh installation
 export ZSH="$HOME/.oh-my-zsh"
