@@ -173,8 +173,3 @@ export MANWIDTH=999
 
 # For xdg-open
 export BROWSER="naver-whale-stable"
-
-#-------------------------------------------------------------------
-# Machine-specific
-#-------------------------------------------------------------------
-source "$HOME/.dotmodules/zshrc/machine-specific.sh"
