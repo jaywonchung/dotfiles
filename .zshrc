@@ -127,7 +127,6 @@ else
     fi
 fi
 unset __conda_setup
-unset CONDA_PREFIX
 
 #-------------------------------------------------------------------
 # Aliases
