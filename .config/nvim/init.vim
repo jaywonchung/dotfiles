@@ -359,7 +359,7 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*'] " for compatibility with
 " fugitive
 " =============================================================================
 nnoremap <Leader>gs :G<CR>
-nnoremap <Leader>gb :Gblame<CR>
+nnoremap <Leader>gb :Git blame<CR>
 nnoremap <Leader>gd :Gdiffsplit!<CR>
 
 
