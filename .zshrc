@@ -124,7 +124,18 @@ export PATH="$HOME/.local/src/node/bin:$PATH"
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
-source "$HOME/.dotmodules/zshrc/python-env.sh"
+# Python
+__conda_setup="$("$HOME/.local/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$HOME/.local/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/.local/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="$HOME/.local/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
 
 #-------------------------------------------------------------------
 # Aliases
@@ -174,4 +185,8 @@ export BROWSER="naver-whale-stable"
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
-source "$HOME/.dotmodules/zshrc/machine-specific.sh"
+# kitty
+export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
+
+# LLVM
+export PATH="/usr/local/Cellar/llvm/12.0.1/bin:$PATH"
