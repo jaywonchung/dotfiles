@@ -1,6 +1,8 @@
 # Navigation
 map [normal]        h          navigate previous
 map [fullscreen]    h          navigate previous
+map [normal]        \;         navigate previous
+map [fullscreen]    \;         navigate previous
 map [normal]        <Left>     navigate previous
 map [fullscreen]    <Left>     navigate previous
 map [normal]        <ShiftTab> navigate previous
@@ -8,6 +10,8 @@ map [fullscreen]    <ShiftTab> navigate previous
 
 map [normal]        l          navigate next
 map [fullscreen]    l          navigate next
+map [normal]        \'         navigate next
+map [fullscreen]    \'         navigate next
 map [normal]        <Right>    navigate next
 map [fullscreen]    <Right>    navigate next
 map [normal]        <Tab>      navigate next
