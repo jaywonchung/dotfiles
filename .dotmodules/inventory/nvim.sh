@@ -2,7 +2,7 @@
 
 set -ev
 
-VERSION=${2:-"v0.5.0"}
+VERSION=${2:-"v0.5.1"}
 
 # Get nightly release
 cd /tmp
