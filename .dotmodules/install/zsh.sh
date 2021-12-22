@@ -26,7 +26,7 @@ installing "zsh-autosuggestions"
 git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 
 installing "fzf"
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+git clone --depth=1 https://github.com/junegunn/fzf.git ~/.fzf
 printf 'y\ny\nn\n' | ~/.fzf/install # Enable fuzzy-autocompletion and key bindings. Do not modify .zshrc.
 
 installing "autojump"
@@ -38,4 +38,8 @@ rm -rf ~/_autojump
 
 installing "direnv"
 mkdir -p ~/.local/bin
-curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
+if [[ $(uname -m) = arm64 ]]; then
+  brew install direnv
+else
+  curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
+fi

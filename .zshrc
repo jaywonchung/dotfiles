@@ -72,11 +72,7 @@ bindkey '^[#' pound-insert  # alt-#
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="Default"
 POWERLEVEL9K_SHORTEN_DELIMITER=".."
-if [ -n "$NOGIT" ]; then
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir)
-else
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
-fi
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------
@@ -87,6 +83,9 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Some shell scripts
 export PATH="$HOME/.dotmodules/bin:$PATH"
+
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Launch and close terminal
 function launch {
@@ -159,6 +158,7 @@ alias nconf="nvim $HOME/.config/nvim/init.vim"
 
 # add flags
 alias cp='cp -i'
+alias mv='mv -i'
 
 # mkdir then cd
 function mkcd() {
@@ -179,14 +179,8 @@ export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
 
-# For xdg-open
-export BROWSER="naver-whale-stable"
-
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
 # kitty
 export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
-
-# LLVM
-export PATH="/usr/local/Cellar/llvm/12.0.1/bin:$PATH"

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-VERSION=${VERSION:-"13.0.0"}
+if ! command -v cargo > /dev/null; then
+  echo Cargo must be installed.
+  exit 1
+fi
 
-cd /tmp
-curl -LO "https://github.com/BurntSushi/ripgrep/releases/download/$VERSION/ripgrep-$VERSION-x86_64-apple-darwin.tar.gz"
-tar xzf "ripgrep-$VERSION-x86_64-apple-darwin.tar.gz"
-mv "ripgrep-$VERSION-x86_64-apple-darwin/rg" ~/.local/bin/
+cargo install ripgrep

@@ -1,3 +1,8 @@
 #!/bin/bash
 
-curl -sfL https://direnv.net/install.sh | bin_path="$HOME/.local/bin" bash
+if ! command -v brew > /dev/null; then
+  echo Homebrew must be installed.
+  exit 1
+fi
+
+brew install direnv
