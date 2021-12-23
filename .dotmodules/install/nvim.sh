@@ -16,6 +16,8 @@ curl -LO https://github.com/neovim/neovim/releases/download/v0.6.0/nvim-linux64.
 tar xzvf nvim-linux64.tar.gz
 mkdir -p ~/.local
 rsync -a nvim-linux64/* ~/.local/
+rm nvim-linux64.tar.gz
+rm -r nvim-linux64
 
 installing "vim-plug"
 sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \

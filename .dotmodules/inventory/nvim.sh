@@ -17,6 +17,8 @@ rm -rf ~/.local/share/nvim || true
 
 # Install nvim
 rsync -a nvim-linux64/* ~/.local/
+rm nvim-linux64.tar.gz
+rm -r nvim-linux64
 
 # Install plugins
 sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
