@@ -39,6 +39,3 @@ rm -rf ~/_autojump
 installing "direnv"
 mkdir -p ~/.local/bin
 curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
-
-echo "fixing completion script permissions"
-compaudit 2 > /dev/null | xargs chmod g-w,o-w

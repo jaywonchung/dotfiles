@@ -37,6 +37,9 @@ DISABLE_UPDATE_PROMPT="true"
 # Oh-my-zsh plugins
 plugins=(git fast-syntax-highlighting zsh-autosuggestions)
 
+# Disable completion script permission check
+ZSH_DISABLE_COMPFIX="true"
+
 # Configure oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
