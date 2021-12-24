@@ -6,3 +6,4 @@ gzip -d rust-analyzer-x86_64-unknown-linux-gnu.gz
 mv rust-analyzer-x86_64-unknown-linux-gnu rust-analyzer
 chmod +x rust-analyzer
 mv rust-analyzer ~/.local/bin
+rm rust-analyzer-x86_64-unknown-linux-gnu.gz
