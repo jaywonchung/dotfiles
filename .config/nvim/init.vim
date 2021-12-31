@@ -790,7 +790,7 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python" },
+  ensure_installed = { "c", "cpp", "python", "rust" },
   highlight = {
     enable = true,
   },
