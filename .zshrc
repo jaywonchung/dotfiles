@@ -18,8 +18,8 @@ if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
   if [[ "$(git config --global --get user.name)" = "Jae-Won Chung" ]]; then
     # But git username is Jae-Won
     echo Hey, $USER. Remember to run git config with your idendity!
-    echo   git config --global user.name [YOUR NAME HERE]
-    echo   git config --global user.email [YOUR GITHUB EMAIL HERE]
+    echo   git config --global user.name \[YOUR NAME HERE\]
+    echo   git config --global user.email \[YOUR GITHUB EMAIL HERE\]
   fi
 fi
 unset JW_USERS
