@@ -37,6 +37,13 @@ DISABLE_UPDATE_PROMPT="true"
 # Oh-my-zsh plugins
 plugins=(git fast-syntax-highlighting zsh-autosuggestions)
 
+# Homebrew zsh completions
+if command -v brew &> /dev/null; then
+  export FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+  autoload -Uz compinit
+  compinit
+fi
+
 # Configure oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
