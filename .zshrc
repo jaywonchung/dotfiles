@@ -18,6 +18,8 @@ if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
   if [[ "$(git config --global --get user.name)" = "Jae-Won Chung" ]]; then
     # But git username is Jae-Won
     echo Hey, $USER. Remember to run git config with your idendity!
+    echo   git config --global user.name [YOUR NAME HERE]
+    echo   git config --global user.email [YOUR GITHUB EMAIL HERE]
   fi
 fi
 unset JW_USERS
@@ -75,11 +77,7 @@ bindkey '^[#' pound-insert  # alt-#
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="Default"
 POWERLEVEL9K_SHORTEN_DELIMITER=".."
-if [ -n "$NOGIT" ]; then
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir)
-else
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
-fi
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
 
 #-------------------------------------------------------------------
@@ -90,11 +88,6 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Some shell scripts
 export PATH="$HOME/.dotmodules/bin:$PATH"
-
-# Launch and close terminal
-function launch {
-    nohup "$@" >/dev/null 2>/dev/null & disown; exit
-}
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -115,6 +108,7 @@ export PATH="$HOME/.local/src/node/bin:$PATH"
 #-------------------------------------------------------------------
 # Python
 # On CloudLab, conda init is done in /etc/zsh/zshenv
+# See https://github.com/jaywonchung/ngpus-profile
 if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
   CONDA_PREFIX="$HOME/.local/miniconda3"
   __conda_setup="$("$CONDA_PREFIX/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
@@ -138,7 +132,6 @@ alias gcm='git commit -m'
 
 # dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-# compdef dotfiles=git
 alias dst='dotfiles status'
 alias da='dotfiles add'
 alias dcm='dotfiles commit -m'
@@ -150,8 +143,9 @@ alias ddf='dotfiles difftool'
 # nvim
 alias nconf="nvim $HOME/.config/nvim/init.vim"
 
-# add flags
+# Ask confirmation when I'm about to overwrite some file.
 alias cp='cp -i'
+alias mv='mv -i'
 
 # mkdir then cd
 function mkcd() {
@@ -171,6 +165,3 @@ export EDITOR="nvim"
 # nvim as manpage viewer
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
-
-# For xdg-open
-export BROWSER="naver-whale-stable"
