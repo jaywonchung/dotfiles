@@ -17,6 +17,7 @@ if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
   # Username is not Jae-Won's
   if [[ "$(git config --global --get user.name)" = "Jae-Won Chung" ]]; then
     # But git username is Jae-Won
+    DOTFILES_WARN_USER=1
     echo Hey, $USER. Remember to run git config with your idendity!
   fi
 fi
@@ -191,3 +192,8 @@ export MANWIDTH=999
 #-------------------------------------------------------------------
 # kitty
 export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
+
+# terminal scaling issues
+if [[ ! "$DOTFILES_WARN_USER" = 1 ]]; then
+  clear
+fi
