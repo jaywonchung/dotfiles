@@ -1,0 +1,27 @@
+[storage]
+paper_metadata = '~/Google/Sync/reason/metadata.yaml'
+command_history = '~/Google/Sync/reason/history.txt'
+max_history_size = 1000
+note_dir = '~/Google/Sync/reason/notes'
+file_dir = '~/Google/Sync/reason/files'
+
+[filter]
+case_insensitive_regex = true
+
+[output]
+table_columns = [
+    'title',
+    'first author',
+    'venue',
+    'year',
+]
+viewer_command = [
+  'zathura',
+]
+viewer_batch = false
+editor_command = [
+  'nvim',
+  '-p'
+]
+editor_batch = true
+browser_command = ['/Applications/Whale.app/Contents/MacOS/Whale']
