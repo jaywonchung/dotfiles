@@ -19,6 +19,8 @@ if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
     # But git username is Jae-Won
     DOTFILES_WARN_USER=1
     echo Hey, $USER. Remember to run git config with your idendity!
+    echo   git config --global user.name \[YOUR NAME HERE\]
+    echo   git config --global user.email \[YOUR GITHUB EMAIL HERE\]
   fi
 fi
 unset JW_USERS
@@ -95,19 +97,19 @@ export PATH="$HOME/.dotmodules/bin:$PATH"
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Launch and close terminal
+# Launch and detach from terminal
 function launch {
     nohup "$@" >/dev/null 2>/dev/null &
     disown
 }
 
 # Install dotfiles in a remote machine
-function dotfiles-install {
-  (
-    cd;
-    dotfiles show origin/master:install.sh | kitty +kitten ssh -tt $1 'cat | zsh';
-  )
+function infect {
+  kitty +kitten ssh -A -tt $1 'SSH=1 source <(curl jaewonchung.me/install-dotfiles.sh)'
 }
+
+# kitty
+export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
 
 # Kitty ssh
 function kssh {
@@ -152,7 +154,6 @@ alias gcm='git commit -m'
 
 # dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-compdef dotfiles=git
 alias dst='dotfiles status'
 alias da='dotfiles add'
 alias dcm='dotfiles commit -m'
@@ -164,7 +165,7 @@ alias ddf='dotfiles difftool'
 # nvim
 alias nconf="nvim $HOME/.config/nvim/init.vim"
 
-# add flags
+# Ask for confirmation when I'm about to overwrite some file.
 alias cp='cp -i'
 alias mv='mv -i'
 
