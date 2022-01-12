@@ -24,4 +24,4 @@ editor_command = [
   '-p'
 ]
 editor_batch = true
-browser_command = ['/Applications/Whale.app/Contents/MacOS/Whale']
+browser_command = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome']
