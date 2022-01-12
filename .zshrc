@@ -165,3 +165,7 @@ export EDITOR="nvim"
 # nvim as manpage viewer
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
+
+# LLVM
+export PATH="$HOME/.local/src/clang+llvm-13.0.0/bin:$PATH"
+export LD_LIBRARY_PATH="$HOME/.local/src/clang+llvm-13.0.0/lib:$PATH"
