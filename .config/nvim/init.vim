@@ -65,8 +65,6 @@ if has('persistent_undo')
   endif
 endif
 
-let g:searchindex_line_limit=100000
-
 
 " =============================================================================
 " Key mappings
@@ -669,9 +667,9 @@ nnoremap <silent> gd :Telescope lsp_definitions<CR>
 nnoremap <silent> gr :Telescope lsp_references<CR>
 nnoremap <silent> gi :lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> gw :lua require'telescope.builtin'.lsp_workspace_symbols{query = vim.fn.input("Query: ")}<CR>
-nnoremap <silent> gD :lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nnoremap <silent> gn :lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap <silent> gp :lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> gD :lua vim.diagnostic.open_float()<CR>
+nnoremap <silent> gn :lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent> gp :lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent> ga :Telescope lsp_code_actions<CR>
 
 lua << END
@@ -684,8 +682,8 @@ end
 
 cmp.setup({
   mapping = {
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+    ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -696,12 +694,12 @@ cmp.setup({
       end
     end, { "i", "s" }),
     ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
   },
   sources = {
     { name = 'nvim_lsp' },
     { name = 'path' },
-  }
+  },
+  preselect = cmp.PreselectMode.None,
 })
 
 require'lsp_signature'.setup({ hint_prefix = "@" })
@@ -709,16 +707,21 @@ require'lsp_signature'.setup({ hint_prefix = "@" })
 local lspconfig = require'lspconfig'
 local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-if vim.fn.executable('ccls') == 1 then
-  lspconfig.ccls.setup{
-    capabilities = capabilities,
-    init_options = {
-      client = { snippetSupport = false },
-    },
-  }
-  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
-end
+lspconfig.clangd.setup{
+  capabilities = capabilities,
+}
+
+--if vim.fn.executable('ccls') == 1 then
+--  lspconfig.ccls.setup{
+--    single_file_support = true,
+--    capabilities = capabilities,
+--    init_options = {
+--      client = { snippetSupport = false },
+--    },
+--  }
+--  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+--  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
+--end
 
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
@@ -792,7 +795,7 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python" },
+  ensure_installed = { "c", "cpp", "python", "rust" },
   highlight = {
     enable = true,
   },
