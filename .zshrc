@@ -129,6 +129,7 @@ fi
 #-------------------------------------------------------------------
 # git
 alias gcm='git commit -m'
+alias gdf='git difftool'
 
 # dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
