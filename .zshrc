@@ -108,9 +108,6 @@ function infect {
   kitty +kitten ssh -A -tt $1 'SSH=1 source <(curl jaewonchung.me/install-dotfiles.sh)'
 }
 
-# kitty
-export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
-
 # Kitty ssh
 function kssh {
   kitty +kitten ssh $@
@@ -194,6 +191,9 @@ export MANWIDTH=999
 #-------------------------------------------------------------------
 # kitty
 export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
+
+# chrome
+export PATH="/Applications/Google Chrome.app/Contents/MacOS:$PATH"
 
 # terminal scaling issues
 if [[ ! "$DOTFILES_WARN_USER" = 1 ]]; then
