@@ -270,7 +270,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'airblade/vim-rooter'
-Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
 " language server protocol
 Plug 'neovim/nvim-lspconfig'
@@ -280,6 +279,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'j-hui/fidget.nvim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -309,7 +309,7 @@ nnoremap <Leader>aw :ArgWrap<CR>
 " =============================================================================
 nnoremap <silent> <Leader>gy :Goyo<CR>
 
-let g:goyo_width = 90
+let g:goyo_width = 110
 let g:goyo_height = '90%'
 
 
@@ -431,11 +431,6 @@ function! Plain()
   highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
-
-  " Sneak (from gruvbox-material)
-  highlight! link Sneak Search
-  highlight! link SneakLabel Search
-  highlight! link SneakScope DiffText
 endfunction
 
 function! Base16()
@@ -450,11 +445,6 @@ function! Base16()
   highlight! CursorLineNr NONE
   highlight! SignColumn NONE
   highlight! Error NONE
-
-  " Sneak (from gruvbox-material)
-  highlight! link Sneak Search
-  highlight! link SneakLabel Search
-  highlight! link SneakScope DiffText
 
   " Transparent background
   highlight Normal guibg=NONE
@@ -646,18 +636,6 @@ let g:rooter_patterns = ['.git', 'Cargo.toml']
 
 
 " =============================================================================
-" vim-sneak
-" =============================================================================
-let g:sneak#label = 1
-let g:sneak#s_next = 1 " repeating s will take me to the next result
-
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
-
-
-" =============================================================================
 " LSP
 " =============================================================================
 " key bindings
@@ -755,6 +733,13 @@ END
 
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
+
+lua << END
+require'fidget'.setup {
+  text = { spinner = "dots" },
+  window = { blend = 0 },
+}
+END
 
 
 " =============================================================================
