@@ -2,11 +2,9 @@
 
 set -ev
 
-VERSION=${2:-"v0.6.0"}
-
 # Get nightly release
 cd /tmp
-curl -LO "https://github.com/neovim/neovim/releases/download/$VERSION/nvim-linux64.tar.gz"
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
 tar xzf nvim-linux64.tar.gz
 mkdir -p ~/.local
 
