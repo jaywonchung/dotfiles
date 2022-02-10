@@ -23,7 +23,7 @@ if [[ $(uname -m) = arm64 ]]; then
 else
   installing "neovim"
   cd /tmp
-  curl -LO https://github.com/neovim/neovim/releases/download/v0.6.0/nvim-macos.tar.gz
+  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-macos.tar.gz
   tar xzvf nvim-macos.tar.gz
   mkdir -p ~/.local
   rsync -a nvim-macos/* ~/.local/

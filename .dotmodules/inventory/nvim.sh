@@ -2,8 +2,6 @@
 
 set -ev
 
-VERSION=${2:-"v0.6.0"}
-
 if [[ $(uname -m) = arm64 ]]; then
   cd "$HOME/.local/src/neovim"
   git pull
@@ -13,7 +11,7 @@ if [[ $(uname -m) = arm64 ]]; then
 else
   # Get nvim release
   cd /tmp
-  curl -LO "https://github.com/neovim/neovim/releases/download/$VERSION/nvim-macos.tar.gz"
+  curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-macos.tar.gz
   tar xzf nvim-macos.tar.gz
   mkdir -p ~/.local
 
