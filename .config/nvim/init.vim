@@ -280,6 +280,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'j-hui/fidget.nvim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -755,6 +756,13 @@ END
 
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
+
+lua << END
+require'fidget'.setup {
+  text = { spinner = "dots" },
+  window = { blend = 0 },
+}
+END
 
 
 " =============================================================================
