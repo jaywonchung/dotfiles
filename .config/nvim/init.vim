@@ -242,6 +242,9 @@ if filereadable(glob('~/.local/share/nvim/site/autoload/plug.vim')) == 0
 endif
 
 call plug#begin(stdpath('data') . '/plugged')
+" performance
+Plug 'lewis6991/impatient.nvim'
+Plug 'nathom/filetype.nvim'
 " editing
 Plug 'editorconfig/editorconfig-vim'
 Plug 'numToStr/Comment.nvim'
@@ -251,7 +254,6 @@ Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
-Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -271,6 +273,7 @@ Plug 'nvim-lua/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'airblade/vim-rooter'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'ggandor/lightspeed.nvim'
 " language server protocol
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
@@ -280,11 +283,26 @@ Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'j-hui/fidget.nvim'
+Plug 'L3MON4D3/luasnip'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'cespare/vim-toml'
+Plug 'cespare/vim-toml'  " Not needed for nvim >= 0.6
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'rafamadriz/friendly-snippets'
 call plug#end()
+
+" =============================================================================
+" impatient.nvim
+" =============================================================================
+lua require('impatient')
+
+
+" =============================================================================
+" filetype.nvim
+" =============================================================================
+let g:did_load_filetypes = 1  " Not needed for nvim >= 0.6
+
 
 " =============================================================================
 " editorconfig-vim
@@ -652,6 +670,7 @@ nnoremap <silent> ga :Telescope lsp_code_actions<CR>
 
 lua << END
 local cmp = require'cmp';
+local luasnip = require'luasnip';
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -659,35 +678,56 @@ local has_words_before = function()
 end
 
 cmp.setup({
+  snippet = {
+    expand = function(arg)
+      luasnip.lsp_expand(arg.body)
+    end,
+  },
   mapping = {
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+    ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()
       else
         fallback()
       end
     end, { "i", "s" }),
-    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
   },
   sources = {
     { name = 'nvim_lsp' },
     { name = 'path' },
+    { name = 'luasnip' },
   },
   preselect = cmp.PreselectMode.None,
 })
+
+require("luasnip.loaders.from_vscode").load()
 
 require'lsp_signature'.setup({ hint_prefix = "@" })
 
 local lspconfig = require'lspconfig'
 local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-lspconfig.clangd.setup{
-  capabilities = capabilities,
-}
+if vim.fn.executable('clangd') == 1 then
+  lspconfig.clangd.setup{
+    capabilities = capabilities,
+  }
+end
 
 --if vim.fn.executable('ccls') == 1 then
 --  lspconfig.ccls.setup{
