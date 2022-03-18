@@ -49,7 +49,9 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: full
+  decorations: buttonless
+
+  opacity: 0.85
 
   # Startup Mode (changes require restart)
   #
@@ -97,7 +99,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: MesloLGS NF
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -108,7 +110,7 @@ font:
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: MesloLGS NF
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
     #style: Bold
@@ -119,7 +121,7 @@ font:
     #
     # If the italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    family: MesloLGS NF
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
     #style: Italic
@@ -130,13 +132,13 @@ font:
     #
     # If the bold italic family is not specified, it will fall back to the
     # value specified for the normal font.
-    #family: monospace
+    family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
     #style: Bold Italic
 
   # Point size
-  size: 13.0
+  size: 16.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -229,7 +231,7 @@ colors:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.85
+# background_opacity: 0.85
 
 selection:
   #semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
@@ -456,7 +458,7 @@ key_bindings:
   - { key: C,         mods: Control|Shift, action: Copy                                 }
   - { key: N,         mods: Control|Shift, action: SpawnNewInstance                     }
   - { key: Equals,    mods: Control,       action: IncreaseFontSize                     }
-  - { key: Subtract,  mods: Control,       action: DecreaseFontSize                     }
+  - { key: Minus,     mods: Control,       action: DecreaseFontSize                     }
   - { key: F11,                            action: ToggleFullscreen                     }
   - { key: PageUp,    mods: Shift,         action: ScrollPageUp,        mode: ~Alt      }
   - { key: PageDown,  mods: Shift,         action: ScrollPageDown,      mode: ~Alt      }
