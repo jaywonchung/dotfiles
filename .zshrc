@@ -109,7 +109,7 @@ export PATH="$HOME/.local/src/node/bin:$PATH"
 # Python
 # On CloudLab, conda init is done in /etc/zsh/zshenv
 # See https://github.com/jaywonchung/ngpus-profile
-if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
+if [[ ! "$(hostname)" =~ "clgpu" ]]; then
   CONDA_PREFIX="$HOME/.local/miniconda3"
   __conda_setup="$("$CONDA_PREFIX/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
   if [ $? -eq 0 ]; then
