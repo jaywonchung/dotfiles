@@ -191,6 +191,9 @@ inoremap ? ?<C-g>u
 nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 
+" Delete one character in insert mode
+inoremap <C-d> <DEL>
+
 
 " =============================================================================
 " Autocommands
@@ -290,12 +293,13 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'cespare/vim-toml'  " Not needed for nvim >= 0.6
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
+Plug 'lervag/vimtex'
 call plug#end()
 
 " =============================================================================
 " impatient.nvim
 " =============================================================================
-lua require('impatient')
+lua require'impatient'
 
 
 " =============================================================================
@@ -410,7 +414,7 @@ function! GruvboxMaterial()
 
   colorscheme gruvbox-material
 
-  let g:lualine_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox-material'
 
   " Transparent tabline
   highlight! TabLineFill NONE
@@ -439,7 +443,7 @@ function! Plain()
   hi! link LspDiagnosticsDefaultInformation Constant
   hi! link LspDiagnosticsDefaultHint Constant
 
-  let g:lualine_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox-material'
 
   " Search matches (from gruvbox-community)
   highlight! Search     cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
@@ -456,7 +460,7 @@ function! Base16()
   colorscheme base16-gruvbox-dark-hard
   " colorscheme base16-default-dark
 
-  let g:lualine_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox-material'
 
   highlight! link VertSplit SignColumn
   highlight! LineNR NONE
@@ -687,6 +691,7 @@ cmp.setup({
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
     ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { "i", "s" }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -727,6 +732,8 @@ if vim.fn.executable('clangd') == 1 then
   lspconfig.clangd.setup{
     capabilities = capabilities,
   }
+  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
 --if vim.fn.executable('ccls') == 1 then
@@ -756,6 +763,19 @@ if vim.fn.executable('pyright') == 1 then
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
+end
+
+if vim.fn.executable('texlab') == 1 then
+  lspconfig.texlab.setup{
+    capabilities = capabilities,
+    settings = {
+      texlab = {
+        chktex = {
+          onEdit = true,
+        }
+      }
+    }
+  }
 end
 
 -- Configs for diagnostics
@@ -826,6 +846,14 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 END
+
+
+" =============================================================================
+" vimtex
+" =============================================================================
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_open_on_warning = 0
+let maplocalleader=','
 
 
 " =============================================================================

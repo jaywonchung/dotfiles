@@ -186,6 +186,11 @@ export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
 
+# for synctex
+# Requires dbus in MacOS. See vimtex docs section vimtex-faq-zathura-macos.
+export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
+
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------

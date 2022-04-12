@@ -42,3 +42,7 @@ set selection-clipboard clipboard
 
 # Font size
 set font 'monospace normal 14'
+
+# synctex
+set synctex true
+set synctex-editor-command "nvr --remote-silent +%{line} %{input}"
