@@ -266,7 +266,8 @@ Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
 " git integration
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 " navigation
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
@@ -287,6 +288,7 @@ Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'L3MON4D3/luasnip'
+Plug 'RRethy/vim-illuminate'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -495,6 +497,11 @@ function! Nightfly()
   highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+
+  " vim-illuminate
+  highlight LspReferenceText guibg=#162F43
+  highlight LspReferenceRead guibg=#162F43
+  highlight LspReferenceWrite guibg=#162F43
 endfunction
 
 " call Plain()
@@ -542,14 +549,22 @@ let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
 " =============================================================================
 " vim-gitgutter
 " =============================================================================
-" Transparent git gutter backgrounds
-let g:gitgutter_set_sign_backgrounds = 1
+" " Transparent git gutter backgrounds
+" let g:gitgutter_set_sign_backgrounds = 1
+"
+" " The option above clears gutter icon foreground. Re-add.
+" autocmd VimEnter * highlight link GitGutterAdd Green
+" autocmd VimEnter * highlight link GitGutterChange Yellow
+" autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
+" autocmd VimEnter * highlight link GitGutterDelete Red
 
-" The option above clears gutter icon foreground. Re-add.
-autocmd VimEnter * highlight link GitGutterAdd Green
-autocmd VimEnter * highlight link GitGutterChange Yellow
-autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
-autocmd VimEnter * highlight link GitGutterDelete Red
+
+" =============================================================================
+" vim-gitgutter
+" =============================================================================
+lua << END
+require'gitsigns'.setup{}
+END
 
 
 " =============================================================================
@@ -730,6 +745,7 @@ local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.
 
 if vim.fn.executable('clangd') == 1 then
   lspconfig.clangd.setup{
+    on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
   }
   vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
@@ -750,6 +766,7 @@ end
 
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
+    on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
     settings = {
       python = {
@@ -767,6 +784,7 @@ end
 
 if vim.fn.executable('texlab') == 1 then
   lspconfig.texlab.setup{
+    on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
     settings = {
       texlab = {
