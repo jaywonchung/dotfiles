@@ -169,4 +169,4 @@ export MANWIDTH=999
 
 # LLVM
 export PATH="$HOME/.local/src/clang+llvm-13.0.0/bin:$PATH"
-export LD_LIBRARY_PATH="$HOME/.local/src/clang+llvm-13.0.0/lib:$PATH"
+export LD_LIBRARY_PATH="$HOME/.local/src/clang+llvm-13.0.0/lib:$LD_LIBRARY_PATH"
