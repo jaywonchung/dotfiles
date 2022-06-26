@@ -35,18 +35,18 @@ set background=dark             " Dark background
 set number relativenumber       " Show relative line number
 set noshowmode                  " Do not show current mode at the bottom
 " misc
-set mouse=a                     " Mouses are useful for visual selection
+set mouse=a                     " Mouse is useful for visual selection
 set history=256                 " History for commands, searches, etc
 
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
 
-" Set cursor line
+" Cursorline only in the current focused window
 set cursorline
 autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
 
-" Cursor shape: Changes shape based on current mode
+" Cursor shape changes based on current input mode
 set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 " Use the following to use the terminal-default cursor shape
 " set guicursor=
@@ -266,7 +266,6 @@ Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
 " git integration
 Plug 'tpope/vim-fugitive'
-" Plug 'airblade/vim-gitgutter'
 Plug 'lewis6991/gitsigns.nvim'
 " navigation
 Plug 'majutsushi/tagbar'
@@ -499,9 +498,9 @@ function! Nightfly()
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
 
   " vim-illuminate
-  highlight LspReferenceText guibg=#162F43
-  highlight LspReferenceRead guibg=#162F43
-  highlight LspReferenceWrite guibg=#162F43
+  highlight link LspReferenceText CursorLine
+  highlight link LspReferenceRead CursorLine
+  highlight link LspReferenceWrite CursorLine
 endfunction
 
 " call Plain()
@@ -793,6 +792,13 @@ if vim.fn.executable('texlab') == 1 then
         }
       }
     }
+  }
+end
+
+if vim.fn.executable('ltex-ls') == 1 then
+  lspconfig.ltex.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
   }
 end
 
