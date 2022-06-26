@@ -460,6 +460,7 @@ key_bindings:
   - { key: Equals,    mods: Control,       action: IncreaseFontSize                     }
   - { key: Minus,     mods: Control,       action: DecreaseFontSize                     }
   - { key: F11,                            action: ToggleFullscreen                     }
+  - { key: Q, mods: Control, chars: "\x11" }
   - { key: PageUp,    mods: Shift,         action: ScrollPageUp,        mode: ~Alt      }
   - { key: PageDown,  mods: Shift,         action: ScrollPageDown,      mode: ~Alt      }
   - { key: Home,      mods: Shift,         action: ScrollToTop,         mode: ~Alt      }
