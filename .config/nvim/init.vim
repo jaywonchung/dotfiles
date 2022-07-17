@@ -875,7 +875,8 @@ END
 " =============================================================================
 " vimtex
 " =============================================================================
-let g:vimtex_view_method = 'zathura'
+let g:vimtex_view_method = 'sioyek'
+let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
 let g:vimtex_quickfix_open_on_warning = 0
 let maplocalleader=','
 
