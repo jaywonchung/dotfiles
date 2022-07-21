@@ -35,18 +35,18 @@ set background=dark             " Dark background
 set number relativenumber       " Show relative line number
 set noshowmode                  " Do not show current mode at the bottom
 " misc
-set mouse=a                     " Mouses are useful for visual selection
+set mouse=a                     " Mouse is useful for visual selection
 set history=256                 " History for commands, searches, etc
 
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
 
-" Set cursor line
+" Cursorline only in the current focused window
 set cursorline
 autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
 
-" Cursor shape: Changes shape based on current mode
+" Cursor shape changes based on current input mode
 set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 " Use the following to use the terminal-default cursor shape
 " set guicursor=
@@ -191,6 +191,9 @@ inoremap ? ?<C-g>u
 nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'j'
 
+" Delete one character in insert mode
+inoremap <C-d> <DEL>
+
 
 " =============================================================================
 " Autocommands
@@ -242,6 +245,9 @@ if filereadable(glob('~/.local/share/nvim/site/autoload/plug.vim')) == 0
 endif
 
 call plug#begin(stdpath('data') . '/plugged')
+" performance
+Plug 'lewis6991/impatient.nvim'
+Plug 'nathom/filetype.nvim'
 " editing
 Plug 'editorconfig/editorconfig-vim'
 Plug 'numToStr/Comment.nvim'
@@ -251,7 +257,6 @@ Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
-Plug 'iamcco/markdown-preview.nvim', {'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -261,7 +266,7 @@ Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
 " git integration
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+Plug 'lewis6991/gitsigns.nvim'
 " navigation
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
@@ -270,8 +275,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'airblade/vim-rooter'
-Plug 'justinmk/vim-sneak'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'ggandor/lightspeed.nvim'
 " language server protocol
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
@@ -281,11 +286,28 @@ Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'j-hui/fidget.nvim'
+Plug 'L3MON4D3/luasnip'
+Plug 'RRethy/vim-illuminate'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'cespare/vim-toml'
+Plug 'cespare/vim-toml'  " Not needed for nvim >= 0.6
+Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'rafamadriz/friendly-snippets'
+Plug 'lervag/vimtex'
 call plug#end()
+
+" =============================================================================
+" impatient.nvim
+" =============================================================================
+lua require'impatient'
+
+
+" =============================================================================
+" filetype.nvim
+" =============================================================================
+let g:did_load_filetypes = 1  " Not needed for nvim >= 0.6
+
 
 " =============================================================================
 " editorconfig-vim
@@ -310,7 +332,7 @@ nnoremap <Leader>aw :ArgWrap<CR>
 " =============================================================================
 nnoremap <silent> <Leader>gy :Goyo<CR>
 
-let g:goyo_width = 90
+let g:goyo_width = 110
 let g:goyo_height = '90%'
 
 
@@ -393,7 +415,7 @@ function! GruvboxMaterial()
 
   colorscheme gruvbox-material
 
-  let g:lualine_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox-material'
 
   " Transparent tabline
   highlight! TabLineFill NONE
@@ -422,7 +444,7 @@ function! Plain()
   hi! link LspDiagnosticsDefaultInformation Constant
   hi! link LspDiagnosticsDefaultHint Constant
 
-  let g:lualine_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox-material'
 
   " Search matches (from gruvbox-community)
   highlight! Search     cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
@@ -432,11 +454,6 @@ function! Plain()
   highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
-
-  " Sneak (from gruvbox-material)
-  highlight! link Sneak Search
-  highlight! link SneakLabel Search
-  highlight! link SneakScope DiffText
 endfunction
 
 function! Base16()
@@ -444,18 +461,13 @@ function! Base16()
   colorscheme base16-gruvbox-dark-hard
   " colorscheme base16-default-dark
 
-  let g:lualine_theme = 'gruvbox_material'
+  let g:lualine_theme = 'gruvbox-material'
 
   highlight! link VertSplit SignColumn
   highlight! LineNR NONE
   highlight! CursorLineNr NONE
   highlight! SignColumn NONE
   highlight! Error NONE
-
-  " Sneak (from gruvbox-material)
-  highlight! link Sneak Search
-  highlight! link SneakLabel Search
-  highlight! link SneakScope DiffText
 
   " Transparent background
   highlight Normal guibg=NONE
@@ -484,6 +496,11 @@ function! Nightfly()
   highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+
+  " vim-illuminate
+  highlight link LspReferenceText CursorLine
+  highlight link LspReferenceRead CursorLine
+  highlight link LspReferenceWrite CursorLine
 endfunction
 
 " call Plain()
@@ -531,14 +548,22 @@ let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
 " =============================================================================
 " vim-gitgutter
 " =============================================================================
-" Transparent git gutter backgrounds
-let g:gitgutter_set_sign_backgrounds = 1
+" " Transparent git gutter backgrounds
+" let g:gitgutter_set_sign_backgrounds = 1
+"
+" " The option above clears gutter icon foreground. Re-add.
+" autocmd VimEnter * highlight link GitGutterAdd Green
+" autocmd VimEnter * highlight link GitGutterChange Yellow
+" autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
+" autocmd VimEnter * highlight link GitGutterDelete Red
 
-" The option above clears gutter icon foreground. Re-add.
-autocmd VimEnter * highlight link GitGutterAdd Green
-autocmd VimEnter * highlight link GitGutterChange Yellow
-autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
-autocmd VimEnter * highlight link GitGutterDelete Red
+
+" =============================================================================
+" vim-gitgutter
+" =============================================================================
+lua << END
+require'gitsigns'.setup{}
+END
 
 
 " =============================================================================
@@ -647,18 +672,6 @@ let g:rooter_patterns = ['.git', 'Cargo.toml']
 
 
 " =============================================================================
-" vim-sneak
-" =============================================================================
-let g:sneak#label = 1
-let g:sneak#s_next = 1 " repeating s will take me to the next result
-
-map f <Plug>Sneak_f
-map F <Plug>Sneak_F
-map t <Plug>Sneak_t
-map T <Plug>Sneak_T
-
-
-" =============================================================================
 " LSP
 " =============================================================================
 " key bindings
@@ -675,6 +688,7 @@ nnoremap <silent> ga :Telescope lsp_code_actions<CR>
 
 lua << END
 local cmp = require'cmp';
+local luasnip = require'luasnip';
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -682,35 +696,60 @@ local has_words_before = function()
 end
 
 cmp.setup({
+  snippet = {
+    expand = function(arg)
+      luasnip.lsp_expand(arg.body)
+    end,
+  },
   mapping = {
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+    ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { "i", "s" }),
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
       elseif has_words_before() then
         cmp.complete()
       else
         fallback()
       end
     end, { "i", "s" }),
-    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
   },
   sources = {
     { name = 'nvim_lsp' },
     { name = 'path' },
+    { name = 'luasnip' },
   },
   preselect = cmp.PreselectMode.None,
 })
+
+require("luasnip.loaders.from_vscode").load()
 
 require'lsp_signature'.setup({ hint_prefix = "@" })
 
 local lspconfig = require'lspconfig'
 local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-lspconfig.clangd.setup{
-  capabilities = capabilities,
-}
+if vim.fn.executable('clangd') == 1 then
+  lspconfig.clangd.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+  }
+  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
+end
 
 --if vim.fn.executable('ccls') == 1 then
 --  lspconfig.ccls.setup{
@@ -726,6 +765,7 @@ lspconfig.clangd.setup{
 
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
+    on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
     settings = {
       python = {
@@ -739,6 +779,27 @@ if vim.fn.executable('pyright') == 1 then
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
   vim.cmd('autocmd FileType python setlocal signcolumn=yes')
+end
+
+if vim.fn.executable('texlab') == 1 then
+  lspconfig.texlab.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+    settings = {
+      texlab = {
+        chktex = {
+          onEdit = true,
+        }
+      }
+    }
+  }
+end
+
+if vim.fn.executable('ltex-ls') == 1 then
+  lspconfig.ltex.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+  }
 end
 
 -- Configs for diagnostics
@@ -809,6 +870,15 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 END
+
+
+" =============================================================================
+" vimtex
+" =============================================================================
+let g:vimtex_view_method = 'sioyek'
+let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
+let g:vimtex_quickfix_open_on_warning = 0
+let maplocalleader=','
 
 
 " =============================================================================
