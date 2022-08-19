@@ -154,6 +154,11 @@ function mkcd() {
   cd $1
 }
 
+# Wait for a process to finish
+function waitpid() {
+  tail --pid $1 -f /dev/null
+}
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
