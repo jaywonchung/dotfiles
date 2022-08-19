@@ -200,6 +200,9 @@ export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
 # chrome
 export PATH="/Applications/Google Chrome.app/Contents/MacOS:$PATH"
 
+# sioyek
+export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
+
 # terminal scaling issues
 if [[ ! "$DOTFILES_WARN_USER" = 1 ]]; then
   clear
