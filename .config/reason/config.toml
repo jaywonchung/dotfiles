@@ -16,7 +16,8 @@ table_columns = [
     'year',
 ]
 viewer_command = [
-  'zathura',
+  '/Applications/sioyek.app/Contents/MacOS/sioyek',
+  '--new-instance',
 ]
 viewer_batch = false
 editor_command = [
