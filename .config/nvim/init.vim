@@ -621,7 +621,11 @@ let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':
 nnoremap <Leader>f  :Telescope find_files<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
-nnoremap gs         :Telescope live_grep<CR>
+if executable("rg")
+  nnoremap gs         :Telescope live_grep<CR>
+else
+  echom "RipGrep (rg) is not installed. Disabling Telescope live_grep."
+endif
 
 lua << END
 local action_state = require('telescope.actions.state')
