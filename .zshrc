@@ -37,7 +37,7 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_UPDATE_PROMPT="true"
 
 # Oh-my-zsh plugins
-plugins=(git fast-syntax-highlighting zsh-autosuggestions)
+plugins=(git fast-syntax-highlighting zsh-autosuggestions docker)
 
 # Disable completion script permission check
 ZSH_DISABLE_COMPFIX="true"
