@@ -688,7 +688,7 @@ nnoremap <silent> gw :lua require'telescope.builtin'.lsp_workspace_symbols{query
 nnoremap <silent> gD :lua vim.diagnostic.open_float()<CR>
 nnoremap <silent> gn :lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.diagnostic.goto_prev()<CR>
-nnoremap <silent> ga :Telescope lsp_code_actions<CR>
+nnoremap <silent> ga :lua vim.lsp.buf.code_action()<CR>
 
 lua << END
 local cmp = require'cmp';
