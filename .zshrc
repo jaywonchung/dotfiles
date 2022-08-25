@@ -159,6 +159,15 @@ function waitpid() {
   tail --pid $1 -f /dev/null
 }
 
+# Zeus
+function zeus_power() {
+  python -c "from zeus.analyze import *; print(avg_power(\"$1\"))"
+}
+
+function zeus_energy() {
+  python -c "from zeus.analyze import *; print(energy(\"$1\"))"
+}
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
