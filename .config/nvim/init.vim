@@ -233,6 +233,9 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " Rust
 autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
 
+" Go
+autocmd FileType go setlocal shiftwidth=8 tabstop=8 softtabstop=8
+
 
 " =============================================================================
 " Plugins
@@ -755,18 +758,6 @@ if vim.fn.executable('clangd') == 1 then
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
---if vim.fn.executable('ccls') == 1 then
---  lspconfig.ccls.setup{
---    single_file_support = true,
---    capabilities = capabilities,
---    init_options = {
---      client = { snippetSupport = false },
---    },
---  }
---  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
---  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
---end
-
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
     on_attach = require'illuminate'.on_attach,
@@ -801,6 +792,13 @@ end
 
 if vim.fn.executable('ltex-ls') == 1 then
   lspconfig.ltex.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+  }
+end
+
+if vim.fn.executable('gopls') == 1 then
+  lspconfig.gopls.setup{
     on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
   }
@@ -868,7 +866,7 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust" },
+  ensure_installed = { "c", "cpp", "python", "rust", "go" },
   highlight = {
     enable = true,
   },

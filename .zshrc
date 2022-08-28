@@ -124,6 +124,10 @@ if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
   unset __conda_setup
 fi
 
+# Go
+export PATH="$HOME/.local/go/bin:$HOME/go/bin:$PATH"
+export LD_LIBRARY_PATH="HOME/.local/go/lib:$LD_LIBRARY_PATH"
+
 #-------------------------------------------------------------------
 # Aliases
 #-------------------------------------------------------------------
