@@ -271,8 +271,8 @@ Plug 'bluz71/vim-nightfly-guicolors'
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
 " navigation
-Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+" Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
@@ -291,6 +291,7 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'L3MON4D3/luasnip'
 Plug 'RRethy/vim-illuminate'
+Plug 'liuchengxu/vista.vim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -549,20 +550,7 @@ let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
 
 
 " =============================================================================
-" vim-gitgutter
-" =============================================================================
-" " Transparent git gutter backgrounds
-" let g:gitgutter_set_sign_backgrounds = 1
-"
-" " The option above clears gutter icon foreground. Re-add.
-" autocmd VimEnter * highlight link GitGutterAdd Green
-" autocmd VimEnter * highlight link GitGutterChange Yellow
-" autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
-" autocmd VimEnter * highlight link GitGutterDelete Red
-
-
-" =============================================================================
-" vim-gitgutter
+" gitsigns.nvim
 " =============================================================================
 lua << END
 require'gitsigns'.setup{}
@@ -570,51 +558,108 @@ END
 
 
 " =============================================================================
-" Tagbar
+" vista.vim
 " =============================================================================
-nnoremap <silent> <Leader>t :TagbarToggle<CR>
+let g:vista_default_executive = 'nvim_lsp'
+let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+let g:vista_no_mappings = 1
 
-" First show in the order that appears in the source
-let g:tagbar_sort = 0
-
-" Do not close tagbar on jump
-let g:tagbar_autoclose = 0
+nnoremap <silent> <Leader>t :Vista!!<CR>
+autocmd FileType vista,vista_kind
+    \ nnoremap <buffer> <silent> <CR> :call vista#cursor#FoldOrJump()<CR>
 
 
 " =============================================================================
-" NERDTree
+" nvim-tree.lua
 " =============================================================================
-nnoremap <silent> <C-f> :NERDTreeFind<CR>
+nnoremap <silent> <C-f> :NvimTreeFindFile<CR>
 
-" NERDTreeToggle but does not move focus
-function! NERDTreeToggleNoFocus()
-  if (exists("g:NERDTree") && g:NERDTree.IsOpen() == 1)
-    NERDTreeClose
-  else
-    NERDTreeFind
-    wincmd p
-  endif
-endfunction
-nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
+nnoremap <silent> <Leader>n :lua require'nvim-tree.api'.tree.toggle(true, true)<CR>
 
-" Open NERDTree on startup
+lua <<END
+require'nvim-tree'.setup({
+  update_focused_file = {
+    enable = true,
+    update_root = true,
+  },
+  open_on_setup_file = not vim.opt.diff:get() and #vim.v.argv > 1,
+  open_on_tab = true,
+  view = {
+    mappings = {
+      list = {
+        { key = "<C-e>", action = "" },
+        { key = "<C-s>", action = "split" },
+        { key = "<C-g>", action = "tabnew" },
+        { key = "<F2>",  action = "rename" },
+        { key = "s",     action = "" },
+      }
+    }
+  }
+})
+END
+
 if argc() > 0 && &diff == 0 && &columns > 125
-  autocmd VimEnter * silent call NERDTreeToggleNoFocus()
+  " autocmd VimEnter * lua require'nvim-tree.api'.tree.toggle(true, true)
+  " autocmd VimEnter * NvimTreeFindFile | wincmd p | wincmd p
 endif
 
-" Quit NERDTree when its the only window open
-function! NERDTreeAutoQuit()
-  if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
-    q
+function! NvimTreeAutoQuit()
+  " If nvim-tree is the only window left, close it.
+  if winnr("$") == 1
+    if bufname() == 'NvimTree_' . tabpagenr()
+      q
+    endif
+  " Even when there are more than one windows, we want to ignore
+  " floating windows.
+  else
+    for winid in nvim_list_wins()
+      " The existence of a window that is not nvim-tree and is not floating
+      " means that we cannot quit everything.
+      if bufname(nvim_win_get_buf(winid)) != 'NvimTree_' . tabpagenr()
+        if !has_key(nvim_win_get_config(winid), 'zindex')
+          return
+        endif
+      endif
+    endfor
+    qa
   endif
 endfunction
-autocmd BufEnter * silent call NERDTreeAutoQuit()
+autocmd BufEnter * silent call NvimTreeAutoQuit()
 
-" Key mappings
-let NERDTreeMapOpenInTab='<C-g>'
-let NERDTreeMapOpenSplit='<C-s>'
-let NERDTreeMapOpenVSplit='<C-v>'
-let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':1,'stay':0}}
+" nnoremap <silent> <C-f> :NERDTreeFind<CR>
+"
+" " NERDTreeToggle but does not move focus
+" function! NERDTreeToggleNoFocus()
+"   if (exists("g:NERDTree") && g:NERDTree.IsOpen() == 1)
+"     NERDTreeClose
+"   else
+"     NERDTreeFind
+"     wincmd p
+"   endif
+" endfunction
+" nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
+"
+" " Open NERDTree on startup
+" if argc() > 0 && &diff == 0 && &columns > 125
+"   autocmd VimEnter * silent call NERDTreeToggleNoFocus()
+" endif
+"
+" " Quit NERDTree when its the only window open
+" " FIXME: Should ignore the floating window opened by fidget.nvim.
+" function! NERDTreeAutoQuit()
+"   if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
+"     q
+"   endif
+" endfunction
+" autocmd BufEnter * silent call NERDTreeAutoQuit()
+"
+" " Key mappings
+" let NERDTreeMapOpenInTab='<C-g>'
+" let NERDTreeMapOpenSplit='<C-s>'
+" let NERDTreeMapOpenVSplit='<C-v>'
+" let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':1,'stay':0}}
 
 
 " =============================================================================
