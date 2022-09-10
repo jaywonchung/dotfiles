@@ -204,6 +204,7 @@ export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
 
 # chrome
 export PATH="/Applications/Google Chrome.app/Contents/MacOS:$PATH"
+alias chrome="Google Chrome"
 
 # sioyek
 export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
