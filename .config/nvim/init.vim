@@ -233,6 +233,9 @@ autocmd FileType verilog setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " Rust
 autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
 
+" Go
+autocmd FileType go setlocal shiftwidth=8 tabstop=8 softtabstop=8
+
 
 " =============================================================================
 " Plugins
@@ -264,12 +267,13 @@ Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
+Plug 'sam4llis/nvim-tundra'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
 " navigation
-Plug 'majutsushi/tagbar'
-Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+" Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
@@ -288,6 +292,7 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'j-hui/fidget.nvim'
 Plug 'L3MON4D3/luasnip'
 Plug 'RRethy/vim-illuminate'
+Plug 'liuchengxu/vista.vim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -503,10 +508,33 @@ function! Nightfly()
   highlight link LspReferenceWrite CursorLine
 endfunction
 
+function! Tundra() 
+  lua require'nvim-tundra'.setup({transparent_background = true})
+
+  colorscheme tundra
+
+  let g:lualine_theme = 'nightfly'
+
+  " Enhancements
+  highlight! link VertSplit SignColumn
+  highlight! CursorLine guibg=#092236
+
+  " Vimdiff (from gruvbox-community)
+  highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+  highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
+  highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+
+  " vim-illuminate
+  highlight link LspReferenceText CursorLine
+  highlight link LspReferenceRead CursorLine
+  highlight link LspReferenceWrite CursorLine
+endfunction
+
 " call Plain()
 " call GruvboxMaterial()
 " call Base16()
-call Nightfly()
+" call Nightfly()
+call Tundra()
 
 
 " =============================================================================
@@ -546,72 +574,79 @@ let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
 
 
 " =============================================================================
-" vim-gitgutter
+" gitsigns.nvim
 " =============================================================================
-" " Transparent git gutter backgrounds
-" let g:gitgutter_set_sign_backgrounds = 1
-"
-" " The option above clears gutter icon foreground. Re-add.
-" autocmd VimEnter * highlight link GitGutterAdd Green
-" autocmd VimEnter * highlight link GitGutterChange Yellow
-" autocmd VimEnter * highlight link GitGutterChangeDelete Yellow
-" autocmd VimEnter * highlight link GitGutterDelete Red
+lua require'gitsigns'.setup{}
 
 
 " =============================================================================
-" vim-gitgutter
+" vista.vim
 " =============================================================================
-lua << END
-require'gitsigns'.setup{}
+let g:vista_default_executive = 'nvim_lsp'
+let g:vista_echo_cursor_strategy = 'floating_win'
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+let g:vista_no_mappings = 1
+
+nnoremap <silent> <Leader>t :Vista!!<CR>
+autocmd FileType vista,vista_kind
+    \ nnoremap <buffer> <silent> <CR> :call vista#cursor#FoldOrJump()<CR>
+
+
+" =============================================================================
+" nvim-tree.lua
+" =============================================================================
+nnoremap <silent> <C-f> :NvimTreeFindFile<CR>
+
+nnoremap <silent> <Leader>n :lua require'nvim-tree.api'.tree.toggle(true, true)<CR>
+
+lua <<END
+local open_on_start = not vim.opt.diff:get()
+                      and #vim.v.argv > 1
+                      and vim.opt.columns:get() > 125
+require'nvim-tree'.setup({
+  update_focused_file = {
+    enable = true,
+    update_root = true,
+  },
+  open_on_setup_file = open_on_start,
+  open_on_tab = true,
+  view = {
+    mappings = {
+      list = {
+        { key = "<C-e>", action = "" },
+        { key = "<C-s>", action = "split" },
+        { key = "<C-g>", action = "tabnew" },
+        { key = "<F2>",  action = "rename" },
+        { key = "s",     action = "" },
+      }
+    }
+  }
+})
 END
 
-
-" =============================================================================
-" Tagbar
-" =============================================================================
-nnoremap <silent> <Leader>t :TagbarToggle<CR>
-
-" First show in the order that appears in the source
-let g:tagbar_sort = 0
-
-" Do not close tagbar on jump
-let g:tagbar_autoclose = 0
-
-
-" =============================================================================
-" NERDTree
-" =============================================================================
-nnoremap <silent> <C-f> :NERDTreeFind<CR>
-
-" NERDTreeToggle but does not move focus
-function! NERDTreeToggleNoFocus()
-  if (exists("g:NERDTree") && g:NERDTree.IsOpen() == 1)
-    NERDTreeClose
+function! NvimTreeAutoQuit()
+  " If nvim-tree is the only window left, close it.
+  if winnr("$") == 1
+    if bufname() == 'NvimTree_' . tabpagenr()
+      q
+    endif
+  " Even when there are more than one windows, we want to ignore
+  " floating windows.
   else
-    NERDTreeFind
-    wincmd p
+    for winid in nvim_list_wins()
+      " The existence of a window that is not nvim-tree and is not floating
+      " means that we cannot quit everything.
+      if bufname(nvim_win_get_buf(winid)) != 'NvimTree_' . tabpagenr()
+        if !has_key(nvim_win_get_config(winid), 'zindex')
+          return
+        endif
+      endif
+    endfor
+    qa
   endif
 endfunction
-nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
-
-" Open NERDTree on startup
-if argc() > 0 && &diff == 0 && &columns > 125
-  autocmd VimEnter * silent call NERDTreeToggleNoFocus()
-endif
-
-" Quit NERDTree when its the only window open
-function! NERDTreeAutoQuit()
-  if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
-    q
-  endif
-endfunction
-autocmd BufEnter * silent call NERDTreeAutoQuit()
-
-" Key mappings
-let NERDTreeMapOpenInTab='<C-g>'
-let NERDTreeMapOpenSplit='<C-s>'
-let NERDTreeMapOpenVSplit='<C-v>'
-let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':1,'stay':0}}
+autocmd BufEnter * silent call NvimTreeAutoQuit()
 
 
 " =============================================================================
@@ -688,7 +723,7 @@ nnoremap <silent> gw :lua require'telescope.builtin'.lsp_workspace_symbols{query
 nnoremap <silent> gD :lua vim.diagnostic.open_float()<CR>
 nnoremap <silent> gn :lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.diagnostic.goto_prev()<CR>
-nnoremap <silent> ga :Telescope lsp_code_actions<CR>
+nnoremap <silent> ga :lua vim.lsp.buf.code_action()<CR>
 
 lua << END
 local cmp = require'cmp';
@@ -755,18 +790,6 @@ if vim.fn.executable('clangd') == 1 then
   vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
---if vim.fn.executable('ccls') == 1 then
---  lspconfig.ccls.setup{
---    single_file_support = true,
---    capabilities = capabilities,
---    init_options = {
---      client = { snippetSupport = false },
---    },
---  }
---  vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
---  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
---end
-
 if vim.fn.executable('pyright') == 1 then
   lspconfig.pyright.setup{
     on_attach = require'illuminate'.on_attach,
@@ -801,6 +824,13 @@ end
 
 if vim.fn.executable('ltex-ls') == 1 then
   lspconfig.ltex.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+  }
+end
+
+if vim.fn.executable('gopls') == 1 then
+  lspconfig.gopls.setup{
     on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
   }
@@ -868,7 +898,7 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust" },
+  ensure_installed = { "c", "cpp", "python", "rust", "go" },
   highlight = {
     enable = true,
   },
