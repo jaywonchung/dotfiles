@@ -34,17 +34,13 @@ set showmatch                   " Highlight matching braces
 set background=dark             " Dark background
 set number relativenumber       " Show relative line number
 set noshowmode                  " Do not show current mode at the bottom
+set cursorline                  " Highlight the row where the cursor is on
 " misc
 set mouse=a                     " Mouse is useful for visual selection
 set history=256                 " History for commands, searches, etc
 
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
-
-" Cursorline only in the current focused window
-set cursorline
-autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-autocmd WinLeave * setlocal nocursorline
 
 " Cursor shape changes based on current input mode
 set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
@@ -496,6 +492,9 @@ function! Nightfly()
 
   let g:lualine_theme = 'nightfly'
 
+  " Enhancements
+  highlight! VertSplit None
+
   " Vimdiff (from gruvbox-community)
   highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
@@ -516,6 +515,8 @@ function! Tundra()
 
   " Enhancements
   highlight! link VertSplit SignColumn
+
+  " Cursor line (from nightfly)
   highlight! CursorLine guibg=#092236
 
   " Vimdiff (from gruvbox-community)
