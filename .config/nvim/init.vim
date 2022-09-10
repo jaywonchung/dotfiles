@@ -34,17 +34,13 @@ set showmatch                   " Highlight matching braces
 set background=dark             " Dark background
 set number relativenumber       " Show relative line number
 set noshowmode                  " Do not show current mode at the bottom
+set cursorline                  " Highlight the row where the cursor is on
 " misc
 set mouse=a                     " Mouse is useful for visual selection
 set history=256                 " History for commands, searches, etc
 
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
-
-" Cursorline only in the current focused window
-set cursorline
-autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-autocmd WinLeave * setlocal nocursorline
 
 " Cursor shape changes based on current input mode
 set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
@@ -267,11 +263,11 @@ Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
+Plug 'sam4llis/nvim-tundra'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
 " navigation
-" Plug 'scrooloose/nerdtree', {'on': ['NERDTreeToggle', 'NERDTreeFind']}
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
@@ -507,10 +503,33 @@ function! Nightfly()
   highlight link LspReferenceWrite CursorLine
 endfunction
 
+function! Tundra() 
+  lua require'nvim-tundra'.setup({transparent_background = true})
+
+  colorscheme tundra
+
+  let g:lualine_theme = 'nightfly'
+
+  " Enhancements
+  highlight! link VertSplit SignColumn
+  highlight! CursorLine guibg=#092236
+
+  " Vimdiff (from gruvbox-community)
+  highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
+  highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
+  highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
+
+  " vim-illuminate
+  highlight link LspReferenceText CursorLine
+  highlight link LspReferenceRead CursorLine
+  highlight link LspReferenceWrite CursorLine
+endfunction
+
 " call Plain()
 " call GruvboxMaterial()
 " call Base16()
-call Nightfly()
+" call Nightfly()
+call Tundra()
 
 
 " =============================================================================
@@ -552,9 +571,7 @@ let g:markdown_fenced_languages = ["python", "sh", "bash=sh"]
 " =============================================================================
 " gitsigns.nvim
 " =============================================================================
-lua << END
-require'gitsigns'.setup{}
-END
+lua require'gitsigns'.setup{}
 
 
 " =============================================================================
@@ -579,12 +596,15 @@ nnoremap <silent> <C-f> :NvimTreeFindFile<CR>
 nnoremap <silent> <Leader>n :lua require'nvim-tree.api'.tree.toggle(true, true)<CR>
 
 lua <<END
+local open_on_start = not vim.opt.diff:get()
+                      and #vim.v.argv > 1
+                      and vim.opt.columns:get() > 125
 require'nvim-tree'.setup({
   update_focused_file = {
     enable = true,
     update_root = true,
   },
-  open_on_setup_file = not vim.opt.diff:get() and #vim.v.argv > 1,
+  open_on_setup_file = open_on_start,
   open_on_tab = true,
   view = {
     mappings = {
@@ -599,11 +619,6 @@ require'nvim-tree'.setup({
   }
 })
 END
-
-if argc() > 0 && &diff == 0 && &columns > 125
-  " autocmd VimEnter * lua require'nvim-tree.api'.tree.toggle(true, true)
-  " autocmd VimEnter * NvimTreeFindFile | wincmd p | wincmd p
-endif
 
 function! NvimTreeAutoQuit()
   " If nvim-tree is the only window left, close it.
@@ -627,39 +642,6 @@ function! NvimTreeAutoQuit()
   endif
 endfunction
 autocmd BufEnter * silent call NvimTreeAutoQuit()
-
-" nnoremap <silent> <C-f> :NERDTreeFind<CR>
-"
-" " NERDTreeToggle but does not move focus
-" function! NERDTreeToggleNoFocus()
-"   if (exists("g:NERDTree") && g:NERDTree.IsOpen() == 1)
-"     NERDTreeClose
-"   else
-"     NERDTreeFind
-"     wincmd p
-"   endif
-" endfunction
-" nnoremap <silent> <Leader>n :call NERDTreeToggleNoFocus()<CR>
-"
-" " Open NERDTree on startup
-" if argc() > 0 && &diff == 0 && &columns > 125
-"   autocmd VimEnter * silent call NERDTreeToggleNoFocus()
-" endif
-"
-" " Quit NERDTree when its the only window open
-" " FIXME: Should ignore the floating window opened by fidget.nvim.
-" function! NERDTreeAutoQuit()
-"   if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree())
-"     q
-"   endif
-" endfunction
-" autocmd BufEnter * silent call NERDTreeAutoQuit()
-"
-" " Key mappings
-" let NERDTreeMapOpenInTab='<C-g>'
-" let NERDTreeMapOpenSplit='<C-s>'
-" let NERDTreeMapOpenVSplit='<C-v>'
-" let NERDTreeCustomOpenArgs={'file':{'reuse':'currenttab','where':'p','keepopen':1,'stay':0}}
 
 
 " =============================================================================
