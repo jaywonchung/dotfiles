@@ -492,6 +492,9 @@ function! Nightfly()
 
   let g:lualine_theme = 'nightfly'
 
+  " Enhancements
+  highlight! VertSplit None
+
   " Vimdiff (from gruvbox-community)
   highlight! DiffText   cterm=reverse ctermfg=214 ctermbg=235 gui=reverse guifg=#fabd2f guibg=#282828
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
@@ -512,6 +515,8 @@ function! Tundra()
 
   " Enhancements
   highlight! link VertSplit SignColumn
+
+  " Cursor line (from nightfly)
   highlight! CursorLine guibg=#092236
 
   " Vimdiff (from gruvbox-community)
