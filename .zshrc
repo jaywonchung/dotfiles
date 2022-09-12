@@ -37,7 +37,7 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_UPDATE_PROMPT="true"
 
 # Oh-my-zsh plugins
-plugins=(git fast-syntax-highlighting zsh-autosuggestions)
+plugins=(git fast-syntax-highlighting zsh-autosuggestions docker)
 
 # Disable completion script permission check
 ZSH_DISABLE_COMPFIX="true"
@@ -157,6 +157,15 @@ function mkcd() {
 # Wait for a process to finish
 function waitpid() {
   tail --pid $1 -f /dev/null
+}
+
+# Zeus
+function zeus_power() {
+  python -c "from zeus.analyze import *; print(avg_power(\"$1\"))"
+}
+
+function zeus_energy() {
+  python -c "from zeus.analyze import *; print(energy(\"$1\"))"
 }
 
 #-------------------------------------------------------------------
