@@ -822,10 +822,14 @@ if vim.fn.executable('texlab') == 1 then
   }
 end
 
+local ltex_config = loadfile(os.getenv("HOME") .. "/.config/ltex/config.lua")()
 if vim.fn.executable('ltex-ls') == 1 then
   lspconfig.ltex.setup{
     on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
+    settings = {
+      ltex = ltex_config,
+    }
   }
 end
 
