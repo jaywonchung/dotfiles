@@ -61,6 +61,9 @@ if has('persistent_undo')
   endif
 endif
 
+" Edit config
+command Nconf tabe ~/.config/nvim/init.vim
+
 
 " =============================================================================
 " Key mappings
@@ -81,7 +84,6 @@ nnoremap <silent> <C-c> :noh<CR>
 " Leader mappings
 let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
-nnoremap <Leader>qw :wq<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
@@ -159,7 +161,6 @@ function! ToggleRelnum() abort
     set relativenumber
   endif
 endfunction
-
 nnoremap <silent> <Leader>r :call ToggleRelnum()<CR>
 
 " Neovim terminal
@@ -356,20 +357,11 @@ let g:floaterm_autoclose = 2
 nnoremap <CR> :FloatermToggle<CR>
 tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 
-" Wrappers
-command! Vifm FloatermNew vifm
-
 " Disable git plugin inside floaterm
 let g:floaterm_shell = 'zsh'
 
 " Prettier borders
 let g:floaterm_borderchars = '─│─│╭╮╯╰'
-
-
-" =============================================================================
-" markdown-preview
-" =============================================================================
-let g:mkdp_auto_close = 0
 
 
 " =============================================================================
@@ -681,6 +673,8 @@ require'telescope'.setup{
         ["<C-c>"] = actions.close,
         ["<C-y>"] = preview_scroll_up_one,
         ["<C-e>"] = preview_scroll_down_one,
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<C-j>"] = actions.move_selection_next,
       },
       i = {
         ["<C-c>"] = actions.close,
@@ -689,6 +683,8 @@ require'telescope'.setup{
         ["<C-e>"] = preview_scroll_down_one,
         ["<C-v>"] = actions.select_vertical,
         ["<C-s>"] = actions.select_horizontal,
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<C-j>"] = actions.move_selection_next,
       }
     }
   },
@@ -733,6 +729,26 @@ local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line-1, line, true)[1]:sub(col, col):match("%s") == nil
 end
+local tab_function = function(fallback)
+  if cmp.visible() then
+    cmp.select_next_item()
+  elseif luasnip.expand_or_jumpable() then
+    luasnip.expand_or_jump()
+  elseif has_words_before() then
+    cmp.complete()
+  else
+    fallback()
+  end
+end
+local stab_function = function(fallback)
+  if cmp.visible() then
+    cmp.select_prev_item()
+  elseif luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  else
+    fallback()
+  end
+end
 
 cmp.setup({
   snippet = {
@@ -744,27 +760,9 @@ cmp.setup({
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
     ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
-    ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { "i", "s" }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      elseif has_words_before() then
-        cmp.complete()
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { 'i', 's' }),
+    ['<Tab>'] = cmp.mapping(tab_function, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(stab_function, { 'i', 's' }),
   },
   sources = {
     { name = 'nvim_lsp' },
