@@ -777,7 +777,7 @@ require("luasnip.loaders.from_vscode").load()
 require'lsp_signature'.setup({ hint_prefix = "@" })
 
 local lspconfig = require'lspconfig'
-local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 
 if vim.fn.executable('clangd') == 1 then
   lspconfig.clangd.setup{
@@ -867,7 +867,7 @@ END
 " rust-tools.nvim
 " =============================================================================
 lua << END
-local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()) 
+local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 
 require'rust-tools'.setup {
   tools = {
