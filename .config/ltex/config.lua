@@ -20,6 +20,8 @@ return {
       "ImageNet",
       "tradeoff",
       "Jae-Won",
+      "MLOps",
+      "KubeFlow",
     }
   }
 }
