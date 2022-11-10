@@ -22,6 +22,10 @@ return {
       "Jae-Won",
       "MLOps",
       "KubeFlow",
+      "DeepSpeed",
+      "Megatron",
+      "microbatch",
+      "docstring",
     }
   }
 }
