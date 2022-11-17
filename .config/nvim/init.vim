@@ -88,7 +88,7 @@ nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
-nnoremap <Leader>p :echo expand('%')<CR>
+nnoremap <Leader>p :echo expand('%:p')<CR>
 
 " Delete selected area and replace with yanked content
 vnoremap <Leader>p "_dP
@@ -615,7 +615,14 @@ require'nvim-tree'.setup({
         { key = "s",     action = "" },
       }
     }
-  }
+  },
+  actions = {
+    open_file = {
+      window_picker = {
+        enable = false,
+      }
+    },
+  },
 })
 END
 
