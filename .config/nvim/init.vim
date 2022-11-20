@@ -292,7 +292,6 @@ Plug 'liuchengxu/vista.vim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'cespare/vim-toml'  " Not needed for nvim >= 0.6
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'lervag/vimtex'
@@ -505,7 +504,7 @@ function! Tundra()
 
   colorscheme tundra
 
-  let g:lualine_theme = 'nightfly'
+  let g:lualine_theme = 'tundra'
 
   " Enhancements
   highlight! link VertSplit SignColumn
