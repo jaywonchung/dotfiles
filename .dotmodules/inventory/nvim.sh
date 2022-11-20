@@ -2,9 +2,11 @@
 
 set -ev
 
+VERSION=${VERSION:-stable}
+
 # Get nvim release
 cd /tmp
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-macos.tar.gz
+curl -LO https://github.com/neovim/neovim/releases/download/$VERSION/nvim-macos.tar.gz
 xattr -c nvim-macos.tar.gz
 tar xzf nvim-macos.tar.gz
 mkdir -p ~/.local
