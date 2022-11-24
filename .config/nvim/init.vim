@@ -264,7 +264,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
-Plug 'sam4llis/nvim-tundra'
+Plug 'jaywonchung/nvim-tundra'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
