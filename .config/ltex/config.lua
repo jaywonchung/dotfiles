@@ -26,6 +26,7 @@ return {
       "Megatron",
       "microbatch",
       "docstring",
+      "Mosharaf",
     }
   }
 }
