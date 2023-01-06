@@ -237,13 +237,6 @@ autocmd FileType go setlocal shiftwidth=8 tabstop=8 softtabstop=8
 " =============================================================================
 " Plugins
 " =============================================================================
-" Install vim-plugged if not already
-if filereadable(glob('~/.local/share/nvim/site/autoload/plug.vim')) == 0
-  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 call plug#begin(stdpath('data') . '/plugged')
 " performance
 Plug 'lewis6991/impatient.nvim'
@@ -909,7 +902,7 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust", "go" },
+  ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua" },
   highlight = {
     enable = true,
   },
