@@ -917,9 +917,3 @@ let g:vimtex_view_method = 'sioyek'
 let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
 let g:vimtex_quickfix_open_on_warning = 0
 let maplocalleader=','
-
-
-" =============================================================================
-" Must-be-done-at-the-end config
-" =============================================================================
-set secure exrc                 " Execute .vimrc in the directory vim is started
