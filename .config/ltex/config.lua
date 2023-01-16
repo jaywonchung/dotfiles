@@ -27,6 +27,7 @@ return {
       "microbatch",
       "docstring",
       "Mosharaf",
+      "Huggingface",
     }
   }
 }
