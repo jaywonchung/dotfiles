@@ -17,7 +17,7 @@ table_columns = [
 ]
 viewer_command = [
   '/Applications/sioyek.app/Contents/MacOS/sioyek',
-  '--new-instance',
+  '--new-window',
 ]
 viewer_batch = false
 editor_command = [
