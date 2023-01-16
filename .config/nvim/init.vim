@@ -233,6 +233,9 @@ autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " Go
 autocmd FileType go setlocal shiftwidth=8 tabstop=8 softtabstop=8
 
+" LaTeX
+let g:tex_flavor = "latex"
+
 
 " =============================================================================
 " Plugins
@@ -250,6 +253,7 @@ Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
+Plug 'github/copilot.vim'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -356,6 +360,20 @@ let g:floaterm_shell = 'zsh'
 
 " Prettier borders
 let g:floaterm_borderchars = '─│─│╭╮╯╰'
+
+
+" =============================================================================
+" copilot.vim
+" =============================================================================
+" Disable by default
+let g:copilot_filetypes = {
+      \ '*': v:false,
+      \ 'python': v:false,
+      \ }
+
+" Use <C-j> to accept Copilot suggestion
+imap <silent><script><expr> <C-j> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
 
 
 " =============================================================================
@@ -916,4 +934,5 @@ END
 let g:vimtex_view_method = 'sioyek'
 let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
 let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_enabled = 0
 let maplocalleader=','
