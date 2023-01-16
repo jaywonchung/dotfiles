@@ -7,5 +7,5 @@ else
 fi
 
 curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-$ARCH-apple-darwin.gz \
-  | gzip -d - > ~/.local/bin/rust-analyzer
+  | gunzip -c - > ~/.local/bin/rust-analyzer
 chmod +x ~/.local/bin/rust-analyzer
