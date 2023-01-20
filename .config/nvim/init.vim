@@ -42,11 +42,6 @@ set history=256                 " History for commands, searches, etc
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
 
-" Cursor shape changes based on current input mode
-set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-" Use the following to use the terminal-default cursor shape
-" set guicursor=
-
 " Syntax highlighting
 if has("syntax")
  syntax on
@@ -219,6 +214,10 @@ autocmd VimResized *
 
 " Highlight yanked text
 autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
+
+" Restore cursor shape when exiting
+autocmd VimEnter,VimResume * set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+autocmd VimLeave,VimSuspend * set guicursor=a:ver25
 
 
 " =============================================================================
