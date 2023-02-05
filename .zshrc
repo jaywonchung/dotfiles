@@ -213,3 +213,4 @@ export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
 if [[ ! "$DOTFILES_WARN_USER" = 1 ]]; then
   clear
 fi
+unset DOTFILES_WARN_USER
