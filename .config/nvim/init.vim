@@ -604,15 +604,35 @@ nnoremap <silent> <C-f> :NvimTreeFindFile<CR>
 nnoremap <silent> <Leader>n :lua require'nvim-tree.api'.tree.toggle(true, true)<CR>
 
 lua <<END
-local open_on_start = not vim.opt.diff:get()
-                      and #vim.v.argv > 1
-                      and vim.opt.columns:get() > 125
+-- Open-At-Startup configuration
+local function open_nvim_tree(data)
+
+  -- Buffer is a real file on the disk -> open
+  local real_file = vim.fn.filereadable(data.file) == 1
+
+  -- Buffer is a [No Name] -> don't open
+  local no_name = data.file == "" and vim.bo[data.buf].buftype == ""
+
+  -- Currently in diff mode (nvim -d) -> don't open
+  local diff_mode = vim.opt.diff:get()
+
+  -- Neovim is wide enough -> open
+  local wide_enough = vim.opt.columns:get() > 125
+
+  if not real_file or no_name or diff_mode or not wide_enough then
+    return
+  end
+
+  -- open the tree, find the file, but don't focus nvim-tree
+  require("nvim-tree.api").tree.toggle({ focus = false, find_file = true, })
+end
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+
 require'nvim-tree'.setup({
   update_focused_file = {
     enable = true,
     update_root = true,
   },
-  open_on_setup_file = open_on_start,
   open_on_tab = true,
   view = {
     mappings = {
