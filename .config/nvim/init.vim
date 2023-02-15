@@ -261,6 +261,7 @@ Plug 'andreypopp/vim-colors-plain'
 Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
 Plug 'jaywonchung/nvim-tundra'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
@@ -510,7 +511,22 @@ function! Nightfly()
 endfunction
 
 function! Tundra() 
-  lua require'nvim-tundra'.setup({transparent_background = true})
+lua <<END
+require'nvim-tundra'.setup({
+  transparent_background = true,
+  syntax = {
+    comments = { italic = true },
+    booleans = { italic = true },
+    types = { italic = true },
+  },
+  plugins = {
+    lsp = true,
+    treesitter = true,
+    cmp = true,
+    gitsigns = true,
+  },
+})
+END
 
   colorscheme tundra
 
@@ -533,11 +549,42 @@ function! Tundra()
   highlight link LspReferenceWrite CursorLine
 endfunction
 
+function! Catppuccin() 
+lua <<END
+require"catppuccin".setup({
+  transparent_background = true,
+  styles = {
+    conditionals = {},
+  },
+  integrations = {
+    cmp = true,
+    fidget = true,
+    native_lsp = {
+      enabled = true,
+    },
+  },
+})
+END
+
+  colorscheme catppuccin-mocha
+
+  " Cursor line (from nightfly)
+  highlight! CursorLine guibg=#092236
+
+  let g:lualine_theme = "catppuccin"
+
+  " LSP hover menu dark background (from Tundra)
+  highlight  NormalFloat guibg=#0e1420
+  " nvim-cmp autocompletion menu
+  highlight  Pmenu       guibg=#0e1420
+endfunction
+
 " call Plain()
 " call GruvboxMaterial()
 " call Base16()
 " call Nightfly()
-call Tundra()
+" call Tundra()
+call Catppuccin()
 
 
 " =============================================================================
@@ -940,6 +987,7 @@ autocmd FileType rust setlocal signcolumn=yes
 lua << END
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua" },
+  auto_install = true,
   highlight = {
     enable = true,
   },
