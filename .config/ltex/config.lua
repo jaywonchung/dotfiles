@@ -28,6 +28,8 @@ return {
       "docstring",
       "Mosharaf",
       "Huggingface",
+      "MAB",
+      "CloudLab",
     }
   }
 }
