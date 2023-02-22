@@ -583,8 +583,8 @@ endfunction
 " call GruvboxMaterial()
 " call Base16()
 " call Nightfly()
-" call Tundra()
-call Catppuccin()
+call Tundra()
+" call Catppuccin()
 
 
 " =============================================================================
@@ -987,7 +987,6 @@ autocmd FileType rust setlocal signcolumn=yes
 lua << END
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua" },
-  auto_install = true,
   highlight = {
     enable = true,
   },
