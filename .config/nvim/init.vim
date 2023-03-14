@@ -338,7 +338,7 @@ let g:goyo_height = '90%'
 " =============================================================================
 " oscyank
 " =============================================================================
-vnoremap <silent> <Leader>y :OSCYank<CR>
+vnoremap <silent> <Leader>y :OSCYankVisual<CR>
 
 
 " =============================================================================
@@ -368,7 +368,7 @@ let g:floaterm_borderchars = '─│─│╭╮╯╰'
 " Disable by default
 let g:copilot_filetypes = {
       \ '*': v:false,
-      \ 'python': v:false,
+      \ 'python': v:true,
       \ }
 
 " Use <C-j> to accept Copilot suggestion
@@ -583,8 +583,8 @@ endfunction
 " call GruvboxMaterial()
 " call Base16()
 " call Nightfly()
-" call Tundra()
-call Catppuccin()
+call Tundra()
+" call Catppuccin()
 
 
 " =============================================================================
@@ -987,7 +987,6 @@ autocmd FileType rust setlocal signcolumn=yes
 lua << END
 require'nvim-treesitter.configs'.setup {
   ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua" },
-  auto_install = true,
   highlight = {
     enable = true,
   },
