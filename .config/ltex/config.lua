@@ -45,6 +45,8 @@ return {
       "TODO",
       "ResNet",
       "pipelined",
+      "microbatch",
+      "microbatches",
     }
   }
 }
