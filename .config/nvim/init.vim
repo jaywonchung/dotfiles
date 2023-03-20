@@ -252,7 +252,7 @@ Plug 'foosoft/vim-argwrap'
 Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
-Plug 'github/copilot.vim'
+Plug 'zbirenbaum/copilot.lua'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -303,6 +303,7 @@ lua require'impatient'
 " =============================================================================
 " filetype.nvim
 " =============================================================================
+lua require'filetype'.setup({})
 let g:did_load_filetypes = 1  " Not needed for nvim >= 0.6
 
 
@@ -363,17 +364,24 @@ let g:floaterm_borderchars = '─│─│╭╮╯╰'
 
 
 " =============================================================================
-" copilot.vim
+" copilot.lua
 " =============================================================================
-" Disable by default
-let g:copilot_filetypes = {
-      \ '*': v:false,
-      \ 'python': v:true,
-      \ }
-
-" Use <C-j> to accept Copilot suggestion
-imap <silent><script><expr> <C-j> copilot#Accept("\<CR>")
-let g:copilot_no_tab_map = v:true
+lua <<END
+require"copilot".setup({
+  suggestion = {
+    enabled = true,
+    auto_trigger = true,
+    keymap = {
+      accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
+      accept_line = "<M-e>",
+    },
+  },
+  filetypes = {
+    python = true,
+    ["*"] = false,
+  }
+})
+END
 
 
 " =============================================================================
@@ -646,7 +654,7 @@ autocmd FileType vista,vista_kind
 " =============================================================================
 " nvim-tree.lua
 " =============================================================================
-nnoremap <silent> <C-f> :NvimTreeFindFile<CR>
+nnoremap <silent> <C-f> :lua require'nvim-tree.api'.tree.open({focus = true, find_file = true})<CR>
 
 nnoremap <silent> <Leader>n :lua require'nvim-tree.api'.tree.toggle(true, true)<CR>
 
@@ -844,7 +852,7 @@ cmp.setup({
   mapping = {
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-    ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
+    ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
     ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { 'i', 's' }),
     ['<Tab>'] = cmp.mapping(tab_function, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(stab_function, { 'i', 's' }),
