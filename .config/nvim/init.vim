@@ -320,6 +320,12 @@ lua require'Comment'.setup()
 
 
 " =============================================================================
+" vim-surround
+" =============================================================================
+let g:surround_no_insert_mappings = 1
+
+
+" =============================================================================
 " vim-argwrap
 " =============================================================================
 let g:argwrap_tail_comma = 1
@@ -925,6 +931,21 @@ if vim.fn.executable('ltex-ls') == 1 then
   }
 end
 
+if vim.fn.executable('texlab') == 1 then
+  lspconfig.texlab.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+    settings = {
+      texlab = {
+        chktex = {
+          onEdit = true,
+          onOpenAndSave = true,
+        },
+      },
+    },
+  }
+end
+
 if vim.fn.executable('gopls') == 1 then
   lspconfig.gopls.setup{
     on_attach = require'illuminate'.on_attach,
@@ -1007,6 +1028,7 @@ END
 " =============================================================================
 let g:vimtex_view_method = 'sioyek'
 let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
+let g:vimtex_view_use_temp_files = 1
 let g:vimtex_quickfix_open_on_warning = 0
 let g:vimtex_quickfix_enabled = 0
 let maplocalleader=','
