@@ -249,7 +249,6 @@ Plug 'numToStr/Comment.nvim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
-Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
 Plug 'zbirenbaum/copilot.lua'
@@ -331,15 +330,6 @@ let g:surround_no_insert_mappings = 1
 let g:argwrap_tail_comma = 1
 
 nnoremap <Leader>aw :ArgWrap<CR>
-
-
-" =============================================================================
-" goyo
-" =============================================================================
-nnoremap <silent> <Leader>gy :Goyo<CR>
-
-let g:goyo_width = 110
-let g:goyo_height = '90%'
 
 
 " =============================================================================
