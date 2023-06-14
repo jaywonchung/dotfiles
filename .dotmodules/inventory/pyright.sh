@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=${VERSION:-"14.16.0"}
+VERSION=${VERSION:-"17.3.0"}
 
 cd /tmp
 curl -LO "https://nodejs.org/dist/v$VERSION/node-v$VERSION-linux-x64.tar.xz"
