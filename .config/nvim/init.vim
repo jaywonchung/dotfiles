@@ -377,6 +377,7 @@ require"copilot".setup({
   },
   filetypes = {
     python = true,
+    rust = true,
     ["*"] = false,
   }
 })
