@@ -65,6 +65,11 @@ return {
       "hardcode",
       "hardcoding",
       "ChatGPT",
+      "LMSys",
+      "LLM",
+      "LLMs",
+      "FastChat",
+      "ShareGPT",
     }
   }
 }
