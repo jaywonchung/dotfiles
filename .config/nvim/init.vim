@@ -286,7 +286,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
-Plug 'j-hui/fidget.nvim'
+Plug 'j-hui/fidget.nvim', {'tag': 'legacy'}
 Plug 'L3MON4D3/luasnip'
 Plug 'RRethy/vim-illuminate'
 Plug 'liuchengxu/vista.vim'
