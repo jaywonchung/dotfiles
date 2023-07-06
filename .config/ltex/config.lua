@@ -70,6 +70,8 @@ return {
       "LLMs",
       "FastChat",
       "ShareGPT",
+      "LLaMA",
+      "TensorRT",
     }
   }
 }
