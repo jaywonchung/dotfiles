@@ -72,6 +72,7 @@ return {
       "ShareGPT",
       "LLaMA",
       "TensorRT",
+      "torchvision",
     }
   }
 }
