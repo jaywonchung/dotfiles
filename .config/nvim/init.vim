@@ -26,7 +26,6 @@ set autoread                    " Auto load when current file is edited somewher
 " performance
 set lazyredraw                  " Screen not updated during macros, etc
 " vimdiff
-set diffopt+=iwhite             " Ignore whitespace
 set diffopt+=algorithm:patience " Use the patience algorithm
 set diffopt+=indent-heuristic   " Internal diff lib for indents
 " appearance
@@ -42,11 +41,6 @@ set history=256                 " History for commands, searches, etc
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
 
-" Cursor shape changes based on current input mode
-set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
-" Use the following to use the terminal-default cursor shape
-" set guicursor=
-
 " Syntax highlighting
 if has("syntax")
  syntax on
@@ -60,6 +54,9 @@ if has('persistent_undo')
     call mkdir(&undodir, "p")
   endif
 endif
+
+" Edit config
+command Nconf tabe ~/.config/nvim/init.vim
 
 
 " =============================================================================
@@ -81,12 +78,11 @@ nnoremap <silent> <C-c> :noh<CR>
 " Leader mappings
 let mapleader = "\<space>"
 nnoremap <Leader>w :w<CR>
-nnoremap <Leader>qw :wq<CR>
 nnoremap <Leader>qq :q<CR>
 nnoremap <Leader>qa :qa<CR>
 nnoremap <Leader>s :sp<CR>
 nnoremap <Leader>v :vsp<CR>
-nnoremap <Leader>p :echo expand('%')<CR>
+nnoremap <Leader>p :echo expand('%:p')<CR>
 
 " Delete selected area and replace with yanked content
 vnoremap <Leader>p "_dP
@@ -159,7 +155,6 @@ function! ToggleRelnum() abort
     set relativenumber
   endif
 endfunction
-
 nnoremap <silent> <Leader>r :call ToggleRelnum()<CR>
 
 " Neovim terminal
@@ -219,6 +214,13 @@ autocmd VimResized *
 " Highlight yanked text
 autocmd TextYankPost * lua require'vim.highlight'.on_yank({"Substitute", 300})
 
+" Restore cursor shape when exiting
+autocmd VimEnter,VimResume * set guicursor=n-v:block-Cursor/lCursor-blinkon0,i-c-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
+autocmd VimLeave,VimSuspend * set guicursor=a:ver25
+
+" Set line wrap for both splits for vimdiff
+autocmd VimEnter * if &diff | execute 'windo set wrap' | endif
+
 
 " =============================================================================
 " Language settings
@@ -232,30 +234,29 @@ autocmd FileType rust setlocal shiftwidth=4 tabstop=4 softtabstop=4
 " Go
 autocmd FileType go setlocal shiftwidth=8 tabstop=8 softtabstop=8
 
+" LaTeX
+let g:tex_flavor = "latex"
+
+" Lua filetypes
+let g:do_filetype_lua = 1
+let g:did_load_filetypes = 0
+
 
 " =============================================================================
 " Plugins
 " =============================================================================
-" Install vim-plugged if not already
-if filereadable(glob('~/.local/share/nvim/site/autoload/plug.vim')) == 0
-  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 call plug#begin(stdpath('data') . '/plugged')
 " performance
 Plug 'lewis6991/impatient.nvim'
-Plug 'nathom/filetype.nvim'
 " editing
 Plug 'editorconfig/editorconfig-vim'
 Plug 'numToStr/Comment.nvim'
-Plug 'tpope/vim-surround'
+Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
-Plug 'junegunn/goyo.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
+Plug 'zbirenbaum/copilot.lua'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -263,7 +264,8 @@ Plug 'chriskempson/base16-vim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
-Plug 'sam4llis/nvim-tundra'
+Plug 'jaywonchung/nvim-tundra'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
@@ -284,14 +286,14 @@ Plug 'hrsh7th/cmp-path'
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'simrat39/rust-tools.nvim'
-Plug 'j-hui/fidget.nvim'
+Plug 'j-hui/fidget.nvim', {'tag': 'legacy'}
 Plug 'L3MON4D3/luasnip'
 Plug 'RRethy/vim-illuminate'
 Plug 'liuchengxu/vista.vim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'cespare/vim-toml'  " Not needed for nvim >= 0.6
+Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'lervag/vimtex'
@@ -301,12 +303,6 @@ call plug#end()
 " impatient.nvim
 " =============================================================================
 lua require'impatient'
-
-
-" =============================================================================
-" filetype.nvim
-" =============================================================================
-let g:did_load_filetypes = 1  " Not needed for nvim >= 0.6
 
 
 " =============================================================================
@@ -322,24 +318,23 @@ lua require'Comment'.setup()
 
 
 " =============================================================================
+" vim-sandwich
+" =============================================================================
+runtime macros/sandwich/keymap/surround.vim
+
+
+" =============================================================================
 " vim-argwrap
 " =============================================================================
+let g:argwrap_tail_comma = 1
+
 nnoremap <Leader>aw :ArgWrap<CR>
-
-
-" =============================================================================
-" goyo
-" =============================================================================
-nnoremap <silent> <Leader>gy :Goyo<CR>
-
-let g:goyo_width = 110
-let g:goyo_height = '90%'
 
 
 " =============================================================================
 " oscyank
 " =============================================================================
-vnoremap <silent> <Leader>y :OSCYank<CR>
+vnoremap <silent> <Leader>y :OSCYankVisual<CR>
 
 
 " =============================================================================
@@ -356,20 +351,37 @@ let g:floaterm_autoclose = 2
 nnoremap <CR> :FloatermToggle<CR>
 tnoremap <C-z> <C-\><C-n>:FloatermHide<CR>
 
-" Wrappers
-command! Vifm FloatermNew vifm
-
 " Disable git plugin inside floaterm
 let g:floaterm_shell = 'zsh'
 
 " Prettier borders
 let g:floaterm_borderchars = '─│─│╭╮╯╰'
 
+" Silently start a terminal in the background so that it's quick when we want
+" the terminal
+autocmd VimEnter * FloatermNew --silent
+
 
 " =============================================================================
-" markdown-preview
+" copilot.lua
 " =============================================================================
-let g:mkdp_auto_close = 0
+lua <<END
+require"copilot".setup({
+  suggestion = {
+    enabled = true,
+    auto_trigger = true,
+    keymap = {
+      accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
+      accept_line = "<M-e>",
+    },
+  },
+  filetypes = {
+    python = true,
+    rust = true,
+    ["*"] = false,
+  }
+})
+END
 
 
 " =============================================================================
@@ -500,18 +512,31 @@ function! Nightfly()
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
 
-  " vim-illuminate
-  highlight link LspReferenceText CursorLine
-  highlight link LspReferenceRead CursorLine
-  highlight link LspReferenceWrite CursorLine
+  " nvim-tree
+  highlight! NvimTreeNormal guibg=NONE
 endfunction
 
 function! Tundra() 
-  lua require'nvim-tundra'.setup({transparent_background = true})
+lua <<END
+require'nvim-tundra'.setup({
+  transparent_background = true,
+  syntax = {
+    comments = { italic = true },
+    booleans = { italic = true },
+    types = { italic = true },
+  },
+  plugins = {
+    lsp = true,
+    treesitter = true,
+    cmp = true,
+    gitsigns = true,
+  },
+})
+END
 
   colorscheme tundra
 
-  let g:lualine_theme = 'nightfly'
+  let g:lualine_theme = 'tundra'
 
   " Enhancements
   highlight! link VertSplit SignColumn
@@ -530,11 +555,42 @@ function! Tundra()
   highlight link LspReferenceWrite CursorLine
 endfunction
 
+function! Catppuccin() 
+lua <<END
+require"catppuccin".setup({
+  transparent_background = true,
+  styles = {
+    conditionals = {},
+  },
+  integrations = {
+    cmp = true,
+    fidget = true,
+    native_lsp = {
+      enabled = true,
+    },
+  },
+})
+END
+
+  colorscheme catppuccin-mocha
+
+  " Cursor line (from nightfly)
+  highlight! CursorLine guibg=#092236
+
+  let g:lualine_theme = "catppuccin"
+
+  " LSP hover menu dark background (from Tundra)
+  highlight  NormalFloat guibg=#0e1420
+  " nvim-cmp autocompletion menu
+  highlight  Pmenu       guibg=#0e1420
+endfunction
+
 " call Plain()
 " call GruvboxMaterial()
 " call Base16()
 " call Nightfly()
-call Tundra()
+" call Tundra()
+call Catppuccin()
 
 
 " =============================================================================
@@ -596,32 +652,111 @@ autocmd FileType vista,vista_kind
 " =============================================================================
 " nvim-tree.lua
 " =============================================================================
-nnoremap <silent> <C-f> :NvimTreeFindFile<CR>
+nnoremap <silent> <C-f> :lua require'nvim-tree.api'.tree.open({focus = true, find_file = true})<CR>
 
 nnoremap <silent> <Leader>n :lua require'nvim-tree.api'.tree.toggle(true, true)<CR>
 
 lua <<END
-local open_on_start = not vim.opt.diff:get()
-                      and #vim.v.argv > 1
-                      and vim.opt.columns:get() > 125
+-- Open-At-Startup configuration
+local function open_nvim_tree(data)
+
+  -- Buffer is a real file on the disk -> open
+  local real_file = vim.fn.filereadable(data.file) == 1
+
+  -- Buffer is a [No Name] -> don't open
+  local no_name = data.file == "" and vim.bo[data.buf].buftype == ""
+
+  -- Currently in diff mode (nvim -d) -> don't open
+  local diff_mode = vim.opt.diff:get()
+
+  -- Neovim is wide enough -> open
+  local wide_enough = vim.opt.columns:get() > 125
+
+  if not real_file or no_name or diff_mode or not wide_enough then
+    return
+  end
+
+  -- open the tree, find the file, but don't focus nvim-tree
+  require("nvim-tree.api").tree.toggle({ focus = false, find_file = true, })
+end
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
+
+local function on_attach(bufnr)
+  local api = require('nvim-tree.api')
+
+  local function opts(desc)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+
+  -- Default mappings.
+  vim.keymap.set('n', '<C-]>', api.tree.change_root_to_node,          opts('CD'))
+  vim.keymap.set('n', '<C-k>', api.node.show_info_popup,              opts('Info'))
+  vim.keymap.set('n', '<C-r>', api.fs.rename_sub,                     opts('Rename: Omit Filename'))
+  vim.keymap.set('n', '<C-v>', api.node.open.vertical,                opts('Open: Vertical Split'))
+  vim.keymap.set('n', '<BS>',  api.node.navigate.parent_close,        opts('Close Directory'))
+  vim.keymap.set('n', '<CR>',  api.node.open.edit,                    opts('Open'))
+  vim.keymap.set('n', '<Tab>', api.node.open.preview,                 opts('Open Preview'))
+  vim.keymap.set('n', '>',     api.node.navigate.sibling.next,        opts('Next Sibling'))
+  vim.keymap.set('n', '<',     api.node.navigate.sibling.prev,        opts('Previous Sibling'))
+  vim.keymap.set('n', '.',     api.node.run.cmd,                      opts('Run Command'))
+  vim.keymap.set('n', '-',     api.tree.change_root_to_parent,        opts('Up'))
+  vim.keymap.set('n', 'a',     api.fs.create,                         opts('Create'))
+  vim.keymap.set('n', 'bmv',   api.marks.bulk.move,                   opts('Move Bookmarked'))
+  vim.keymap.set('n', 'B',     api.tree.toggle_no_buffer_filter,      opts('Toggle No Buffer'))
+  vim.keymap.set('n', 'c',     api.fs.copy.node,                      opts('Copy'))
+  vim.keymap.set('n', 'C',     api.tree.toggle_git_clean_filter,      opts('Toggle Git Clean'))
+  vim.keymap.set('n', '[c',    api.node.navigate.git.prev,            opts('Prev Git'))
+  vim.keymap.set('n', ']c',    api.node.navigate.git.next,            opts('Next Git'))
+  vim.keymap.set('n', 'd',     api.fs.remove,                         opts('Delete'))
+  vim.keymap.set('n', 'D',     api.fs.trash,                          opts('Trash'))
+  vim.keymap.set('n', 'E',     api.tree.expand_all,                   opts('Expand All'))
+  vim.keymap.set('n', 'e',     api.fs.rename_basename,                opts('Rename: Basename'))
+  vim.keymap.set('n', ']e',    api.node.navigate.diagnostics.next,    opts('Next Diagnostic'))
+  vim.keymap.set('n', '[e',    api.node.navigate.diagnostics.prev,    opts('Prev Diagnostic'))
+  vim.keymap.set('n', 'F',     api.live_filter.clear,                 opts('Clean Filter'))
+  vim.keymap.set('n', 'f',     api.live_filter.start,                 opts('Filter'))
+  vim.keymap.set('n', 'g?',    api.tree.toggle_help,                  opts('Help'))
+  vim.keymap.set('n', 'gy',    api.fs.copy.absolute_path,             opts('Copy Absolute Path'))
+  vim.keymap.set('n', 'H',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
+  vim.keymap.set('n', 'I',     api.tree.toggle_gitignore_filter,      opts('Toggle Git Ignore'))
+  vim.keymap.set('n', 'J',     api.node.navigate.sibling.last,        opts('Last Sibling'))
+  vim.keymap.set('n', 'K',     api.node.navigate.sibling.first,       opts('First Sibling'))
+  vim.keymap.set('n', 'm',     api.marks.toggle,                      opts('Toggle Bookmark'))
+  vim.keymap.set('n', 'o',     api.node.open.edit,                    opts('Open'))
+  vim.keymap.set('n', 'O',     api.node.open.no_window_picker,        opts('Open: No Window Picker'))
+  vim.keymap.set('n', 'p',     api.fs.paste,                          opts('Paste'))
+  vim.keymap.set('n', 'P',     api.node.navigate.parent,              opts('Parent Directory'))
+  vim.keymap.set('n', 'q',     api.tree.close,                        opts('Close'))
+  vim.keymap.set('n', 'R',     api.tree.reload,                       opts('Refresh'))
+  vim.keymap.set('n', 'S',     api.tree.search_node,                  opts('Search'))
+  vim.keymap.set('n', 'U',     api.tree.toggle_custom_filter,         opts('Toggle Hidden'))
+  vim.keymap.set('n', 'W',     api.tree.collapse_all,                 opts('Collapse'))
+  vim.keymap.set('n', 'x',     api.fs.cut,                            opts('Cut'))
+  vim.keymap.set('n', 'y',     api.fs.copy.filename,                  opts('Copy Name'))
+  vim.keymap.set('n', 'Y',     api.fs.copy.relative_path,             opts('Copy Relative Path'))
+  vim.keymap.set('n', '<2-LeftMouse>',  api.node.open.edit,           opts('Open'))
+  vim.keymap.set('n', '<2-RightMouse>', api.tree.change_root_to_node, opts('CD'))
+
+  -- Mappings migrated from view.mappings.list
+  vim.keymap.set('n', '<C-s>', api.node.open.horizontal, opts('Open: Horizontal Split'))
+  vim.keymap.set('n', '<C-g>', api.node.open.tab, opts('Open: New Tab'))
+  vim.keymap.set('n', '<F2>', api.fs.rename, opts('Rename'))
+end
+
 require'nvim-tree'.setup({
+  on_attach = on_attach,
   update_focused_file = {
     enable = true,
     update_root = true,
   },
-  open_on_setup_file = open_on_start,
   open_on_tab = true,
-  view = {
-    mappings = {
-      list = {
-        { key = "<C-e>", action = "" },
-        { key = "<C-s>", action = "split" },
-        { key = "<C-g>", action = "tabnew" },
-        { key = "<F2>",  action = "rename" },
-        { key = "s",     action = "" },
+  actions = {
+    open_file = {
+      window_picker = {
+        enable = false,
       }
-    }
-  }
+    },
+  },
 })
 END
 
@@ -653,11 +788,11 @@ autocmd BufEnter * silent call NvimTreeAutoQuit()
 " Telescope.nvim
 " =============================================================================
 " Mappings. live_grep uses rg by default.
-nnoremap <Leader>f  :Telescope find_files<CR>
+nnoremap <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
 if executable("rg")
-  nnoremap gs         :Telescope live_grep<CR>
+  nnoremap gs       :Telescope live_grep<CR>
 else
   echom "RipGrep (rg) is not installed. Disabling Telescope live_grep."
 endif
@@ -672,6 +807,8 @@ function preview_scroll_down_one(prompt_bufnr)
 end
 
 local actions = require'telescope.actions'
+local config = require'telescope.config'
+
 require'telescope'.setup{
   defaults = {
     mappings = {
@@ -681,6 +818,8 @@ require'telescope'.setup{
         ["<C-c>"] = actions.close,
         ["<C-y>"] = preview_scroll_up_one,
         ["<C-e>"] = preview_scroll_down_one,
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<C-j>"] = actions.move_selection_next,
       },
       i = {
         ["<C-c>"] = actions.close,
@@ -689,8 +828,25 @@ require'telescope'.setup{
         ["<C-e>"] = preview_scroll_down_one,
         ["<C-v>"] = actions.select_vertical,
         ["<C-s>"] = actions.select_horizontal,
+        ["<C-k>"] = actions.move_selection_previous,
+        ["<C-j>"] = actions.move_selection_next,
+        ["<ESC>"] = actions.close,
       }
-    }
+    },
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--hidden",
+      "--ignore-file",
+      ".gitignore",
+      "--glob",
+      "!.git",
+    },
   },
   extensions = {
     fzy_native = {
@@ -733,6 +889,26 @@ local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line-1, line, true)[1]:sub(col, col):match("%s") == nil
 end
+local tab_function = function(fallback)
+  if cmp.visible() then
+    cmp.select_next_item()
+  elseif luasnip.expand_or_jumpable() then
+    luasnip.expand_or_jump()
+  elseif has_words_before() then
+    cmp.complete()
+  else
+    fallback()
+  end
+end
+local stab_function = function(fallback)
+  if cmp.visible() then
+    cmp.select_prev_item()
+  elseif luasnip.jumpable(-1) then
+    luasnip.jump(-1)
+  else
+    fallback()
+  end
+end
 
 cmp.setup({
   snippet = {
@@ -743,28 +919,10 @@ cmp.setup({
   mapping = {
     ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
     ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-    ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = true })),
-    ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { "i", "s" }),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-      elseif has_words_before() then
-        cmp.complete()
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif luasnip.jumpable(-1) then
-        luasnip.jump(-1)
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
+    ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { 'i', 's' }),
+    ['<Tab>'] = cmp.mapping(tab_function, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(stab_function, { 'i', 's' }),
   },
   sources = {
     { name = 'nvim_lsp' },
@@ -779,7 +937,7 @@ require("luasnip.loaders.from_vscode").load()
 require'lsp_signature'.setup({ hint_prefix = "@" })
 
 local lspconfig = require'lspconfig'
-local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 
 if vim.fn.executable('clangd') == 1 then
   lspconfig.clangd.setup{
@@ -823,14 +981,60 @@ if vim.fn.executable('texlab') == 1 then
 end
 
 if vim.fn.executable('ltex-ls') == 1 then
+  local ltex_config = { dictionary = { ["en-US"] = {} } }
+  -- My custom dictionary is inside `~/.local/ltex/config.lua`.
+  if vim.fn.filereadable(os.getenv("HOME") .. "/.config/ltex/config.lua") == 1 then
+    ltex_config = loadfile(os.getenv("HOME") .. "/.config/ltex/config.lua")()
+  end
+  --[[
+  If the current directory has a `.ltex_dictionary.lua` file, add it to the custom dictionary.
+  It should looke like this:
+  ```lua
+  return {
+    "Jae-Won",
+    "ltex".
+  }
+  ```
+  --]]
+  if vim.fn.filereadable('.ltex_dictionary.lua') == 1 then
+    endict = ltex_config['dictionary']['en-US']
+    for _, v in ipairs(loadfile('.ltex_dictionary.lua')()) do
+      table.insert(endict, v)
+    end
+  end
   lspconfig.ltex.setup{
     on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
+    settings = {
+      ltex = ltex_config,
+    }
+  }
+end
+
+if vim.fn.executable('texlab') == 1 then
+  lspconfig.texlab.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+    settings = {
+      texlab = {
+        chktex = {
+          onEdit = true,
+          onOpenAndSave = true,
+        },
+      },
+    },
   }
 end
 
 if vim.fn.executable('gopls') == 1 then
   lspconfig.gopls.setup{
+    on_attach = require'illuminate'.on_attach,
+    capabilities = capabilities,
+  }
+end
+
+if vim.fn.executable('zls') == 1 then
+  lspconfig.zls.setup{
     on_attach = require'illuminate'.on_attach,
     capabilities = capabilities,
   }
@@ -864,12 +1068,12 @@ END
 " rust-tools.nvim
 " =============================================================================
 lua << END
-local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities()) 
+local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 
 require'rust-tools'.setup {
   tools = {
     inlay_hints = {
-      show_parameter_hints = false,
+      show_parameter_hints = true,
       other_hints_prefix = '  » ',
     }
   },
@@ -878,8 +1082,8 @@ require'rust-tools'.setup {
     settings = {
       ["rust-analyzer"] = {
         completion = {
-          addCallArgumentSnippets = false,
-          addCallParenthesis = false,
+          addCallArgumentSnippets = true,
+          addCallParenthesis = true,
         },
         diagnostics = {
           disabled = {"inactive-code"},
@@ -898,11 +1102,12 @@ autocmd FileType rust setlocal signcolumn=yes
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust", "go" },
+  ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua" },
   highlight = {
     enable = true,
   },
 }
+require'treesitter-context'.setup()
 END
 
 
@@ -911,11 +1116,19 @@ END
 " =============================================================================
 let g:vimtex_view_method = 'sioyek'
 let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
+let g:vimtex_view_use_temp_files = 1
 let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_enabled = 1
+let g:vimtex_imaps_enabled = 0
+let g:vimtex_quickfix_autoclose_after_keystrokes = 4
+let g:vimtex_toc_enabled = 0
+let g:vimtex_view_reverse_search_edit_cmd = 'tabedit'
+let g:vimtex_quickfix_ignore_filters = [
+      \ 'warning',
+      \ 'Warning',
+      \ 'Missing "school"',
+      \ 'no output PDF',
+      \ 'Underfull',
+      \ 'overfull',
+      \]
 let maplocalleader=','
-
-
-" =============================================================================
-" Must-be-done-at-the-end config
-" =============================================================================
-set secure exrc                 " Execute .vimrc in the directory vim is started
