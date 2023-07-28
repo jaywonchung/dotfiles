@@ -512,10 +512,8 @@ function! Nightfly()
   highlight! DiffAdd    cterm=reverse ctermfg=142 ctermbg=235 gui=reverse guifg=#b8bb26 guibg=#282828
   highlight! DiffDelete cterm=reverse ctermfg=167 ctermbg=235 gui=reverse guifg=#fb4934 guibg=#282828
 
-  " vim-illuminate
-  highlight link LspReferenceText CursorLine
-  highlight link LspReferenceRead CursorLine
-  highlight link LspReferenceWrite CursorLine
+  " nvim-tree
+  highlight! NvimTreeNormal guibg=NONE
 endfunction
 
 function! Tundra() 
@@ -591,8 +589,8 @@ endfunction
 " call GruvboxMaterial()
 " call Base16()
 " call Nightfly()
-call Tundra()
-" call Catppuccin()
+" call Tundra()
+call Catppuccin()
 
 
 " =============================================================================
@@ -790,7 +788,7 @@ autocmd BufEnter * silent call NvimTreeAutoQuit()
 " Telescope.nvim
 " =============================================================================
 " Mappings. live_grep uses rg by default.
-nnoremap <Leader>f :Telescope find_files<CR>
+nnoremap <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
 nnoremap <Leader>b  :Telescope buffers<CR>
 nnoremap <Leader>gc :Telescope git_bcommits<CR>
 if executable("rg")
@@ -834,6 +832,20 @@ require'telescope'.setup{
         ["<C-j>"] = actions.move_selection_next,
         ["<ESC>"] = actions.close,
       }
+    },
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--hidden",
+      "--ignore-file",
+      ".gitignore",
+      "--glob",
+      "!.git",
     },
   },
   extensions = {
