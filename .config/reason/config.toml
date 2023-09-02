@@ -14,6 +14,7 @@ table_columns = [
     'first author',
     'venue',
     'year',
+    'labels',
 ]
 viewer_command = [
   '/Applications/sioyek.app/Contents/MacOS/sioyek',
@@ -26,3 +27,5 @@ editor_command = [
 ]
 editor_batch = true
 browser_command = ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome']
+label_colors = { done = 'Green', active = 'Yellow' }
+exclusive_label_groups = [ [ 'done', 'active' ] ]
