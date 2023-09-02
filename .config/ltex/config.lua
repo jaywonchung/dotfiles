@@ -73,6 +73,16 @@ return {
       "LLaMA",
       "TensorRT",
       "torchvision",
+      "CUDA",
+      "GenAI",
+      "AllReduce",
+      "Gradio",
+      "FastAPI",
+      "async",
+      "UMich",
+      "NVML",
+      "ROCm",
+      "ElectricityMap",
     }
   }
 }
