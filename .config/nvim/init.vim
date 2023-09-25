@@ -804,10 +804,14 @@ END
 " Telescope.nvim
 " =============================================================================
 " Mappings. live_grep uses rg by default.
-nnoremap <silent> <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
 nnoremap <silent> <Leader>b  :Telescope buffers<CR>
 nnoremap <silent> <Leader>gc :Telescope git_bcommits<CR>
 nnoremap <silent> <Leader>u  :Telescope undo<CR>
+if executable("fd")
+  nnoremap <silent> <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
+else
+  nnoremap <silent> <Leader>f  :Telescope find_files<CR>
+endif
 if executable("rg")
   nnoremap gs       :Telescope live_grep<CR>
 else
