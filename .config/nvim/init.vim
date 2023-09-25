@@ -257,6 +257,7 @@ Plug 'foosoft/vim-argwrap'
 Plug 'ojroques/vim-oscyank'
 Plug 'voldikss/vim-floaterm'
 Plug 'zbirenbaum/copilot.lua'
+Plug 'debugloop/telescope-undo.nvim'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -271,6 +272,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
 " navigation
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'stevearc/oil.nvim'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
@@ -785,12 +787,27 @@ autocmd BufEnter * silent call NvimTreeAutoQuit()
 
 
 " =============================================================================
+" oil.nvim
+" =============================================================================
+lua <<END
+require'oil'.setup({
+  keymaps = {
+    ["<C-s>"] = "actions.select_split",
+    ["<C-v>"] = "actions.select_vsplit",
+    ["<C-g>"] = "actions.select_tab",
+  },
+})
+END
+
+
+" =============================================================================
 " Telescope.nvim
 " =============================================================================
 " Mappings. live_grep uses rg by default.
-nnoremap <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
-nnoremap <Leader>b  :Telescope buffers<CR>
-nnoremap <Leader>gc :Telescope git_bcommits<CR>
+nnoremap <silent> <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
+nnoremap <silent> <Leader>b  :Telescope buffers<CR>
+nnoremap <silent> <Leader>gc :Telescope git_bcommits<CR>
+nnoremap <silent> <Leader>u  :Telescope undo<CR>
 if executable("rg")
   nnoremap gs       :Telescope live_grep<CR>
 else
@@ -852,11 +869,17 @@ require'telescope'.setup{
     fzy_native = {
       override_generic_sorter = true,
       override_file_sorter = true,
-    }
-  }
+    },
+    undo = {
+      use_delta = (vim.fn.executable("delta") == 1),
+      side_by_side = (vim.fn.executable("delta") == 1),
+      layout_strategy = "vertical",
+    },
+  },
 }
 
 require'telescope'.load_extension('fzy_native')
+require'telescope'.load_extension('undo')
 END
 
 
@@ -1079,6 +1102,7 @@ require'rust-tools'.setup {
   },
   server = {
     capabilities = capabilities,
+    on_attach = require'illuminate'.on_attach,
     settings = {
       ["rust-analyzer"] = {
         completion = {
