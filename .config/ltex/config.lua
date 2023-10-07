@@ -83,6 +83,10 @@ return {
       "NVML",
       "ROCm",
       "ElectricityMap",
+      "Neovim",
+      "lowtime",
+      "Lowtime",
+      "jaywonchung",
     }
   }
 }
