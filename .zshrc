@@ -40,13 +40,6 @@ DISABLE_UPDATE_PROMPT="true"
 # Oh-my-zsh plugins
 plugins=(git fast-syntax-highlighting zsh-autosuggestions)
 
-# Homebrew zsh completions
-if command -v brew &> /dev/null; then
-  export FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
-  autoload -Uz compinit
-  compinit
-fi
-
 # Configure oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
@@ -83,7 +76,7 @@ POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="Default"
 POWERLEVEL9K_SHORTEN_DELIMITER=".."
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv anaconda time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status anaconda time)
 
 #-------------------------------------------------------------------
 # Command-line tools
@@ -119,7 +112,6 @@ function kssh {
 # autojump
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
-autoload -U compinit && compinit -u
 
 # direnv
 eval "$(direnv hook zsh)"
