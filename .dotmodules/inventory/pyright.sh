@@ -8,9 +8,11 @@ else
   ARCH=x64
 fi
 
-cd /tmp
-curl -LO "https://nodejs.org/dist/v$VERSION/node-v$VERSION-darwin-$ARCH.tar.xz"
-tar xJf "node-v$VERSION-darwin-$ARCH.tar.xz" -C ~/.local/src
-mv ~/.local/src/node* ~/.local/src/node
+if ! command -v node 2>&1 > /dev/null; then
+  cd /tmp
+  curl -LO "https://nodejs.org/dist/v$VERSION/node-v$VERSION-darwin-$ARCH.tar.xz"
+  tar xJf "node-v$VERSION-darwin-$ARCH.tar.xz" -C ~/.local/src
+  mv ~/.local/src/node-* ~/.local/src/node
+fi
 
 npm install -g pyright
