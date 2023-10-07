@@ -6,6 +6,7 @@
   unstage = reset HEAD --
 [core]
   editor = nvim
+	autocrlf = false
 [diff]
   tool = vimdiff
 [merge]
