@@ -87,6 +87,8 @@ return {
       "lowtime",
       "Lowtime",
       "jaywonchung",
+      "Powerpoint",
+      "SymbioticLab",
     }
   }
 }
