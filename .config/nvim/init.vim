@@ -191,7 +191,7 @@ inoremap <C-d> <DEL>
 " =============================================================================
 " Pick up where I left off
 autocmd BufReadPost *
-  \   if line("'\"") > 0 && line("'\"") <= line("$")
+  \   if ! &diff && line("'\"") > 0 && line("'\"") <= line("$")
   \ |   exe "norm g`\""
   \ | endif
 
@@ -254,7 +254,7 @@ Plug 'numToStr/Comment.nvim'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
-Plug 'ojroques/vim-oscyank'
+Plug 'ojroques/nvim-osc52'
 Plug 'voldikss/vim-floaterm'
 Plug 'zbirenbaum/copilot.lua'
 Plug 'debugloop/telescope-undo.nvim'
@@ -334,9 +334,13 @@ nnoremap <Leader>aw :ArgWrap<CR>
 
 
 " =============================================================================
-" oscyank
+" nvim-osc52
 " =============================================================================
-vnoremap <silent> <Leader>y :OSCYankVisual<CR>
+lua <<END
+vim.keymap.set('n', '<leader>y', require('osc52').copy_operator, {expr = true})
+vim.keymap.set('n', '<leader>yy', '<leader>y_', {remap = true})
+vim.keymap.set('v', '<leader>y', require('osc52').copy_visual)
+END
 
 
 " =============================================================================
