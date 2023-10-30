@@ -191,7 +191,7 @@ inoremap <C-d> <DEL>
 " =============================================================================
 " Pick up where I left off
 autocmd BufReadPost *
-  \   if line("'\"") > 0 && line("'\"") <= line("$")
+  \   if ! &diff && line("'\"") > 0 && line("'\"") <= line("$")
   \ |   exe "norm g`\""
   \ | endif
 
@@ -254,10 +254,11 @@ Plug 'numToStr/Comment.nvim'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-repeat'
 Plug 'foosoft/vim-argwrap'
-Plug 'ojroques/vim-oscyank'
+Plug 'ojroques/nvim-osc52'
 Plug 'voldikss/vim-floaterm'
 Plug 'zbirenbaum/copilot.lua'
 Plug 'debugloop/telescope-undo.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -308,6 +309,17 @@ lua require'impatient'
 
 
 " =============================================================================
+" indent-blankline.nvim
+" =============================================================================
+lua <<END
+require'ibl'.setup{
+  scope = { enabled = false },
+  indent = { char = '┋', highlight = { "LineNr" } },
+}
+END
+
+
+" =============================================================================
 " editorconfig-vim
 " =============================================================================
 let g:EditorConfig_verbose = 1
@@ -334,9 +346,13 @@ nnoremap <Leader>aw :ArgWrap<CR>
 
 
 " =============================================================================
-" oscyank
+" nvim-osc52
 " =============================================================================
-vnoremap <silent> <Leader>y :OSCYankVisual<CR>
+lua <<END
+vim.keymap.set('n', '<leader>y', require('osc52').copy_operator, {expr = true})
+vim.keymap.set('n', '<leader>yy', '<leader>y_', {remap = true})
+vim.keymap.set('v', '<leader>y', require('osc52').copy_visual)
+END
 
 
 " =============================================================================
@@ -804,14 +820,10 @@ END
 " Telescope.nvim
 " =============================================================================
 " Mappings. live_grep uses rg by default.
+nnoremap <silent> <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
 nnoremap <silent> <Leader>b  :Telescope buffers<CR>
 nnoremap <silent> <Leader>gc :Telescope git_bcommits<CR>
 nnoremap <silent> <Leader>u  :Telescope undo<CR>
-if executable("fd")
-  nnoremap <silent> <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
-else
-  nnoremap <silent> <Leader>f  :Telescope find_files<CR>
-endif
 if executable("rg")
   nnoremap gs       :Telescope live_grep<CR>
 else
