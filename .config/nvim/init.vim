@@ -102,6 +102,7 @@ nnoremap [<CR> i[<CR><ESC>o]<ESC>k^
 " Diff mappings
 nnoremap <Leader>dg :diffget<CR>
 nnoremap <Leader>dp :diffput<CR>
+nnoremap <Leader>du :diffupdate<CR>
 nnoremap <Leader>gh :diffget //2<CR>
 nnoremap <Leader>gl :diffget //3<CR>
 
