@@ -102,6 +102,7 @@ nnoremap [<CR> i[<CR><ESC>o]<ESC>k^
 " Diff mappings
 nnoremap <Leader>dg :diffget<CR>
 nnoremap <Leader>dp :diffput<CR>
+nnoremap <Leader>du :diffupdate<CR>
 nnoremap <Leader>gh :diffget //2<CR>
 nnoremap <Leader>gl :diffget //3<CR>
 
@@ -258,6 +259,7 @@ Plug 'ojroques/nvim-osc52'
 Plug 'voldikss/vim-floaterm'
 Plug 'zbirenbaum/copilot.lua'
 Plug 'debugloop/telescope-undo.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
 Plug 'sainnhe/gruvbox-material'
@@ -305,6 +307,17 @@ call plug#end()
 " impatient.nvim
 " =============================================================================
 lua require'impatient'
+
+
+" =============================================================================
+" indent-blankline.nvim
+" =============================================================================
+lua <<END
+require'ibl'.setup{
+  scope = { enabled = false },
+  indent = { char = '┋', highlight = { "LineNr" } },
+}
+END
 
 
 " =============================================================================
