@@ -294,6 +294,7 @@ Plug 'j-hui/fidget.nvim', {'tag': 'legacy'}
 Plug 'L3MON4D3/luasnip'
 Plug 'RRethy/vim-illuminate'
 Plug 'liuchengxu/vista.vim'
+Plug 'barreiroleo/ltex_extra.nvim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -1021,29 +1022,12 @@ if vim.fn.executable('texlab') == 1 then
 end
 
 if vim.fn.executable('ltex-ls') == 1 then
-  local ltex_config = { dictionary = { ["en-US"] = {} } }
-  -- My custom dictionary is inside `~/.local/ltex/config.lua`.
-  if vim.fn.filereadable(os.getenv("HOME") .. "/.config/ltex/config.lua") == 1 then
-    ltex_config = loadfile(os.getenv("HOME") .. "/.config/ltex/config.lua")()
-  end
-  --[[
-  If the current directory has a `.ltex_dictionary.lua` file, add it to the custom dictionary.
-  It should looke like this:
-  ```lua
-  return {
-    "Jae-Won",
-    "ltex".
-  }
-  ```
-  --]]
-  if vim.fn.filereadable('.ltex_dictionary.lua') == 1 then
-    endict = ltex_config['dictionary']['en-US']
-    for _, v in ipairs(loadfile('.ltex_dictionary.lua')()) do
-      table.insert(endict, v)
-    end
+  local ltex_on_attach = function(client, bufnr)
+    require'illuminate'.on_attach(client, bufnr)
+    require'ltex_extra'.setup{ path = vim.fn.expand("~") .. "/.local/share/ltex" }
   end
   lspconfig.ltex.setup{
-    on_attach = require'illuminate'.on_attach,
+    on_attach = ltex_on_attach,
     capabilities = capabilities,
     settings = {
       ltex = ltex_config,
