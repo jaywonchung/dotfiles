@@ -269,6 +269,7 @@ Plug 'tpope/vim-markdown'
 Plug 'bluz71/vim-nightfly-guicolors'
 Plug 'jaywonchung/nvim-tundra'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'mechatroner/rainbow_csv'
 " git integration
 Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
@@ -922,6 +923,9 @@ nnoremap <silent> gn :lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent> gp :lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent> ga :lua vim.lsp.buf.code_action()<CR>
 
+" Turn on signcolum by default for LSP diagnostics and gitsigns
+set signcolumn=yes
+
 lua << END
 local cmp = require'cmp';
 local luasnip = require'luasnip';
@@ -986,7 +990,6 @@ if vim.fn.executable('clangd') == 1 then
     capabilities = capabilities,
   }
   vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd FileType c,cpp setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('pyright') == 1 then
@@ -1004,7 +1007,6 @@ if vim.fn.executable('pyright') == 1 then
     }
   }
   vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-  vim.cmd('autocmd FileType python setlocal signcolumn=yes')
 end
 
 if vim.fn.executable('texlab') == 1 then
@@ -1024,14 +1026,14 @@ end
 if vim.fn.executable('ltex-ls') == 1 then
   local ltex_on_attach = function(client, bufnr)
     require'illuminate'.on_attach(client, bufnr)
-    require'ltex_extra'.setup{ path = vim.fn.expand("~") .. "/.local/share/ltex" }
+    require'ltex_extra'.setup{
+      load_langs = { 'en-US' },
+      path = vim.fn.expand("~") .. "/.local/share/ltex",
+    }
   end
   lspconfig.ltex.setup{
     on_attach = ltex_on_attach,
     capabilities = capabilities,
-    settings = {
-      ltex = ltex_config,
-    }
   }
 end
 
@@ -1119,7 +1121,6 @@ require'rust-tools'.setup {
 }
 END
 autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
-autocmd FileType rust setlocal signcolumn=yes
 
 
 " =============================================================================
