@@ -258,7 +258,6 @@ Plug 'foosoft/vim-argwrap'
 Plug 'ojroques/nvim-osc52'
 Plug 'voldikss/vim-floaterm'
 Plug 'zbirenbaum/copilot.lua'
-Plug 'debugloop/telescope-undo.nvim'
 Plug 'lukas-reineke/indent-blankline.nvim'
 " appearance
 Plug 'hoob3rt/lualine.nvim'
@@ -352,8 +351,8 @@ nnoremap <Leader>aw :ArgWrap<CR>
 " nvim-osc52
 " =============================================================================
 lua <<END
-vim.keymap.set('n', '<leader>y', require('osc52').copy_operator, {expr = true})
-vim.keymap.set('n', '<leader>yy', '<leader>y_', {remap = true})
+vim.keymap.set('n', '<leader>y', require('osc52').copy_operator, { expr = true })
+vim.keymap.set('n', '<leader>yy', '<leader>y_', { remap = true })
 vim.keymap.set('v', '<leader>y', require('osc52').copy_visual)
 END
 
@@ -401,6 +400,7 @@ require"copilot".setup({
     rust = true,
     go = true,
     cpp = true,
+    bash = true,
     ["*"] = false,
   }
 })
@@ -828,7 +828,6 @@ END
 nnoremap <silent> <Leader>f  :Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>
 nnoremap <silent> <Leader>b  :Telescope buffers<CR>
 nnoremap <silent> <Leader>gc :Telescope git_bcommits<CR>
-nnoremap <silent> <Leader>u  :Telescope undo<CR>
 if executable("rg")
   nnoremap gs       :Telescope live_grep<CR>
 else
@@ -891,16 +890,10 @@ require'telescope'.setup{
       override_generic_sorter = true,
       override_file_sorter = true,
     },
-    undo = {
-      use_delta = (vim.fn.executable("delta") == 1),
-      side_by_side = (vim.fn.executable("delta") == 1),
-      layout_strategy = "vertical",
-    },
   },
 }
 
 require'telescope'.load_extension('fzy_native')
-require'telescope'.load_extension('undo')
 END
 
 
