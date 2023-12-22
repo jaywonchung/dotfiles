@@ -12,12 +12,11 @@ fi
 # Zsh and oh-my-zsh configs
 #-------------------------------------------------------------------
 # A kind reminder for others using my dotfiles
-JW_USERS=(jaywonchung jwnchung JWC)
+JW_USERS=(jaywonchung jwnchung JWC cc)
 if [[ ! "${JW_USERS[*]}" =~ "$USER" ]]; then
   # Username is not Jae-Won's
   if [[ "$(git config --global --get user.name)" = "Jae-Won Chung" ]]; then
     # But git username is Jae-Won
-    DOTFILES_WARN_USER=1
     echo Hey, $USER. Remember to run git config with your idendity!
     echo   git config --global user.name \[YOUR NAME HERE\]
     echo   git config --global user.email \[YOUR GITHUB EMAIL HERE\]
@@ -38,7 +37,10 @@ HYPHEN_INSENSITIVE="true"
 DISABLE_UPDATE_PROMPT="true"
 
 # Oh-my-zsh plugins
-plugins=(git fast-syntax-highlighting zsh-autosuggestions)
+plugins=(git fast-syntax-highlighting zsh-autosuggestions docker)
+
+# Disable completion script permission check
+ZSH_DISABLE_COMPFIX="true"
 
 # Configure oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -53,7 +55,6 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # Shell options
-setopt nonomatch
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
 setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
 setopt SHARE_HISTORY             # Share history between all sessions.
@@ -74,9 +75,9 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 FAST_HIGHLIGHT_STYLES[comment]='none'
 
 # Keybindings
-bindkey '^B'  backward-word  # Move the cursor backward by one word
-bindkey '^F'  forward-word   # Move the cursor forward by one word
-bindkey '^[#' pound-insert   # alt-#; Insert a pound at the front and execute (which does nothing)
+bindkey '^B'  backward-word      # Move the cursor backward by one word
+bindkey '^F'  forward-word       # Move the cursor forward by one word
+bindkey '^[#' pound-insert       # alt-#; Insert a pound at the front and execute (which does nothing)
 
 #-------------------------------------------------------------------
 # Powerlevel10k
@@ -99,23 +100,10 @@ export PATH="$HOME/.local/bin:$PATH"
 # Some shell scripts
 export PATH="$HOME/.dotmodules/bin:$PATH"
 
-# Homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
 # Launch and detach from terminal
 function launch {
     nohup "$@" >/dev/null 2>/dev/null &
     disown
-}
-
-# Install dotfiles in a remote machine
-function infect {
-  kitty +kitten ssh -A -tt $1 'SSH=1 source <(curl jaewonchung.me/install-dotfiles.sh)'
-}
-
-# Kitty ssh
-function kssh {
-  kitty +kitten ssh $@
 }
 
 # fzf
@@ -131,24 +119,28 @@ eval "$(direnv hook zsh)"
 # node
 export PATH="$HOME/.local/src/node/bin:$PATH"
 
-# go
-export PATH="$HOME/go/bin:$PATH"
-
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
-# Python
-__conda_setup="$("$HOME/.local/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$HOME/.local/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/.local/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="$HOME/.local/miniconda3/bin:$PATH"
-    fi
+# Python (miniconda3)
+# On CloudLab, conda init is done in /etc/zsh/zshenv
+# See https://github.com/jaywonchung/ngpus-profile
+if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
+  __conda_setup="$("$HOME/.local/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+      eval "$__conda_setup"
+  else
+      if [ -f "$HOME/.local/miniconda3/etc/profile.d/conda.sh" ]; then
+          . "$HOME/.local/miniconda3/etc/profile.d/conda.sh"
+      else
+          export PATH="$HOME/.local/miniconda3/bin:$PATH"
+      fi
+  fi
+  unset __conda_setup
 fi
-unset __conda_setup
+
+# Go
+export PATH="$HOME/.local/go/bin:$HOME/go/bin:$PATH"
 
 #-------------------------------------------------------------------
 # Aliases
@@ -180,7 +172,7 @@ function mkcd() {
   cd $1
 }
 
-# Wait for a process to finish
+# Block until a specific process finishes
 function waitpid() {
   tail --pid $1 -f /dev/null
 }
@@ -198,26 +190,36 @@ export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
 
-# for synctex
-# Requires dbus in MacOS. See vimtex docs section vimtex-faq-zathura-macos.
-export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
-export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
-
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
-# kitty
-export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
+unamestr="$(uname)"
+# MacOS
+if [[ "$unamestr" == "Darwin" ]]; then
+  # Homebrew
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# chrome
-export PATH="/Applications/Google Chrome.app/Contents/MacOS:$PATH"
-alias chrome="Google Chrome"
+  # Synctex + Neovim
+  # Requires dbus. See vimtex docs section vimtex-faq-zathura-macos.
+  export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
 
-# sioyek
-export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
+  # Kitty
+  export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
 
-# terminal scaling issues
-if [[ ! "$DOTFILES_WARN_USER" = 1 ]]; then
-  clear
+  # Kitty ssh
+  function kssh {
+    kitty +kitten ssh $@
+  }
+
+  # Chrome
+  export PATH="/Applications/Google Chrome.app/Contents/MacOS:$PATH"
+  alias chrome="Google Chrome"
+
+  # Sioyek
+  export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
+
+# Linux
+elif [[ "$unamestr" == "Linux" ]]; then
+  # Actually not much for now.
 fi
-unset DOTFILES_WARN_USER
