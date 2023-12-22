@@ -399,6 +399,8 @@ require"copilot".setup({
   filetypes = {
     python = true,
     rust = true,
+    go = true,
+    cpp = true,
     ["*"] = false,
   }
 })
@@ -1142,6 +1144,7 @@ END
 " =============================================================================
 let g:vimtex_view_method = 'sioyek'
 let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
+let g:vimtex_callback_progpath = 'arch -arm64 nvim'
 let g:vimtex_view_use_temp_files = 1
 let g:vimtex_quickfix_open_on_warning = 0
 let g:vimtex_quickfix_enabled = 1
