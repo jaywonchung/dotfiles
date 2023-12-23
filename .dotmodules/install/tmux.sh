@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 pprint() {
   printf "%*s\n" $(( (${#1} + $(tput cols) * 2 / 3) / 2 )) "$1"

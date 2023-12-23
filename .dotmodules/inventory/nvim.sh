@@ -4,11 +4,18 @@ set -ev
 
 VERSION=${VERSION:-stable}
 
+unamestr="$(uname)"
+if [[ "$unamestr" == "Darwin" ]]; then
+  OS=macos
+elif [[ "$unamestr" == "Linux" ]]; then
+  OS=linux64
+fi
+
 # Get nvim release
 cd /tmp
-curl -LO https://github.com/neovim/neovim/releases/download/$VERSION/nvim-macos.tar.gz
-xattr -c nvim-macos.tar.gz
-tar xzf nvim-macos.tar.gz
+curl -LO https://github.com/neovim/neovim/releases/download/$VERSION/nvim-$OS.tar.gz
+xattr -c nvim-$OS.tar.gz
+tar xzf nvim-$OS.tar.gz
 mkdir -p ~/.local
 
 # Remove
@@ -17,10 +24,10 @@ rm -rf ~/.local/lib/nvim   || true
 rm -rf ~/.local/share/nvim || true
 
 # Install nvim
-rsync -a nvim-macos/* ~/.local/
+rsync -a nvim-$OS/* ~/.local/
 
 # Cleanup
-rm -rf nvim-macos
+rm -rf nvim-$OS
 
 # Install plugins
 sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \

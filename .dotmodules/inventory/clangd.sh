@@ -1,7 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-cd /tmp
-curl -LO https://github.com/clangd/clangd/releases/download/13.0.0/clangd-mac-13.0.0.zip
-unzip clangd-mac-13.0.0.zip
-rsync -a clangd_13.0.0/* "$HOME/.local"
-rm -r clangd-mac-13.0.0.zip clangd_13.0.0
+version=${version:-17.0.3}
+
+unamestr="$(uname)"
+if [[ "$unamestr" == "Darwin" ]]; then
+  cd /tmp
+  curl -LO https://github.com/clangd/clangd/releases/download/$version/clangd-mac-$version.zip
+  unzip clangd-mac-$version.zip
+  rsync -a clangd_$version/* "$HOME/.local"
+  rm -r clangd-mac-$version.zip clangd_$version
+elif [[ "$unamestr" == "Linux" ]]; then
+  cd /tmp
+  curl -LO https://github.com/clangd/clangd/releases/download/$version/clangd-linux-$version.zip
+  unzip clangd-linux-$version.zip
+  rsync -a clangd_$version/* "$HOME/.local"
+  rm -r clangd-linux-$version.zip clangd_$version
+fi
