@@ -177,6 +177,11 @@ function waitpid() {
   tail --pid $1 -f /dev/null
 }
 
+# Automatically reset cursor shape
+function rc() {
+  print -n '\033[5 q'
+}
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
