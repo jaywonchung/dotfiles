@@ -401,6 +401,7 @@ require"copilot".setup({
     go = true,
     cpp = true,
     bash = true,
+    zig = true,
     ["*"] = false,
   }
 })
@@ -1060,6 +1061,7 @@ if vim.fn.executable('zls') == 1 then
     capabilities = capabilities,
   }
 end
+vim.g.zig_fmt_parse_errors = 0
 
 -- Configs for diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -1123,7 +1125,7 @@ autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc
 " =============================================================================
 lua << END
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua" },
+  ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "lua", "zig" },
   highlight = {
     enable = true,
   },
