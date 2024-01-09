@@ -113,6 +113,11 @@ function launch {
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
 
+# Homebrew for MacOS
+if [[ "$(uname)" == "Darwin" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # direnv
 eval "$(direnv hook zsh)"
 
@@ -201,9 +206,6 @@ export MANWIDTH=999
 unamestr="$(uname)"
 # MacOS
 if [[ "$unamestr" == "Darwin" ]]; then
-  # Homebrew
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-
   # Synctex + Neovim
   # Requires dbus. See vimtex docs section vimtex-faq-zathura-macos.
   export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
