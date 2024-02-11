@@ -32,3 +32,4 @@ sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs 
 
 installing "vim plugins"
 ~/.local/bin/nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!
+echo "done"
