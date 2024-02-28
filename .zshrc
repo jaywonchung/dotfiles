@@ -74,6 +74,10 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
 # Do not highlight comments
 FAST_HIGHLIGHT_STYLES[comment]='none'
 
+# These characters are additionally considered as part of a word, so that they're skipped over
+# by backward-word, forward-word, etc.
+WORDCHARS='*?_-.~=!#$%^(){}<>'
+
 # Keybindings
 bindkey '^B'  backward-word      # Move the cursor backward by one word
 bindkey '^F'  forward-word       # Move the cursor forward by one word
