@@ -98,6 +98,8 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status anaconda time)
 #-------------------------------------------------------------------
 # Command-line tools
 #-------------------------------------------------------------------
+_UNAME="$(uname)"
+
 # I like keeping things here
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -118,7 +120,7 @@ function launch {
     source "$HOME/.autojump/etc/profile.d/autojump.sh"
 
 # Homebrew for MacOS
-if [[ "$(uname)" == "Darwin" ]]; then
+if [[ "$_UNAME" == "Darwin" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
@@ -147,6 +149,8 @@ if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
   fi
   unset __conda_setup
 fi
+# Makes sure orders in PATH are consistent when sourcing .zshrc again on tmux start, etc.
+export PATH="$HOME/.local/miniconda3/bin:$PATH"
 
 # Go
 export PATH="$HOME/.local/go/bin:$HOME/go/bin:$PATH"
@@ -207,9 +211,8 @@ export MANWIDTH=999
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
-unamestr="$(uname)"
 # MacOS
-if [[ "$unamestr" == "Darwin" ]]; then
+if [[ "$_UNAME" == "Darwin" ]]; then
   # Synctex + Neovim
   # Requires dbus. See vimtex docs section vimtex-faq-zathura-macos.
   export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
@@ -231,6 +234,8 @@ if [[ "$unamestr" == "Darwin" ]]; then
   export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
 
 # Linux
-elif [[ "$unamestr" == "Linux" ]]; then
+elif [[ "$_UNAME" == "Linux" ]]; then
   # Actually not much for now.
 fi
+
+unset _UNAME
