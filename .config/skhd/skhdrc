@@ -77,7 +77,7 @@
 # ############################################################### #
 
 # open terminal
-cmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
+lcmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
 
 # # focus window (XMonad style)
 # cmd - j : yabai -m window --focus next || yabai -m window --focus first

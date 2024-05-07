@@ -76,7 +76,7 @@ FAST_HIGHLIGHT_STYLES[comment]='none'
 
 # These characters are additionally considered as part of a word, so that they're skipped over
 # by backward-word, forward-word, etc.
-WORDCHARS='*?_-.~=!#$%^(){}<>'
+WORDCHARS='*?.~=!#$%^(){}<>'
 
 # Keybindings
 bindkey '^B'  backward-word      # Move the cursor backward by one word

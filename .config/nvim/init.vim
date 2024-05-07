@@ -41,6 +41,8 @@ set history=256                 " History for commands, searches, etc
 " Embed lua syntax highlighting in vimscript
 let g:vimsyn_embed = 'l'
 
+let maplocalleader=','
+
 " Syntax highlighting
 if has("syntax")
  syntax on
@@ -269,8 +271,11 @@ Plug 'bluz71/vim-nightfly-guicolors'
 Plug 'jaywonchung/nvim-tundra'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'mechatroner/rainbow_csv'
+Plug 'projekt0n/github-nvim-theme'
 " git integration
 Plug 'tpope/vim-fugitive'
+Plug 'NeogitOrg/neogit'
+Plug 'sindrets/diffview.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 " navigation
 Plug 'kyazdani42/nvim-tree.lua'
@@ -303,6 +308,30 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'lervag/vimtex'
 call plug#end()
+
+" =============================================================================
+" vimtex
+" =============================================================================
+let g:vimtex_view_method = 'sioyek'
+let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
+let g:vimtex_callback_progpath = 'arch -arm64 nvim'
+let g:vimtex_view_use_temp_files = 1
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_enabled = 0
+let g:vimtex_imaps_enabled = 0
+let g:vimtex_quickfix_autoclose_after_keystrokes = 4
+let g:vimtex_toc_enabled = 0
+let g:vimtex_view_reverse_search_edit_cmd = 'tabedit'
+let g:vimtex_quickfix_ignore_filters = [
+      \ 'warning',
+      \ 'Warning',
+      \ 'no output PDF',
+      \ 'underfull',
+      \ 'Underfull',
+      \ 'overfull',
+      \ 'Overfull',
+      \]
+
 
 " =============================================================================
 " impatient.nvim
@@ -417,9 +446,36 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*'] " for compatibility with
 " =============================================================================
 " fugitive
 " =============================================================================
-nnoremap <Leader>gs :G<CR>
 nnoremap <Leader>gb :Git blame<CR>
-nnoremap <Leader>gd :Gdiffsplit!<CR>
+
+
+" =============================================================================
+" neogit
+" =============================================================================
+lua <<END
+local neogit = require'neogit'
+neogit.setup {
+  graph_style = "unicode",
+  commit_view = { verify_commit = false },
+  mappings = {
+    status = {
+      ["<c-v>"] = "VSplitOpen",
+      ["<c-s>"] = "SplitOpen",
+      ["<c-g>"] = "TabOpen",
+    },
+  },
+}
+END
+
+
+" =============================================================================
+" diffview
+" =============================================================================
+lua <<END
+require'diffview'.setup {
+  use_icons = false,
+}
+END
 
 
 " =============================================================================
@@ -607,6 +663,17 @@ END
   highlight  NormalFloat guibg=#0e1420
   " nvim-cmp autocompletion menu
   highlight  Pmenu       guibg=#0e1420
+  
+  " diffview.nvim
+  highlight  DiffviewFilePanelTitle   guifg=#74c7ed
+  highlight  DiffviewFilePanelCounter guifg=#74c7ed
+endfunction
+
+function GitHub()
+  " Really just for screenshot purposes.
+  colorscheme github_light
+  let g:lualine_theme = "github_light"
+  highlight Normal guibg=#f6f8fa
 endfunction
 
 " call Plain()
@@ -615,6 +682,7 @@ endfunction
 " call Nightfly()
 " call Tundra()
 call Catppuccin()
+" call GitHub()
 
 
 " =============================================================================
@@ -782,30 +850,43 @@ require'nvim-tree'.setup({
     },
   },
 })
-END
 
-function! NvimTreeAutoQuit()
-  " If nvim-tree is the only window left, close it.
-  if winnr("$") == 1
-    if bufname() == 'NvimTree_' . tabpagenr()
-      q
-    endif
-  " Even when there are more than one windows, we want to ignore
-  " floating windows.
-  else
-    for winid in nvim_list_wins()
-      " The existence of a window that is not nvim-tree and is not floating
-      " means that we cannot quit everything.
-      if bufname(nvim_win_get_buf(winid)) != 'NvimTree_' . tabpagenr()
-        if !has_key(nvim_win_get_config(winid), 'zindex')
-          return
-        endif
-      endif
-    endfor
-    qa
-  endif
-endfunction
-autocmd BufEnter * silent call NvimTreeAutoQuit()
+local function tab_win_closed(winnr)
+  local api = require"nvim-tree.api"
+  local tabnr = vim.api.nvim_win_get_tabpage(winnr)
+  local bufnr = vim.api.nvim_win_get_buf(winnr)
+  local buf_info = vim.fn.getbufinfo(bufnr)[1]
+  local tab_wins = vim.tbl_filter(function(w) return w~=winnr end, vim.api.nvim_tabpage_list_wins(tabnr))
+  local tab_bufs = vim.tbl_map(vim.api.nvim_win_get_buf, tab_wins)
+  if buf_info.name:match(".*NvimTree_%d*$") then            -- close buffer was nvim tree
+    -- Close all nvim tree on :q
+    if not vim.tbl_isempty(tab_bufs) then                      -- and was not the last window (not closed automatically by code below)
+      api.tree.close()
+    end
+  else                                                      -- else closed buffer was normal buffer
+    if #tab_bufs == 1 then                                    -- if there is only 1 buffer left in the tab
+      local last_buf_info = vim.fn.getbufinfo(tab_bufs[1])[1]
+      if last_buf_info.name:match(".*NvimTree_%d*$") then       -- and that buffer is nvim tree
+        vim.schedule(function ()
+          if #vim.api.nvim_list_wins() == 1 then                -- if its the last buffer in vim
+            vim.cmd "quit"                                        -- then close all of vim
+          else                                                  -- else there are more tabs open
+            vim.api.nvim_win_close(tab_wins[1], true)             -- then close only the tab
+          end
+        end)
+      end
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd("WinClosed", {
+  callback = function ()
+    local winnr = tonumber(vim.fn.expand("<amatch>"))
+    vim.schedule_wrap(tab_win_closed(winnr))
+  end,
+  nested = true
+})
+END
 
 
 " =============================================================================
@@ -836,16 +917,22 @@ else
 endif
 
 lua << END
-local action_state = require('telescope.actions.state')
-function preview_scroll_up_one(prompt_bufnr)
+local actions = require'telescope.actions'
+local action_state = require'telescope.actions.state'
+local Path = require'plenary.path'
+
+local preview_scroll_up_one = function(prompt_bufnr)
   action_state.get_current_picker(prompt_bufnr).previewer:scroll_fn(-1)
 end
-function preview_scroll_down_one(prompt_bufnr)
+local preview_scroll_down_one = function(prompt_bufnr)
   action_state.get_current_picker(prompt_bufnr).previewer:scroll_fn(1)
 end
-
-local actions = require'telescope.actions'
-local config = require'telescope.config'
+local create_buffer = function(prompt_bufnr)
+  local prompt = action_state.get_current_line()
+  local prompt_path = Path:new(prompt)
+  actions.close(prompt_bufnr)
+  vim.cmd.tabedit(prompt_path:absolute())
+end
 
 require'telescope'.setup{
   defaults = {
@@ -869,6 +956,7 @@ require'telescope'.setup{
         ["<C-k>"] = actions.move_selection_previous,
         ["<C-j>"] = actions.move_selection_next,
         ["<ESC>"] = actions.close,
+        ["<C-CR>"] = create_buffer,
       }
     },
     vimgrep_arguments = {
@@ -1132,27 +1220,4 @@ require'nvim-treesitter.configs'.setup {
 }
 require'treesitter-context'.setup()
 END
-
-
-" =============================================================================
-" vimtex
-" =============================================================================
-let g:vimtex_view_method = 'sioyek'
-let g:vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
-let g:vimtex_callback_progpath = 'arch -arm64 nvim'
-let g:vimtex_view_use_temp_files = 1
-let g:vimtex_quickfix_open_on_warning = 0
-let g:vimtex_quickfix_enabled = 1
-let g:vimtex_imaps_enabled = 0
-let g:vimtex_quickfix_autoclose_after_keystrokes = 4
-let g:vimtex_toc_enabled = 0
-let g:vimtex_view_reverse_search_edit_cmd = 'tabedit'
-let g:vimtex_quickfix_ignore_filters = [
-      \ 'warning',
-      \ 'Warning',
-      \ 'Missing "school"',
-      \ 'no output PDF',
-      \ 'Underfull',
-      \ 'overfull',
-      \]
-let maplocalleader=','
+autocmd BufEnter *.c,*.cpp,*.py,*.rs,*.go,*.vim,*.lua,*.zig :lua vim.treesitter.start()
