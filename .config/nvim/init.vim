@@ -956,7 +956,7 @@ require'telescope'.setup{
         ["<C-k>"] = actions.move_selection_previous,
         ["<C-j>"] = actions.move_selection_next,
         ["<ESC>"] = actions.close,
-        ["<C-CR>"] = create_buffer,
+        ["<C-l>"] = create_buffer,
       }
     },
     vimgrep_arguments = {
