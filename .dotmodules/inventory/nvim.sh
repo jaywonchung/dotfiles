@@ -6,7 +6,7 @@ VERSION=${VERSION:-stable}
 
 unamestr="$(uname)"
 if [[ "$unamestr" == "Darwin" ]]; then
-  OS=macos
+  OS=macos-arm64
 elif [[ "$unamestr" == "Linux" ]]; then
   OS=linux64
 fi
