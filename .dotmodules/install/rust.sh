@@ -19,3 +19,6 @@ cargo install ripgrep
 
 installing "fd"
 cargo install fd-find
+
+installing "eza"
+cargo install eza

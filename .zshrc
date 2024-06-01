@@ -83,6 +83,9 @@ bindkey '^B'  backward-word      # Move the cursor backward by one word
 bindkey '^F'  forward-word       # Move the cursor forward by one word
 bindkey '^[#' pound-insert       # alt-#; Insert a pound at the front and execute (which does nothing)
 
+# When command output is missing a newline, print this at the end
+PROMPT_EOL_MARK='⏎'
+
 #-------------------------------------------------------------------
 # Powerlevel10k
 #-------------------------------------------------------------------
@@ -129,6 +132,15 @@ eval "$(direnv hook zsh)"
 
 # node
 export PATH="$HOME/.local/src/node/bin:$PATH"
+
+# eza
+if command -v eza 1>/dev/null 2>/dev/null; then
+  __eza_params=('--git' '--icons' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
+  alias ls='eza $__eza_params'
+  alias l='eza --all --header --long $__eza_params'
+  alias ll='eza --header --long $__eza_params'
+  alias tree='eza --tree $__eza_params'
+fi
 
 #-------------------------------------------------------------------
 # Language-specific
