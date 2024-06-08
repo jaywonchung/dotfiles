@@ -135,7 +135,7 @@ export PATH="$HOME/.local/src/node/bin:$PATH"
 
 # eza
 if command -v eza 1>/dev/null 2>/dev/null; then
-  __eza_params=('--git' '--icons' '--classify' '--group-directories-first' '--time-style=long-iso' '--group' '--color-scale')
+  __eza_params=('--git' '--icons' '--classify' '--group-directories-first' '--time-style=long-iso' '--group')
   alias ls='eza $__eza_params'
   alias l='eza --all --header --long $__eza_params'
   alias ll='eza --header --long $__eza_params'
