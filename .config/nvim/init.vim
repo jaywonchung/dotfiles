@@ -303,7 +303,7 @@ Plug 'barreiroleo/ltex_extra.nvim'
 " syntactic language support
 Plug 'rust-lang/rust.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/nvim-treesitter-context'
+" Plug 'nvim-treesitter/nvim-treesitter-context'
 Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'lervag/vimtex'
@@ -674,6 +674,9 @@ function GitHub()
   colorscheme github_light
   let g:lualine_theme = "github_light"
   highlight Normal guibg=#f6f8fa
+  " XXX: Hacky workaround due to Nvim 0.10's highlight group update
+  " https://github.com/projekt0n/github-nvim-theme/issues/329
+  highlight clear Delimiter
 endfunction
 
 " call Plain()
@@ -681,8 +684,8 @@ endfunction
 " call Base16()
 " call Nightfly()
 " call Tundra()
-call Catppuccin()
-" call GitHub()
+" call Catppuccin()
+call GitHub()
 
 
 " =============================================================================
@@ -1149,7 +1152,10 @@ if vim.fn.executable('zls') == 1 then
     capabilities = capabilities,
   }
 end
+-- Remove when Neovim > 0.10.0 is released as
+-- https://github.com/neovim/neovim/pull/28904 was merged.
 vim.g.zig_fmt_parse_errors = 0
+vim.g.zig_fmt_autosave = 0
 
 -- Configs for diagnostics
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -1218,6 +1224,6 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
 }
-require'treesitter-context'.setup()
+-- require'treesitter-context'.setup()
 END
 autocmd BufEnter *.c,*.cpp,*.py,*.rs,*.go,*.vim,*.lua,*.zig :lua vim.treesitter.start()
