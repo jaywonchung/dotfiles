@@ -13,7 +13,7 @@ docker run --rm -v $HOME/.local:$HOME/.local ubuntu:18.04 bash -c \
    cd neovim &&
    git checkout stable &&
    make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=$HOME/.local &&
-   rm -f ~/.local/bin/nvim ~/.local/lib/nvim ~/.local/share/nvim;
+   rm -rf $HOME/local/bin/nvim $HOME/local/lib/nvim $HOME/local/share/nvim;
    make CMAKE_INSTALL_PREFIX=$HOME/.local install &&
    chown -R $(id -u):$(id -g) $HOME/.local"
 
