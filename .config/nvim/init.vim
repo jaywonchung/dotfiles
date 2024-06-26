@@ -674,9 +674,6 @@ function GitHub()
   colorscheme github_light
   let g:lualine_theme = "github_light"
   highlight Normal guibg=#f6f8fa
-  " XXX: Hacky workaround due to Nvim 0.10's highlight group update
-  " https://github.com/projekt0n/github-nvim-theme/issues/329
-  highlight clear Delimiter
 endfunction
 
 " call Plain()
@@ -684,8 +681,8 @@ endfunction
 " call Base16()
 " call Nightfly()
 " call Tundra()
-" call Catppuccin()
-call GitHub()
+call Catppuccin()
+" call GitHub()
 
 
 " =============================================================================
