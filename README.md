@@ -12,10 +12,10 @@ source .dotmodules/init.sh
 
 **Warning.** My machines have SSH authentication set up with Github, so cloning with `git@github.com:jaywonchung/dotfiles.git` works. Others will have to clone with the URL `https://github.com/jaywonchung/dotfiles.git`.
 
-Then checkout the desired system branch. For example, install the `ubuntu-server` settings with:
+A unified set of dotfiles for MacOS and Linux machines is on the `unified` branch:
 
 ```bash
-dotfiles checkout ubuntu-server
+dotfiles checkout unified
 ```
 
 You may run into errors when checking out a branch due to existing dotfiles in your home directory.
