@@ -16,7 +16,3 @@ docker run --rm -v $HOME/.local:$HOME/.local ubuntu:18.04 bash -c \
    rm -rf $HOME/local/bin/nvim $HOME/local/lib/nvim $HOME/local/share/nvim;
    make CMAKE_INSTALL_PREFIX=$HOME/.local install &&
    chown -R $(id -u):$(id -g) $HOME/.local"
-
-sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!

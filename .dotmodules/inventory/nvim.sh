@@ -28,8 +28,3 @@ rsync -a nvim-$OS/* ~/.local/
 
 # Cleanup
 rm -rf nvim-$OS
-
-# Install plugins
-sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!

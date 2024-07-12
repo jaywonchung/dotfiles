@@ -25,11 +25,4 @@ elif [[ "$unamestr" == "Linux" ]]; then
   mkdir -p ~/.local
   rsync -a nvim-linux64/* ~/.local/
 fi
-
-installing "vim-plug"
-sh -c 'curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-installing "vim plugins"
-~/.local/bin/nvim -E -s -u ~/.config/nvim/init.vim +PlugInstall +qall!
 echo "done"

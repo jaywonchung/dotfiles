@@ -142,6 +142,12 @@ if command -v eza 1>/dev/null 2>/dev/null; then
   alias tree='eza --tree $__eza_params'
 fi
 
+# Neovim + diffview.nvim as git difftool
+function gdf() {
+  cmd="DiffviewOpen $@"
+  nvim -c $cmd
+}
+
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
@@ -165,6 +171,7 @@ fi
 export PATH="$HOME/.local/miniconda3/bin:$PATH"
 
 # Go
+export GOBIN="$HOME/.local/go/bin"
 export PATH="$HOME/.local/go/bin:$HOME/go/bin:$PATH"
 
 #-------------------------------------------------------------------
@@ -172,7 +179,6 @@ export PATH="$HOME/.local/go/bin:$HOME/go/bin:$PATH"
 #-------------------------------------------------------------------
 # git
 alias gcm='git commit -m'
-alias gdf='git difftool'
 
 # dotfile management
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
@@ -185,7 +191,7 @@ alias dl='dotfiles pull'
 alias ddf='dotfiles difftool'
 
 # nvim
-alias nconf="nvim $HOME/.config/nvim/init.vim"
+alias nconf="nvim $HOME/.config/nvim/init.lua"
 
 # Ask for confirmation when I'm about to overwrite some file.
 alias cp='cp -i'
