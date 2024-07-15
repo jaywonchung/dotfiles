@@ -851,6 +851,7 @@ require("lazy").setup({
           show_buffer_close_icons = false,
           always_show_bufferline = false,
           auto_toggle_bufferline = true,
+          show_buffer_icons = false,
           diagnostics = "nvim_lsp",
           diagnostics_indicator = function(count, level)
               local icon = level:match("error") and "" or ""
