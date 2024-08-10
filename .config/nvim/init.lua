@@ -237,26 +237,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 ------------------------------------------------------------------------------
 -- Language settings
 ------------------------------------------------------------------------------
--- Verilog
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "verilog",
---   callback = function()
---     vim.bo.shiftwidth = 4
---     vim.bo.tabstop = 4
---     vim.bo.softtabstop = 4
---   end
--- })
-
--- Rust
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "rust",
---   callback = function()
---     vim.bo.shiftwidth = 4
---     vim.bo.tabstop = 4
---     vim.bo.softtabstop = 4
---   end
--- })
-
 -- Go
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
@@ -268,7 +248,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- LaTeX
-
 vim.g.tex_flavor = "latex"
 
 --- Lua filetypes
@@ -287,6 +266,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  rocks = { enabled = false },
   spec = {
     -- Editing
     { "numToStr/Comment.nvim" },
@@ -347,26 +327,29 @@ require("lazy").setup({
     },
     {
       "zbirenbaum/copilot.lua",
-      event = "InsertEnter",
-      opts = {
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          keymap = {
-            accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
-            accept_line = "<M-e>",
+      config = function()
+        require("copilot").setup({
+          suggestion = {
+            enabled = true,
+            auto_trigger = true,
+            keymap = {
+              accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
+              accept_line = "<M-e>",
+            },
           },
-        },
-        filetypes = {
-          python = true,
-          rust = true,
-          go = true,
-          cpp = true,
-          bash = true,
-          zig = true,
-          ["*"] = false,
-        },
-      },
+          filetypes = {
+            python = true,
+            rust = true,
+            go = true,
+            cpp = true,
+            bash = true,
+            zig = true,
+            ["*"] = false,
+          },
+        })
+
+        vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
+      end,
     },
     {
       "lukas-reineke/indent-blankline.nvim",
@@ -498,8 +481,11 @@ require("lazy").setup({
         vim.cmd([[
         colorscheme catppuccin-mocha
 
+        " Make comments slightly lighter
+        highlight  Comment     guifg=#81859a
+
         " Cursor line (from nightfly)
-        highlight! CursorLine guibg=#092236
+        highlight! CursorLine  guibg=#092236
 
         " LSP hover menu dark background (from Tundra)
         highlight  NormalFloat guibg=#0e1420
@@ -741,6 +727,9 @@ require("lazy").setup({
           ["<C-s>"] = "actions.select_split",
           ["<C-v>"] = "actions.select_vsplit",
           ["<C-g>"] = "actions.select_tab",
+        },
+        view_options = {
+          show_hidden = true,
         },
       },
     },
