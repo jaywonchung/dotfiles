@@ -144,7 +144,7 @@ fi
 
 # Neovim + diffview.nvim as git difftool
 function gdf() {
-  cmd="DiffviewOpen $@"
+  cmd="DiffviewOpen -uno $@"
   nvim -c $cmd
 }
 
