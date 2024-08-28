@@ -128,3 +128,5 @@ Miniconda
 Torchvision
 QLoRA
 Nevermind
+pegasus
+bookended
