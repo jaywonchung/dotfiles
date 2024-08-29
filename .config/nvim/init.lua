@@ -984,6 +984,7 @@ require("lazy").setup({
           lspconfig.ltex.setup{
             on_attach = ltex_on_attach,
             capabilities = capabilities,
+            filetypes = { "bib", "gitcommit", "markdown", "plaintex", "rst", "tex", "text" },
           }
         end
 
