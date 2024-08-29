@@ -4,7 +4,7 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "CMD + ESC to CMD + Backtick",
+                        "description": "CMD/SHIFT + ESC to CMD/SHIFT + Backtick",
                         "manipulators": [
                             {
                                 "from": {
@@ -15,6 +15,19 @@
                                     {
                                         "key_code": "grave_accent_and_tilde",
                                         "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "escape",
+                                    "modifiers": { "mandatory": ["right_shift"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "grave_accent_and_tilde",
+                                        "modifiers": ["right_shift"]
                                     }
                                 ],
                                 "type": "basic"
