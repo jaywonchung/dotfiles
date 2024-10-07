@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=${VERSION:-"17.3.0"}
+VERSION=${VERSION:-"22.9.0"}
 
 if [[ $(uname -m) = arm64 ]]; then
   ARCH=arm64
