@@ -323,6 +323,9 @@ require("lazy").setup({
           pattern = "*",
           command = "FloatermNew --silent"
         })
+
+        -- `floaterm [FILE]` inside the floating terminal will open the file as:
+        vim.g.floaterm_opener = "tabe"
       end,
     },
     {
@@ -350,6 +353,57 @@ require("lazy").setup({
 
         vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
       end,
+    },
+    {
+      "yetone/avante.nvim",
+      event = "VeryLazy",
+      lazy = false,
+      version = false, -- set this if you want to always pull the latest change
+      opts = {
+        -- add any opts here
+      },
+      -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+      build = "make",
+      -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+      dependencies = {
+        "nvim-treesitter/nvim-treesitter",
+        "stevearc/dressing.nvim",
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+        --- The below dependencies are optional,
+        "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+        "zbirenbaum/copilot.lua", -- for providers='copilot'
+        {
+          -- support for image pasting
+          "HakonHarnes/img-clip.nvim",
+          event = "VeryLazy",
+          opts = {
+            -- recommended settings
+            default = {
+              embed_image_as_base64 = false,
+              prompt_for_file_name = false,
+              drag_and_drop = {
+                insert_mode = true,
+              },
+              -- required for Windows users
+              use_absolute_path = true,
+            },
+          },
+        },
+        {
+          -- Make sure to set this up properly if you have lazy=true
+          'MeanderingProgrammer/render-markdown.nvim',
+          opts = {
+            file_types = { "Avante" },
+          },
+          ft = { "Avante" },
+        },
+      },
+      config = function()
+        require('avante').setup({
+          provider = "copilot"
+        })
+      end
     },
     {
       "lukas-reineke/indent-blankline.nvim",
@@ -959,20 +1013,6 @@ require("lazy").setup({
           -- vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
         end
 
-        if vim.fn.executable('texlab') == 1 then
-          lspconfig.texlab.setup{
-            on_attach = require'illuminate'.on_attach,
-            capabilities = capabilities,
-            settings = {
-              texlab = {
-                chktex = {
-                  onEdit = true,
-                }
-              }
-            }
-          }
-        end
-
         if vim.fn.executable('ltex-ls') == 1 then
           local ltex_on_attach = function(client, bufnr)
             require'illuminate'.on_attach(client, bufnr)
@@ -1018,8 +1058,8 @@ require("lazy").setup({
         end
         -- Remove when Neovim > 0.10.0 is released as
         -- https://github.com/neovim/neovim/pull/28904 was merged.
-        vim.g.zig_fmt_parse_errors = 0
-        vim.g.zig_fmt_autosave = 0
+        -- vim.g.zig_fmt_parse_errors = 0
+        -- vim.g.zig_fmt_autosave = 0
 
         -- Configs for diagnostics
         vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
