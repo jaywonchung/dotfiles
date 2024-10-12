@@ -88,7 +88,24 @@ vim.keymap.set('v', '<Leader>p', '"_dP')
 vim.keymap.set({ 'i', 'v' }, '<C-c>', '<ESC>')
 
 -- Automatically closing brackets
-vim.keymap.set('i', '{<CR>', '{<CR>}<ESC>O')
+vim.keymap.set('i', '{<CR>', function()
+  local filetype = vim.bo.filetype
+  if filetype == "python" then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('{<CR><BS><BS>}<ESC>O<BS>', true, false, true), 'n', true)
+  else
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('{<CR>}<ESC>O', true, false, true), 'n', true)
+  end
+end)
+vim.keymap.set('i', '(<CR>', function()
+  local filetype = vim.bo.filetype
+  if filetype == "python" then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('(<CR><BS><BS>)<ESC>O<BS>', true, false, true), 'n', true)
+  else
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('(<CR>)<ESC>O', true, false, true), 'n', true)
+  end
+end)
+
+-- vim.keymap.set('i', '{<CR>', '{<CR><BS><BS>}<ESC>O')
 
 -- Surrounding with brackets
 vim.keymap.set('n', '(<CR>', 'i(<CR><ESC>o)<ESC>k^')
