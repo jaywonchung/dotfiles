@@ -148,6 +148,11 @@ function gdf() {
   nvim -c $cmd
 }
 
+function ovim() {
+  cd ~/Google/Sync/Obsidian/notes
+  nvim Index.md
+}
+
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
