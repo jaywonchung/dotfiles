@@ -14,7 +14,7 @@ fi
 # Get nvim release
 cd /tmp
 curl -LO https://github.com/neovim/neovim/releases/download/$VERSION/nvim-$OS.tar.gz
-xattr -c nvim-$OS.tar.gz
+xattr -c nvim-$OS.tar.gz || true
 tar xzf nvim-$OS.tar.gz
 mkdir -p ~/.local
 
