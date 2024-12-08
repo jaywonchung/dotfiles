@@ -713,41 +713,27 @@ require("lazy").setup({
           },
         })
 
-        -- Close all nvim-tree windows when it's closed.
-        -- Also, while ignoring fidget.nvim windows, if the last code window was closed, quit Neovim.
         local function tab_win_closed(winnr)
           local api = require"nvim-tree.api"
           local tabnr = vim.api.nvim_win_get_tabpage(winnr)
           local bufnr = vim.api.nvim_win_get_buf(winnr)
           local buf_info = vim.fn.getbufinfo(bufnr)[1]
-          local all_tab_wins = vim.api.nvim_tabpage_list_wins(tabnr)
-          local remaining_wins = vim.tbl_filter(function(w) return w ~= winnr end, all_tab_wins)
-          local remaining_bufs = vim.tbl_map(vim.api.nvim_win_get_buf, remaining_wins)
-
-          local significant_remaining_bufs = vim.tbl_filter(function(b)
-            local info = vim.fn.getbufinfo(b)[1]
-            return vim.bo[info.bufnr].filetype ~= "fidget"
-          end, remaining_bufs)
-
-          if buf_info.name:match(".*NvimTree_%d*$") then
-            if not vim.tbl_isempty(significant_remaining_bufs) then
+          local tab_wins = vim.tbl_filter(function(w) return w~=winnr end, vim.api.nvim_tabpage_list_wins(tabnr))
+          local tab_bufs = vim.tbl_map(vim.api.nvim_win_get_buf, tab_wins)
+          if buf_info.name:match(".*NvimTree_%d*$") then            -- close buffer was nvim tree
+            -- Close all nvim tree on :q
+            if not vim.tbl_isempty(tab_bufs) then                      -- and was not the last window (not closed automatically by code below)
               api.tree.close()
             end
-          else
-            if #significant_remaining_bufs == 1 then
-              local last_buf_info = vim.fn.getbufinfo(significant_remaining_bufs[1])[1]
-              if last_buf_info.name:match(".*NvimTree_%d*$") then
+          else                                                      -- else closed buffer was normal buffer
+            if #tab_bufs == 1 then                                    -- if there is only 1 buffer left in the tab
+              local last_buf_info = vim.fn.getbufinfo(tab_bufs[1])[1]
+              if last_buf_info.name:match(".*NvimTree_%d*$") then       -- and that buffer is nvim tree
                 vim.schedule(function ()
-                  local all_wins = vim.api.nvim_list_wins()
-                  local non_fidget_wins = vim.tbl_filter(function(win)
-                    local buf = vim.api.nvim_win_get_buf(win)
-                    return vim.bo[buf].filetype ~= "fidget"
-                  end, all_wins)
-
-                  if #non_fidget_wins == 1 then  -- Only one significant window left
-                    vim.cmd "quit"  -- Quit Neovim entirely
-                  elseif #non_fidget_wins > 1 then
-                    vim.api.nvim_win_close(remaining_wins[1], true)  -- Close the NvimTree window safely
+                  if #vim.api.nvim_list_wins() == 1 then                -- if its the last buffer in vim
+                    vim.cmd "quit"                                        -- then close all of vim
+                  else                                                  -- else there are more tabs open
+                    vim.api.nvim_win_close(tab_wins[1], true)             -- then close only the tab
                   end
                 end)
               end
@@ -864,7 +850,7 @@ require("lazy").setup({
     {
       "airblade/vim-rooter",
       init = function()
-        vim.g.rooter_patterns = { '.git', 'Cargo.toml' }
+        vim.g.rooter_patterns = { '.git', 'Cargo.toml', '.obsidian', 'pyproject.toml' }
       end
     },
     { "christoomey/vim-tmux-navigator" },
@@ -923,23 +909,43 @@ require("lazy").setup({
         "hrsh7th/cmp-path",
         "saadparwaiz1/cmp_luasnip",
         "L3MON4D3/luasnip",
-        "rafamadriz/friendly-snippets"
+        "rafamadriz/friendly-snippets",
+        "zbirenbaum/copilot.lua",
       },
+      -- Currently debating whether or not to remove snippets completely, since I never use them.
       config = function()
         local cmp = require'cmp';
         local luasnip = require'luasnip';
+        local copilot = require'copilot.suggestion';
 
         local has_words_before = function()
           local line, col = unpack(vim.api.nvim_win_get_cursor(0))
           return col ~= 0 and vim.api.nvim_buf_get_lines(0, line-1, line, true)[1]:sub(col, col):match("%s") == nil
         end
+        local ctrl_e_function = function(fallback)
+          if cmp.visible() then
+            local selected = cmp.get_selected_entry()
+            if selected ~= nil then
+              cmp.confirm({ select = false })
+            elseif copilot.is_visible() then
+              copilot.accept()
+            end
+            -- if luasnip.expandable() then
+            --   luasnip.expand()
+            -- else
+            --   cmp.confirm({ select = false })
+            -- end
+          else
+            fallback()
+          end
+        end
         local tab_function = function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          elseif has_words_before() then
-            cmp.complete()
+          elseif luasnip.locally_jumpable(1) then
+            luasnip.jump(1)
+          -- elseif has_words_before() then
+          --   cmp.complete()
           else
             fallback()
           end
@@ -947,7 +953,7 @@ require("lazy").setup({
         local stab_function = function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
+          elseif luasnip.locally_jumpable(-1) then
             luasnip.jump(-1)
           else
             fallback()
@@ -955,15 +961,16 @@ require("lazy").setup({
         end
 
         cmp.setup({
-          snippet = {
-            expand = function(arg)
-              luasnip.lsp_expand(arg.body)
-            end,
-          },
+          -- snippet = {
+          --   expand = function(arg)
+          --     luasnip.lsp_expand(arg.body)
+          --   end,
+          -- },
           mapping = {
             ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
             ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-            ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
+            -- ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
+            ['<C-e>'] = cmp.mapping(ctrl_e_function, { 'i', 's' }),
             ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { 'i', 's' }),
             ['<Tab>'] = cmp.mapping(tab_function, { 'i', 's' }),
             ['<S-Tab>'] = cmp.mapping(stab_function, { 'i', 's' }),
@@ -999,6 +1006,13 @@ require("lazy").setup({
 
         local lspconfig = require'lspconfig'
         local capabilities = require'cmp_nvim_lsp'.default_capabilities()
+
+        -- Borders around the LSP hover floating window
+        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+          vim.lsp.handlers.hover, {
+            border = "rounded",
+          }
+        )
 
         if vim.fn.executable('clangd') == 1 then
           lspconfig.clangd.setup{
@@ -1111,8 +1125,8 @@ require("lazy").setup({
             settings = {
               ["rust-analyzer"] = {
                 completion = {
-                  addCallArgumentSnippets = true,
-                  addCallParenthesis = true,
+                  addCallArgumentSnippets = false,
+                  addCallParenthesis = false,
                 },
                 diagnostics = {
                   disabled = {"inactive-code"},
