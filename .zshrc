@@ -251,6 +251,14 @@ if [[ "$_UNAME" == "Darwin" ]]; then
     kitty +kitten ssh $@
   }
 
+  # Kitty icat kitten
+  alias icat="kitty +kitten icat"
+
+  # Copy current terminfo to remote server
+  function cpterminfo() {
+    infocmp -x | ssh $1 -- tic -x -
+  }
+
   # Chrome
   export PATH="/Applications/Google Chrome.app/Contents/MacOS:$PATH"
   alias chrome="Google Chrome"

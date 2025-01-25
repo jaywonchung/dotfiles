@@ -1,0 +1,64 @@
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 16
+
+background = #323232
+foreground = #ffffff
+cursor-color = #d6d6d6
+selection-background = #5b5b5b
+selection-foreground = #323232
+palette = 0=#323232
+palette = 1=#d25252
+palette = 2=#7fe173
+palette = 3=#ffc66d
+palette = 4=#4098ff
+palette = 5=#f57fff
+palette = 6=#bed6ff
+palette = 7=#eeeeec
+palette = 8=#535353
+palette = 9=#f07070
+palette = 10=#9dff90
+palette = 11=#ffe48b
+palette = 12=#5eb7f7
+palette = 13=#ff9dff
+palette = 14=#dcf4ff
+palette = 15=#ffffff
+
+adjust-cell-height = 10%
+
+window-padding-x = 10
+window-padding-y = 10
+
+copy-on-select = true
+
+keybind = ctrl+shift+enter=new_split:right
+keybind = ctrl+alt+enter=new_split:down
+keybind = alt+h=goto_split:left
+keybind = alt+j=goto_split:bottom
+keybind = alt+k=goto_split:top
+keybind = alt+l=goto_split:right
+keybind = ctrl+shift+e=scroll_page_lines:1
+keybind = ctrl+shift+y=scroll_page_lines:-1
+keybind = ctrl+shift+d=scroll_page_fractional:0.5
+keybind = ctrl+shift+u=scroll_page_fractional:-0.5
+keybind = ctrl+shift+j=write_scrollback_file:paste
+
+keybind = ctrl+enter=text:\n
+keybind = ctrl+shift+t=text:tmux a -d || tmux\n
+keybind = ctrl+t=text:\x02\x63
+keybind = ctrl+n=text:\x02\x6f
+keybind = ctrl+[=text:\x02\x5b
+keybind = ctrl+1=text:\x02\x31
+keybind = ctrl+2=text:\x02\x32
+keybind = ctrl+3=text:\x02\x33
+keybind = ctrl+4=text:\x02\x34
+keybind = ctrl+5=text:\x02\x35
+keybind = ctrl+6=text:\x02\x36
+keybind = ctrl+7=text:\x02\x37
+keybind = ctrl+8=text:\x02\x38
+keybind = ctrl+9=text:\x02\x39
+keybind = ctrl+0=text:\x02\x30
+
+keybind = global:ctrl+shift+q=toggle_quick_terminal
+keybind = global:cmd+enter=new_window
+
+background-opacity = 0.85
