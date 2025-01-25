@@ -77,7 +77,8 @@
 # ############################################################### #
 
 # open terminal
-lcmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
+# lcmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
+# lcmd - return : /Applications/Ghostty.app/Contents/MacOS/ghostty
 
 # # focus window (XMonad style)
 # cmd - j : yabai -m window --focus next || yabai -m window --focus first
