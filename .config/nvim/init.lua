@@ -922,6 +922,12 @@ require("lazy").setup({
           local line, col = unpack(vim.api.nvim_win_get_cursor(0))
           return col ~= 0 and vim.api.nvim_buf_get_lines(0, line-1, line, true)[1]:sub(col, col):match("%s") == nil
         end
+
+        -- <C-e> calls this. This function is designed to "accept" suggestions.
+        -- I currently have two sources of suggestions: nvim-cmp and copilot.
+        -- nvim-cmp suggestions are accepted only when a completion window is
+        -- visible AND an item on the list is currently selected. Otherwise,
+        -- the copilot suggestion (if visible) is inserted.
         local ctrl_e_function = function(fallback)
           if cmp.visible() then
             local selected = cmp.get_selected_entry()
@@ -971,7 +977,7 @@ require("lazy").setup({
             ['<C-u>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
             -- ['<C-e>'] = cmp.mapping(cmp.mapping.confirm({ select = false })),
             ['<C-e>'] = cmp.mapping(ctrl_e_function, { 'i', 's' }),
-            ['<C-f>'] = cmp.mapping(cmp.mapping.close(), { 'i', 's' }),
+            ['<C-y>'] = cmp.mapping(cmp.mapping.close(), { 'i', 's' }),
             ['<Tab>'] = cmp.mapping(tab_function, { 'i', 's' }),
             ['<S-Tab>'] = cmp.mapping(stab_function, { 'i', 's' }),
           },
@@ -1084,8 +1090,8 @@ require("lazy").setup({
         end
         -- Remove when Neovim > 0.10.0 is released as
         -- https://github.com/neovim/neovim/pull/28904 was merged.
-        -- vim.g.zig_fmt_parse_errors = 0
-        -- vim.g.zig_fmt_autosave = 0
+        vim.g.zig_fmt_parse_errors = 0
+        vim.g.zig_fmt_autosave = 0
 
         -- Configs for diagnostics
         vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
