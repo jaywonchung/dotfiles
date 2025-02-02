@@ -268,7 +268,8 @@ if [[ "$_UNAME" == "Darwin" ]]; then
 
 # Linux
 elif [[ "$_UNAME" == "Linux" ]]; then
-  # Actually not much for now.
+  # Ghostty
+  builtin source "$HOME/.dotmodules/inventory/ghostty-integration"
 fi
 
 unset _UNAME
