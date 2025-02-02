@@ -358,13 +358,7 @@ require("lazy").setup({
             },
           },
           filetypes = {
-            python = true,
-            rust = true,
-            go = true,
-            cpp = true,
-            bash = true,
-            zig = true,
-            ["*"] = false,
+            ["*"] = true,
           },
         })
 
@@ -1024,6 +1018,7 @@ require("lazy").setup({
           lspconfig.clangd.setup{
             on_attach = require'illuminate'.on_attach,
             capabilities = capabilities,
+            filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
           }
           -- vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
         end
@@ -1186,7 +1181,7 @@ require("lazy").setup({
       build = ':TSUpdate',
       config = function()
         require'nvim-treesitter.configs'.setup {
-          ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "vimdoc", "lua", "zig", "markdown", "markdown_inline" },
+          ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "vimdoc", "lua", "zig", "markdown", "markdown_inline", "proto" },
           highlight = {
             enable = true,
           },
