@@ -96,14 +96,14 @@ vim.keymap.set('i', '{<CR>', function()
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('{<CR>}<ESC>O', true, false, true), 'n', true)
   end
 end)
-vim.keymap.set('i', '(<CR>', function()
-  local filetype = vim.bo.filetype
-  if filetype == "python" then
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('(<CR><BS><BS>)<ESC>O<BS>', true, false, true), 'n', true)
-  else
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('(<CR>)<ESC>O', true, false, true), 'n', true)
-  end
-end)
+-- vim.keymap.set('i', '(<CR>', function()
+--   local filetype = vim.bo.filetype
+--   if filetype == "python" then
+--     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('(<CR><BS><BS>)<ESC>O<BS>', true, false, true), 'n', true)
+--   else
+--     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('(<CR>)<ESC>O', true, false, true), 'n', true)
+--   end
+-- end)
 
 -- vim.keymap.set('i', '{<CR>', '{<CR><BS><BS>}<ESC>O')
 
@@ -872,27 +872,6 @@ require("lazy").setup({
               return " " .. icon .. " " .. count
           end,
         },
-      },
-    },
-    {
-      "epwalsh/obsidian.nvim",
-      version = "*",
-      lazy = true,
-      ft = "markdown",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        "hrsh7th/nvim-cmp",
-        "nvim-telescope/telescope.nvim",
-        "nvim-treesitter/nvim-treesitter",
-      },
-      opts = {
-        workspaces = {
-          {
-            name = "notes",
-            path = "~/Google/Sync/Obsidian/notes",
-          },
-        },
-        ui = { enable = false },
       },
     },
     -- Language server protocol
