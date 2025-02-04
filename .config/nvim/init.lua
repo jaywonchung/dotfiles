@@ -844,7 +844,7 @@ require("lazy").setup({
     {
       "airblade/vim-rooter",
       init = function()
-        vim.g.rooter_patterns = { '.git', 'Cargo.toml', '.obsidian', 'pyproject.toml' }
+        vim.g.rooter_patterns = { '.git', 'Cargo.toml', '.obsidian' }
       end
     },
     { "christoomey/vim-tmux-navigator" },
