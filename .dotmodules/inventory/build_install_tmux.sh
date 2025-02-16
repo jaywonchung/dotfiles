@@ -19,8 +19,8 @@ set -e
 
 cd /tmp
 curl -LO https://github.com/tmux/tmux/releases/download/3.4/tmux-3.4.tar.gz
-tar -zxf tmux-*.tar.gz
-cd tmux-*/
+tar -zxf tmux-3.4.tar.gz
+cd tmux-3.4/
 ./configure --prefix $HOME/.local
 make -j
 make install

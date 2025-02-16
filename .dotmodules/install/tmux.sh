@@ -10,8 +10,12 @@ installing() {
   pprint "#################################################"
 }
 
-installing "TPM"
-git clone --depth=1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+rm -r $HOME/.tmux/plugins || true
 
-installing "TPM plugins"
-~/.tmux/plugins/tpm/bin/install_plugins
+installing catputtin/tmux
+mkdir -p ~/.local/src/tmux/plugins/catppuccin
+git clone -b v2.1.2 https://github.com/catppuccin/tmux.git ~/.local/src/tmux/plugins/catppuccin/tmux
+
+installing jaywonchung/vim-tmux-navigator
+mkdir -p ~/.local/src/tmux/plugins/jaywonchung
+git clone https://github.com/jaywonchung/vim-tmux-navigator.git ~/.local/src/tmux/plugins/jaywonchung/vim-tmux-navigator
