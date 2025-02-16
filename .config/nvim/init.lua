@@ -348,27 +348,32 @@ require("lazy").setup({
     {
       "zbirenbaum/copilot.lua",
       config = function()
-        require("copilot").setup({
-          suggestion = {
-            enabled = true,
-            auto_trigger = true,
-            keymap = {
-              accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
-              accept_line = "<M-e>",
+        -- Skip copilot auth if `node` is not installed.
+        if vim.fn.executable("node") == 1 then
+          require("copilot").setup({
+            suggestion = {
+              enabled = true,
+              auto_trigger = true,
+              keymap = {
+                accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
+                accept_line = "<M-e>",
+              },
             },
-          },
-          filetypes = {
-            ["*"] = true,
-          },
-        })
+            filetypes = {
+              ["*"] = true,
+            },
+          })
 
-        vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
+          vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
+        else
+          print("Skipping Copilot setup as `node` was not found in $PATH.")
+        end
       end,
     },
     {
       "yetone/avante.nvim",
       event = "VeryLazy",
-      lazy = false,
+      lazy = true,
       version = false, -- set this if you want to always pull the latest change
       opts = {
         -- add any opts here
@@ -411,9 +416,12 @@ require("lazy").setup({
         },
       },
       config = function()
-        require('avante').setup({
-          provider = "copilot"
-        })
+        -- Don't initialize Avante if Copilot hasn't been set up
+        if pcall(require("copilot.auth").get_cred) then
+          require('avante').setup({
+            provider = "copilot"
+          })
+        end
       end
     },
     {
