@@ -8,7 +8,7 @@ unamestr="$(uname)"
 if [[ "$unamestr" == "Darwin" ]]; then
   OS=macos-arm64
 elif [[ "$unamestr" == "Linux" ]]; then
-  OS=linux64
+  OS=linux-x86_64
 fi
 
 # Get nvim release
