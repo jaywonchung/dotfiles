@@ -390,23 +390,6 @@ require("lazy").setup({
         "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
         "zbirenbaum/copilot.lua", -- for providers='copilot'
         {
-          -- support for image pasting
-          "HakonHarnes/img-clip.nvim",
-          event = "VeryLazy",
-          opts = {
-            -- recommended settings
-            default = {
-              embed_image_as_base64 = false,
-              prompt_for_file_name = false,
-              drag_and_drop = {
-                insert_mode = true,
-              },
-              -- required for Windows users
-              use_absolute_path = true,
-            },
-          },
-        },
-        {
           -- Make sure to set this up properly if you have lazy=true
           'MeanderingProgrammer/render-markdown.nvim',
           opts = {
@@ -1140,27 +1123,49 @@ require("lazy").setup({
       },
     },
     {
-      "liuchengxu/vista.vim",
-      init = function()
-        vim.g.vista_default_executive = 'nvim_lsp'
-        vim.g.vista_echo_cursor_strategy = 'floating_win'
-        vim.g.vista_blink = { 0, 0 }
-        vim.g.vista_top_level_blink = { 0, 0 }
-        vim.g.vista_no_mappings = 1
-
-        vim.keymap.set('n', '<Leader>t', ':Vista!!<CR>', { silent = true })
-        vim.api.nvim_create_autocmd("FileType", {
-          pattern = { "vista", "vista_kind" },
-          callback = function()
-            vim.keymap.set(
-              'n',
-              '<CR>',
-              [[:call vista#cursor#FoldOrJump()<CR>]],
-              { silent = true, buffer = true }
-            )
+      'stevearc/aerial.nvim',
+      keys = {
+        { '<Leader>t', ':AerialToggle right<CR>', silent = true },
+      },
+      dependencies = {
+         "nvim-treesitter/nvim-treesitter",
+         "nvim-tree/nvim-web-devicons"
+      },
+      config = function()
+        local function get_scroll_source_fn(key)
+          return function()
+            local source_win = require("aerial.util").get_winids(0)
+            if source_win then
+              vim.api.nvim_win_call(source_win, function()
+                local scroll_fn = vim.api.nvim_replace_termcodes(key, true, false, true)
+                vim.cmd("normal! " .. scroll_fn)
+              end)
+            end
           end
+        end
+
+        require("aerial").setup({
+          autojump = true,
+          keymaps = {
+            ["e"] = {
+              desc = "Scroll the source window up",
+              callback = get_scroll_source_fn("<C-e>"),
+            },
+            ["y"] = {
+              desc = "Scroll the source window down",
+              callback = get_scroll_source_fn("<C-y>"),
+            },
+            ["d"] = {
+              desc = "Scroll the source window down",
+              callback = get_scroll_source_fn("<C-d>"),
+            },
+            ["u"] = {
+              desc = "Scroll the source window up",
+              callback = get_scroll_source_fn("<C-u>"),
+            },
+          }
         })
-      end
+      end,
     },
     -- Syntactic language support
     {
