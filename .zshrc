@@ -130,8 +130,9 @@ fi
 # direnv
 eval "$(direnv hook zsh)"
 
-# node
-export PATH="$HOME/.local/src/node/bin:$PATH"
+# node version manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # eza
 if command -v eza 1>/dev/null 2>/dev/null; then
