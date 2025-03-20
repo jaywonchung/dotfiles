@@ -23,12 +23,15 @@ palette = 13=#ff9dff
 palette = 14=#dcf4ff
 palette = 15=#ffffff
 
+macos-icon = "xray"
+
 adjust-cell-height = 10%
 window-padding-x = 10
 window-padding-y = 10
 
 copy-on-select = clipboard
 link-url = true
+clipboard-paste-protection = false
 
 keybind = ctrl+shift+enter=new_split:right
 keybind = ctrl+alt+enter=new_split:down
