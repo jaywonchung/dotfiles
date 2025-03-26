@@ -362,6 +362,7 @@ require("lazy").setup({
             filetypes = {
               ["*"] = true,
             },
+            copilot_model = "gpt-4o-copilot",
           })
 
           vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
@@ -402,7 +403,21 @@ require("lazy").setup({
         -- Don't initialize Avante if Copilot hasn't been set up
         if pcall(require("copilot.auth").get_cred) then
           require('avante').setup({
-            provider = "copilot"
+            provider = "copilot",
+            copilot = {
+              model = "claude-3.5-sonnet",
+              temperature = 0,
+              max_tokens = 8192,
+            },
+            mappings = {
+              diff = {
+                ours = "<Leader>co",
+                theirs = "<Leader>ct",
+                all_theirs = "<Leader>ca",
+                both = "<Leader>cb",
+                cursor = "<Leader>cc",
+              },
+            },
           })
         end
       end
