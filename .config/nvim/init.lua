@@ -37,6 +37,7 @@ vim.opt.cursorline = true           -- Highlight the row where the cursor is on
 vim.opt.signcolumn = "yes"          -- Space for LSP diagnostics and gitsigns
 vim.opt.mouse = { a = true }        -- Mouse is useful for visual selection
 vim.opt.history = 256               -- History for commands, searches, etc
+-- vim.opt.winborder = "rounded"
 
 -- Syntax highlighting
 vim.cmd('syntax on')
@@ -226,7 +227,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 vim.api.nvim_create_autocmd("TextYankPost", {
   pattern = "*",
   callback = function()
-    require('vim.highlight').on_yank({ higroup = 'Substitute', timeout = 300 })
+    require('vim.hl').on_yank({ higroup = 'Substitute', timeout = 300 })
   end
 })
 
@@ -435,6 +436,10 @@ require("lazy").setup({
     { "mechatroner/rainbow_csv", ft = "csv" },
     {
       "hoob3rt/lualine.nvim",
+      dependencies = {
+        "linrongbin16/lsp-progress.nvim",
+        config = true,
+      },
       config = function()
         -- NOTE: Depends on g:lualine_theme being set when configuring the colorscheme.
         local function my_filename()
@@ -454,9 +459,46 @@ require("lazy").setup({
             lualine_a = { { 'mode', upper = true } },
             lualine_b = { { 'branch' } },
             lualine_c = { { my_filename } },
+            lualine_x = {
+              { -- Setup lsp-progress component
+                function()
+                  return require("lsp-progress").progress({
+                    max_size = 80,
+                    format = function(messages)
+                      local active_clients =
+                        vim.lsp.get_clients()
+                      if #messages > 0 then
+                        return table.concat(messages, " ")
+                      end
+                      local client_names = {}
+                      for _, client in ipairs(active_clients) do
+                        if client and client.name ~= "" then
+                          table.insert(
+                            client_names,
+                            1,
+                            client.name
+                          )
+                        end
+                      end
+                      return table.concat(client_names, "  ")
+                    end,
+                  })
+                end,
+                icon = { "", align = "right" },
+              },
+              "diagnostics",
+            },
             lualine_z = { { my_location } },
           },
         }
+
+        -- listen lsp-progress event and refresh lualine
+        vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
+        vim.api.nvim_create_autocmd("User", {
+          group = "lualine_augroup",
+          pattern = "LspProgressStatusUpdated",
+          callback = require("lualine").refresh,
+        })
       end,
     },
     {
@@ -540,7 +582,6 @@ require("lazy").setup({
           },
           integrations = {
             cmp = true,
-            fidget = true,
             native_lsp = {
               enabled = true,
             },
@@ -774,8 +815,8 @@ require("lazy").setup({
         { '<Leader>f', ':Telescope find_files find_command=fd,.,-H,--ignore-file,.gitignore,--exclude,.git,--type,f<CR>', silent = true },
         { '<Leader>b', ':Telescope buffers<CR>', silent = true },
         { 'gd', ':Telescope lsp_definitions<CR>',  silent = true },
-        { 'gr', ':Telescope lsp_references<CR>',  silent = true },
-        { 'gw', ':lua require("telescope.builtin").lsp_workspace_symbols{query = vim.fn.input("Query: ")}<CR>', silent = true },
+        { 'gr', ':Telescope lsp_references',  silent = true },
+        { 'gw', ':Telescope lsp_workspace_symbols', silent = true },
         { 'gs', ':Telescope live_grep<CR>', silent = true },
       },
       config = function()
@@ -845,6 +886,28 @@ require("lazy").setup({
         }
 
         require("telescope").load_extension("fzy_native")
+
+        file_ignore_patterns = { "build/", "python/build/" }
+        for i, pattern in ipairs(file_ignore_patterns) do
+          file_ignore_patterns[i] = vim.fn.getcwd() .. "/" .. pattern
+        end
+
+        vim.keymap.set("n", "gr", function()
+          local opts = {
+            file_ignore_patterns = file_ignore_patterns,
+            include_current_line = true,
+          }
+          require("telescope.builtin").lsp_references(opts)
+        end, { desc = "Telescope LSP References", silent = true })
+
+        vim.keymap.set("n", "gw", function()
+          local opts = {
+            file_ignore_patterns = file_ignore_patterns,
+            query = vim.fn.input("LSP workspace symbol search: "),
+          }
+          require("telescope.builtin").lsp_workspace_symbols(opts)
+          print()  -- Clear commandline
+        end, { desc = "Telescope LSP Workspace Symbols", silent = true })
       end
     },
     {
@@ -989,6 +1052,37 @@ require("lazy").setup({
         vim.keymap.set('n', 'gp', vim.diagnostic.goto_prev, { silent = true })
         vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { silent = true })
 
+        -- Diable default ones
+        -- vim.api.nvim_create_autocmd('LspAttach', {
+        --   callback = function(args)
+        if vim.fn.mapcheck("grn", "n") ~= "" then
+          vim.keymap.del("n", "grn")
+        end
+        if vim.fn.mapcheck("gra", "n") ~= "" then
+          vim.keymap.del("n", "gra")
+        end
+        if vim.fn.mapcheck("grr", "n") ~= "" then
+          vim.keymap.del("n", "grr")
+        end
+        if vim.fn.mapcheck("gri", "n") ~= "" then
+          vim.keymap.del("n", "gri")
+        end
+        if vim.fn.mapcheck("g0", "n") ~= "" then
+          vim.keymap.del("n", "g0")
+        end
+        if vim.fn.mapcheck("<C-s>", "i") ~= "" then
+          vim.keymap.del("i", "<C-s>")
+        end
+
+            --vim.keymap.del('n', 'grn') --, { buffer = args.buf })
+            --vim.keymap.del('n', 'gra') --, { buffer = args.buf })
+            --vim.keymap.del('n', 'grr') --, { buffer = args.buf })
+            --vim.keymap.del('n', 'gri') --, { buffer = args.buf })
+            --vim.keymap.del('n', 'g0') --, { buffer = args.buf })
+            --vim.keymap.del('i', '<C-s>') --, { buffer = args.buf })
+        --   end,
+        -- })
+
         local lspconfig = require'lspconfig'
         local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 
@@ -1001,7 +1095,6 @@ require("lazy").setup({
 
         if vim.fn.executable('clangd') == 1 then
           lspconfig.clangd.setup{
-            on_attach = require'illuminate'.on_attach,
             capabilities = capabilities,
             filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
           }
@@ -1010,7 +1103,6 @@ require("lazy").setup({
 
         if vim.fn.executable('pyright') == 1 then
           lspconfig.pyright.setup{
-            on_attach = require'illuminate'.on_attach,
             capabilities = capabilities,
             settings = {
               python = {
@@ -1027,7 +1119,6 @@ require("lazy").setup({
 
         if vim.fn.executable('ltex-ls') == 1 then
           local ltex_on_attach = function(client, bufnr)
-            require'illuminate'.on_attach(client, bufnr)
             require'ltex_extra'.setup{
               load_langs = { 'en-US' },
               path = vim.fn.expand("~") .. "/.local/share/ltex",
@@ -1036,35 +1127,33 @@ require("lazy").setup({
           lspconfig.ltex.setup{
             on_attach = ltex_on_attach,
             capabilities = capabilities,
-            filetypes = { "bib", "gitcommit", "markdown", "plaintex", "rst", "tex", "text" },
+            filetypes = { "bib", "gitcommit", "markdown", "rst", "tex", "text" },
           }
         end
 
         if vim.fn.executable('texlab') == 1 then
           lspconfig.texlab.setup{
-            on_attach = require'illuminate'.on_attach,
             capabilities = capabilities,
             settings = {
               texlab = {
                 chktex = {
-                  onEdit = true,
+                  onEdit = false,
                   onOpenAndSave = true,
                 },
               },
             },
+            filetypes = { "tex" },
           }
         end
 
         if vim.fn.executable('gopls') == 1 then
           lspconfig.gopls.setup{
-            on_attach = require'illuminate'.on_attach,
             capabilities = capabilities,
           }
         end
 
         if vim.fn.executable('zls') == 1 then
           lspconfig.zls.setup{
-            on_attach = require'illuminate'.on_attach,
             capabilities = capabilities,
           }
         end
@@ -1107,7 +1196,6 @@ require("lazy").setup({
           },
           server = {
             capabilities = require'cmp_nvim_lsp'.default_capabilities(),
-            on_attach = require'illuminate'.on_attach,
             settings = {
               ["rust-analyzer"] = {
                 completion = {
@@ -1124,12 +1212,65 @@ require("lazy").setup({
         -- vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
       end
     },
-    {
-      "j-hui/fidget.nvim",
-      opts = {
-        notification = { window = { winblend = 0 } },
-      },
-    },
+    -- {
+    --   "j-hui/fidget.nvim",
+    --   opts = {
+    --     notification = { window = { winblend = 0 } },
+    --   },
+    -- },
+    -- {
+    --   "linrongbin16/lsp-progress.nvim",
+    --   opts = {
+    --     client_format = function(client_name, spinner, series_messages)
+    --       if #series_messages == 0 then
+    --         return nil
+    --       end
+    --       return {
+    --         name = client_name,
+    --         body = spinner .. " " .. table.concat(series_messages, ", "),
+    --       }
+    --     end,
+    --     format = function(client_messages)
+    --       --- @param name string
+    --       --- @param msg string?
+    --       --- @return string
+    --       local function stringify(name, msg)
+    --         return msg and string.format("%s %s", name, msg) or name
+    --       end
+    --
+    --       local sign = "" -- nf-fa-gear \uf013
+    --       local lsp_clients = vim.lsp.get_active_clients()
+    --       local messages_map = {}
+    --       for _, climsg in ipairs(client_messages) do
+    --         messages_map[climsg.name] = climsg.body
+    --       end
+    --
+    --       if #lsp_clients > 0 then
+    --         table.sort(lsp_clients, function(a, b)
+    --           return a.name < b.name
+    --         end)
+    --         local builder = {}
+    --         for _, cli in ipairs(lsp_clients) do
+    --           if
+    --             type(cli) == "table"
+    --             and type(cli.name) == "string"
+    --             and string.len(cli.name) > 0
+    --           then
+    --             if messages_map[cli.name] then
+    --               table.insert(builder, stringify(cli.name, messages_map[cli.name]))
+    --             else
+    --               table.insert(builder, stringify(cli.name))
+    --             end
+    --           end
+    --         end
+    --         if #builder > 0 then
+    --           return sign .. " " .. table.concat(builder, ", ")
+    --         end
+    --       end
+    --       return ""
+    --     end,
+    --   }
+    -- },
     {
       'ray-x/lsp_signature.nvim',
       opts = {

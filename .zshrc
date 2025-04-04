@@ -239,11 +239,6 @@ export MANWIDTH=999
 #-------------------------------------------------------------------
 # MacOS
 if [[ "$_UNAME" == "Darwin" ]]; then
-  # Synctex + Neovim
-  # Requires dbus. See vimtex docs section vimtex-faq-zathura-macos.
-  export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
-  export DBUS_SESSION_BUS_ADDRESS="unix:path=$DBUS_LAUNCHD_SESSION_BUS_SOCKET"
-
   # Kitty
   export PATH="/Applications/kitty.app/Contents/MacOS:$PATH"
 
