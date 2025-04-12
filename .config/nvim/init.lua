@@ -37,7 +37,6 @@ vim.opt.cursorline = true           -- Highlight the row where the cursor is on
 vim.opt.signcolumn = "yes"          -- Space for LSP diagnostics and gitsigns
 vim.opt.mouse = { a = true }        -- Mouse is useful for visual selection
 vim.opt.history = 256               -- History for commands, searches, etc
--- vim.opt.winborder = "rounded"
 
 -- Syntax highlighting
 vim.cmd('syntax on')
@@ -178,25 +177,26 @@ vim.keymap.set('i', '<C-d>', '<DEL>')
 -- Autocommands
 ------------------------------------------------------------------------------
 -- Pick up where I left off
-vim.api.nvim_create_autocmd("BufRead", {
-  callback = function(opts)
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-      once = true,
-      buffer = opts.buf,
-      callback = function()
-        local ft = vim.bo[opts.buf].filetype
-        local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
-        if
-          not (ft:match('commit') and ft:match('rebase'))
-          and last_known_line > 1
-          and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
-        then
-          vim.api.nvim_feedkeys([[g`"]], 'nx', false)
-        end
-      end,
-    })
-  end,
-})
+-- vim.api.nvim_create_autocmd("BufRead", {
+--   callback = function(opts)
+--     vim.api.nvim_create_autocmd("BufWinEnter", {
+--       once = true,
+--       buffer = opts.buf,
+--       callback = function()
+--         local ft = vim.bo[opts.buf].filetype
+--         local last_known_line = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+--         if
+--           not (ft:match('commit') and ft:match('rebase'))
+--           and last_known_line > 1
+--           and last_known_line <= vim.api.nvim_buf_line_count(opts.buf)
+--         then
+--           vim.api.nvim_feedkeys([[g`"]], 'nx', false)
+--         end
+--       end,
+--     })
+--   end,
+-- })
+
 -- Fix autoread
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
   pattern = "*",
@@ -402,7 +402,7 @@ require("lazy").setup({
       },
       config = function()
         -- Don't initialize Avante if Copilot hasn't been set up
-        if pcall(require("copilot.auth").get_cred) then
+        if pcall(require("copilot.auth").get_creds) then
           require('avante').setup({
             provider = "copilot",
             copilot = {
@@ -895,7 +895,6 @@ require("lazy").setup({
         vim.keymap.set("n", "gr", function()
           local opts = {
             file_ignore_patterns = file_ignore_patterns,
-            include_current_line = true,
           }
           require("telescope.builtin").lsp_references(opts)
         end, { desc = "Telescope LSP References", silent = true })
@@ -1045,16 +1044,14 @@ require("lazy").setup({
       config = function()
         -- Key bindings. Some LSP bindings are set when loading telescope.nvim.
         vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { silent = true })
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, { silent = true })
+        vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ border = "rounded" }) end, { silent = true })
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { silent = true })
         vim.keymap.set('n', 'gD', vim.diagnostic.open_float, { silent = true })
         vim.keymap.set('n', 'gn', vim.diagnostic.goto_next, { silent = true })
         vim.keymap.set('n', 'gp', vim.diagnostic.goto_prev, { silent = true })
         vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { silent = true })
 
-        -- Diable default ones
-        -- vim.api.nvim_create_autocmd('LspAttach', {
-        --   callback = function(args)
+        -- Diable default mappings since 0.11.
         if vim.fn.mapcheck("grn", "n") ~= "" then
           vim.keymap.del("n", "grn")
         end
@@ -1074,24 +1071,8 @@ require("lazy").setup({
           vim.keymap.del("i", "<C-s>")
         end
 
-            --vim.keymap.del('n', 'grn') --, { buffer = args.buf })
-            --vim.keymap.del('n', 'gra') --, { buffer = args.buf })
-            --vim.keymap.del('n', 'grr') --, { buffer = args.buf })
-            --vim.keymap.del('n', 'gri') --, { buffer = args.buf })
-            --vim.keymap.del('n', 'g0') --, { buffer = args.buf })
-            --vim.keymap.del('i', '<C-s>') --, { buffer = args.buf })
-        --   end,
-        -- })
-
         local lspconfig = require'lspconfig'
         local capabilities = require'cmp_nvim_lsp'.default_capabilities()
-
-        -- Borders around the LSP hover floating window
-        vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-          vim.lsp.handlers.hover, {
-            border = "rounded",
-          }
-        )
 
         if vim.fn.executable('clangd') == 1 then
           lspconfig.clangd.setup{
