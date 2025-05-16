@@ -365,6 +365,13 @@ require("lazy").setup({
               ["*"] = true,
             },
             copilot_model = "gpt-4o-copilot",
+            server_opts_overrides = {
+              settings = {
+                telemetry = {
+                  telemetryLevel = "off",
+                },
+              },
+            },
           })
 
           vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
