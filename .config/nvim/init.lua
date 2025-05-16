@@ -357,7 +357,8 @@ require("lazy").setup({
               auto_trigger = true,
               keymap = {
                 accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
-                accept_line = "<M-e>",
+                accept_line = "<C-l>",
+                accept_word = "<M-e>",
               },
             },
             filetypes = {
@@ -917,12 +918,30 @@ require("lazy").setup({
     },
     { "christoomey/vim-tmux-navigator" },
     {
-      "ggandor/leap.nvim",
-      config = function()
-        vim.keymap.set("n", "s",  "<Plug>(leap-forward)", { silent = true })
-        vim.keymap.set("n", "S",  "<Plug>(leap-backward)", { silent = true })
-      end
+      "folke/flash.nvim",
+      event = "VeryLazy",
+      keys = {
+        { "s", mode = { "n", "o", "x" }, function() require("flash").jump() end, desc = "Flash" },
+        { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      },
+      opts = {
+        jump = {
+          nohlsearch = true,
+        },
+        modes = {
+          char = {
+            enabled = false,
+          }
+        },
+      }
     },
+    -- {
+    --   "ggandor/leap.nvim",
+    --   config = function()
+    --     vim.keymap.set("n", "s",  "<Plug>(leap-forward)", { silent = true })
+    --     vim.keymap.set("n", "S",  "<Plug>(leap-backward)", { silent = true })
+    --   end
+    -- },
     {
       "akinsho/bufferline.nvim",
       version = "*",
