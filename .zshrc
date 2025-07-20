@@ -96,7 +96,7 @@ POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 POWERLEVEL9K_SHORTEN_STRATEGY="Default"
 POWERLEVEL9K_SHORTEN_DELIMITER=".."
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon host dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status anaconda time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status virtualenv time)
 
 #-------------------------------------------------------------------
 # Command-line tools
@@ -159,24 +159,29 @@ alias gh='PAGER= gh'
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
-# Python (miniconda3)
-# On CloudLab, conda init is done in /etc/zsh/zshenv
-# See https://github.com/jaywonchung/ngpus-profile
-if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
-  __conda_setup="$("$HOME/.local/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
-  if [ $? -eq 0 ]; then
-      eval "$__conda_setup"
-  else
-      if [ -f "$HOME/.local/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "$HOME/.local/miniconda3/etc/profile.d/conda.sh"
-      else
-          export PATH="$HOME/.local/miniconda3/bin:$PATH"
-      fi
-  fi
-  unset __conda_setup
+# # Python (miniconda3)
+# # On CloudLab, conda init is done in /etc/zsh/zshenv
+# # See https://github.com/jaywonchung/ngpus-profile
+# if [[ ! "$(hostname)" =~ "cloudlab" ]]; then
+#   __conda_setup="$("$HOME/.local/miniconda3/bin/conda" 'shell.zsh' 'hook' 2> /dev/null)"
+#   if [ $? -eq 0 ]; then
+#       eval "$__conda_setup"
+#   else
+#       if [ -f "$HOME/.local/miniconda3/etc/profile.d/conda.sh" ]; then
+#           . "$HOME/.local/miniconda3/etc/profile.d/conda.sh"
+#       else
+#           export PATH="$HOME/.local/miniconda3/bin:$PATH"
+#       fi
+#   fi
+#   unset __conda_setup
+# fi
+# # Makes sure orders in PATH are consistent when sourcing .zshrc again on tmux start, etc.
+# export PATH="$HOME/.local/miniconda3/bin:$PATH"
+
+# The uv plugin only activates when uv in in $PATH.
+if command -v uv >/dev/null 2>&1; then
+  omz plugin load uv
 fi
-# Makes sure orders in PATH are consistent when sourcing .zshrc again on tmux start, etc.
-export PATH="$HOME/.local/miniconda3/bin:$PATH"
 
 # Go
 export GOBIN="$HOME/.local/go/bin"
