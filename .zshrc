@@ -133,6 +133,7 @@ eval "$(direnv hook zsh)"
 # node version manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # eza
 if command -v eza 1>/dev/null 2>/dev/null; then
@@ -181,6 +182,16 @@ alias gh='PAGER= gh'
 # The uv plugin only activates when uv in in $PATH.
 if command -v uv >/dev/null 2>&1; then
   omz plugin load uv
+
+  # Fix completions for uv run to autocomplete .py files
+  _uv_run_mod() {
+      if [[ "$words[2]" == "run" && "$words[CURRENT]" != -* ]]; then
+          _arguments '*:filename:_files -g "*.py"'
+      else
+          _uv "$@"
+      fi
+  }
+  compdef _uv_run_mod uv
 fi
 
 # Go
@@ -271,6 +282,11 @@ if [[ "$_UNAME" == "Darwin" ]]; then
 elif [[ "$_UNAME" == "Linux" ]]; then
   # Ghostty
   builtin source "$HOME/.dotmodules/inventory/ghostty-integration"
+
+  # If /data/hfcache exists, set that as HF_HOME.
+  if [[ -d /data/hfcache ]]; then
+    export HF_HOME="/data/hfcache"
+  fi
 fi
 
 unset _UNAME
