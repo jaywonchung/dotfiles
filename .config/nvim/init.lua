@@ -358,7 +358,7 @@ require("lazy").setup({
               keymap = {
                 accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
                 accept_line = "<C-l>",
-                accept_word = "<M-e>",
+                accept_word = "<C-f>",
               },
             },
             filetypes = {
