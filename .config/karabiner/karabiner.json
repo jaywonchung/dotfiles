@@ -107,6 +107,34 @@
                             "to": [{ "key_code": "f2" }]
                         }
                     ]
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "product_id": 12870,
+                        "vendor_id": 6645
+                    },
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "end" },
+                            "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
+                        }
+                    ]
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "is_pointing_device": true,
+                        "product_id": 12870,
+                        "vendor_id": 6645
+                    },
+                    "ignore": false,
+                    "simple_modifications": [
+                        {
+                            "from": { "key_code": "end" },
+                            "to": [{ "key_code": "fn" }]
+                        }
+                    ]
                 }
             ],
             "name": "Default profile",
