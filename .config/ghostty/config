@@ -23,7 +23,7 @@ palette = 13=#ff9dff
 palette = 14=#dcf4ff
 palette = 15=#ffffff
 
-macos-icon = "xray"
+macos-icon = "chalkboard"
 
 adjust-cell-height = 10%
 window-padding-x = 10
@@ -64,4 +64,4 @@ keybind = ctrl+0=text:\x02\x30
 keybind = global:ctrl+shift+q=toggle_quick_terminal
 keybind = global:cmd+enter=new_window
 
-background-opacity = 0.85
+background-opacity = 1
