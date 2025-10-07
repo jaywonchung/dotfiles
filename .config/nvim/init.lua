@@ -265,6 +265,16 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
+-- Markdown
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function()
+    vim.bo.shiftwidth = 2
+    vim.bo.tabstop = 2
+    vim.bo.softtabstop = 2
+  end
+})
+
 -- LaTeX
 vim.g.tex_flavor = "latex"
 
@@ -381,6 +391,29 @@ require("lazy").setup({
       end,
     },
     {
+      "folke/sidekick.nvim",
+      opts = {
+        -- add any options here
+      },
+      keys = {
+        {
+          "<tab>",
+          function()
+            -- if there is a next edit, jump to it, otherwise apply it if any
+            if require("sidekick").nes_jump_or_apply() then
+              return -- jumped or applied
+            end
+
+            -- fall back to normal tab
+            return "<tab>"
+          end,
+          mode = { "i", "n" },
+          expr = true,
+          desc = "Goto/Apply Next Edit Suggestion",
+        },
+      },
+    },
+    {
       "yetone/avante.nvim",
       event = "VeryLazy",
       lazy = true,
@@ -407,6 +440,9 @@ require("lazy").setup({
           },
           ft = { "Avante" },
         },
+      },
+      keys = {
+        { '<Leader>aa', ':AvanteToggle' }
       },
       config = function()
         -- Don't initialize Avante if Copilot hasn't been set up
@@ -1072,16 +1108,23 @@ require("lazy").setup({
         "barreiroleo/ltex_extra.nvim",
       },
       config = function()
-        -- Key bindings. Some LSP bindings are set when loading telescope.nvim.
-        vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { silent = true })
-        vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ border = "rounded" }) end, { silent = true })
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { silent = true })
-        vim.keymap.set('n', 'gD', vim.diagnostic.open_float, { silent = true })
-        vim.keymap.set('n', 'gn', vim.diagnostic.goto_next, { silent = true })
-        vim.keymap.set('n', 'gp', vim.diagnostic.goto_prev, { silent = true })
-        vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { silent = true })
+        -- LspAttach autocmd for setting up keybindings when LSP attaches to buffer
+        vim.api.nvim_create_autocmd('LspAttach', {
+          callback = function(ev)
+            local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
-        -- Diable default mappings since 0.11.
+            -- Client-specific setup
+            print("LSP started: " .. client.name)
+            if client and client.name == 'ltex' then
+              require'ltex_extra'.setup{
+                load_langs = { 'en-US' },
+                path = vim.fn.expand("~") .. "/.local/share/ltex",
+              }
+            end
+          end,
+        })
+
+        -- Disable default mappings since 0.11.
         if vim.fn.mapcheck("grn", "n") ~= "" then
           vim.keymap.del("n", "grn")
         end
@@ -1101,19 +1144,26 @@ require("lazy").setup({
           vim.keymap.del("i", "<C-s>")
         end
 
-        local lspconfig = require'lspconfig'
+        vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { buffer = bufnr, silent = true })
+        vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ border = "rounded" }) end, { buffer = bufnr, silent = true })
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = bufnr, silent = true })
+        vim.keymap.set('n', 'gD', vim.diagnostic.open_float, { buffer = bufnr, silent = true })
+        vim.keymap.set('n', 'gn', vim.diagnostic.goto_next, { buffer = bufnr, silent = true })
+        vim.keymap.set('n', 'gp', vim.diagnostic.goto_prev, { buffer = bufnr, silent = true })
+        vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { buffer = bufnr, silent = true })
+
         local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 
         if vim.fn.executable('clangd') == 1 then
-          lspconfig.clangd.setup{
+          vim.lsp.config('clangd', {
             capabilities = capabilities,
             filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-          }
-          -- vim.cmd('autocmd FileType c,cpp setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+          })
+          vim.lsp.enable('clangd')
         end
 
         if vim.fn.executable('pyright') == 1 then
-          lspconfig.pyright.setup{
+          vim.lsp.config('pyright', {
             capabilities = capabilities,
             settings = {
               python = {
@@ -1124,26 +1174,31 @@ require("lazy").setup({
                 }
               }
             }
-          }
-          -- vim.cmd('autocmd FileType python setlocal omnifunc=v:lua.vim.lsp.omnifunc')
+          })
+          vim.lsp.enable('pyright')
         end
 
         if vim.fn.executable('ltex-ls') == 1 then
-          local ltex_on_attach = function(client, bufnr)
-            require'ltex_extra'.setup{
-              load_langs = { 'en-US' },
-              path = vim.fn.expand("~") .. "/.local/share/ltex",
-            }
-          end
-          lspconfig.ltex.setup{
-            on_attach = ltex_on_attach,
+          vim.lsp.config('ltex', {
             capabilities = capabilities,
             filetypes = { "bib", "gitcommit", "markdown", "rst", "tex", "text" },
-          }
+            settings = {
+              ltex = {
+                latex = {
+                  commands = {
+                    ["\\JW{}"] = "ignore",
+                    ["\\jw{}"] = "ignore",
+                    ["\\todo{}"] = "ignore",
+                  }
+                }
+              }
+            }
+          })
+          vim.lsp.enable('ltex')
         end
 
         if vim.fn.executable('texlab') == 1 then
-          lspconfig.texlab.setup{
+          vim.lsp.config('texlab', {
             capabilities = capabilities,
             settings = {
               texlab = {
@@ -1154,20 +1209,24 @@ require("lazy").setup({
               },
             },
             filetypes = { "tex" },
-          }
+          })
+          vim.lsp.enable('texlab')
         end
 
         if vim.fn.executable('gopls') == 1 then
-          lspconfig.gopls.setup{
+          vim.lsp.config('gopls', {
             capabilities = capabilities,
-          }
+          })
+          vim.lsp.enable('gopls')
         end
 
         if vim.fn.executable('zls') == 1 then
-          lspconfig.zls.setup{
+          vim.lsp.config('zls', {
             capabilities = capabilities,
-          }
+          })
+          vim.lsp.enable('zls')
         end
+
         -- Remove when Neovim > 0.10.0 is released as
         -- https://github.com/neovim/neovim/pull/28904 was merged.
         vim.g.zig_fmt_parse_errors = 0
@@ -1176,18 +1235,10 @@ require("lazy").setup({
         -- Configs for diagnostics
         vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
           vim.lsp.diagnostic.on_publish_diagnostics, {
-            -- Virtual text appearance
-            virtual_text = {
-              spacing = 4,
-            },
-            -- Do not update in insert mode
+            virtual_text = { spacing = 4 },
             update_in_insert = true,
           }
         )
-
-        -- XXX: Seems unnecessary. Try removing together with omnifunc.
-        -- vim.opt.completeopt = { "menuone", "noinsert", "noselect" }
-        -- vim.opt.shortmess:append("c")
       end
     },
     {

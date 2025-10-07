@@ -117,6 +117,7 @@ function launch {
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+bindkey '^G' fzf-file-widget
 
 # autojump
 [[ -s "$HOME/.autojump/etc/profile.d/autojump.sh" ]] &&
