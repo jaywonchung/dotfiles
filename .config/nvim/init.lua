@@ -1114,7 +1114,6 @@ require("lazy").setup({
             local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
             -- Client-specific setup
-            print("LSP started: " .. client.name)
             if client and client.name == 'ltex' then
               require'ltex_extra'.setup{
                 load_langs = { 'en-US' },
