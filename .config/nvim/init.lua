@@ -391,29 +391,6 @@ require("lazy").setup({
       end,
     },
     {
-      "folke/sidekick.nvim",
-      opts = {
-        -- add any options here
-      },
-      keys = {
-        {
-          "<tab>",
-          function()
-            -- if there is a next edit, jump to it, otherwise apply it if any
-            if require("sidekick").nes_jump_or_apply() then
-              return -- jumped or applied
-            end
-
-            -- fall back to normal tab
-            return "<tab>"
-          end,
-          mode = { "i", "n" },
-          expr = true,
-          desc = "Goto/Apply Next Edit Suggestion",
-        },
-      },
-    },
-    {
       "yetone/avante.nvim",
       event = "VeryLazy",
       lazy = true,
