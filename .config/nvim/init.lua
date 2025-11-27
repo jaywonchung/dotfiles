@@ -423,7 +423,9 @@ require("lazy").setup({
       },
       config = function()
         -- Don't initialize Avante if Copilot hasn't been set up
-        if pcall(require("copilot.auth").get_creds) then
+        copilot_configured = require("copilot.auth").get_creds() ~= nil
+        if copilot_configured then
+          print("wtf")
           require('avante').setup({
             provider = "copilot",
             providers = {
