@@ -4,6 +4,31 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "PageDown → Ctrl+Space (clean)",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "page_down" },
+                                "to": [
+                                    {
+                                        "key_code": "left_control",
+                                        "lazy": false
+                                    },
+                                    {
+                                        "key_code": "spacebar",
+                                        "modifiers": ["left_control"]
+                                    }
+                                ],
+                                "to_after_key_up": [
+                                    {
+                                        "key_code": "left_control",
+                                        "modifiers": []
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "CMD/SHIFT + ESC to CMD/SHIFT + Backtick",
                         "manipulators": [
                             {
@@ -71,7 +96,7 @@
                             "to": [{ "key_code": "left_control" }]
                         },
                         {
-                            "from": { "key_code": "page_down" },
+                            "from": { "key_code": "page_up" },
                             "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
                         },
                         {
