@@ -1079,6 +1079,15 @@ require("lazy").setup({
       end
     },
     {
+      "barreiroleo/ltex_extra.nvim",
+      branch = "dev",
+      ft = { "markdown", "rst", "tex", "gitcommit", "text" },
+      opts = {
+        load_langs = { "en-US" },
+        path = vim.fn.expand("~") .. "/.local/share/ltex",
+      }
+    },
+    {
       "neovim/nvim-lspconfig",
       dependencies = {
         "hrsh7th/nvim-cmp",
@@ -1087,21 +1096,6 @@ require("lazy").setup({
         "barreiroleo/ltex_extra.nvim",
       },
       config = function()
-        -- LspAttach autocmd for setting up keybindings when LSP attaches to buffer
-        vim.api.nvim_create_autocmd('LspAttach', {
-          callback = function(ev)
-            local client = vim.lsp.get_client_by_id(ev.data.client_id)
-
-            -- Client-specific setup
-            if client and client.name == 'ltex' then
-              require'ltex_extra'.setup{
-                load_langs = { 'en-US' },
-                path = vim.fn.expand("~") .. "/.local/share/ltex",
-              }
-            end
-          end,
-        })
-
         -- Disable default mappings since 0.11.
         if vim.fn.mapcheck("grn", "n") ~= "" then
           vim.keymap.del("n", "grn")
@@ -1159,7 +1153,7 @@ require("lazy").setup({
         if vim.fn.executable('ltex-ls') == 1 then
           vim.lsp.config('ltex', {
             capabilities = capabilities,
-            filetypes = { "bib", "gitcommit", "markdown", "rst", "tex", "text" },
+            filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
             settings = {
               ltex = {
                 latex = {
@@ -1220,22 +1214,13 @@ require("lazy").setup({
       end
     },
     {
-      "simrat39/rust-tools.nvim",
-      ft = "rust",
-      dependencies = {
-        'neovim/nvim-lspconfig',
-      },
+      "mrcjkb/rustaceanvim",
+      version = "^6", -- lock to a stable major release
+      lazy = false,
       config = function()
-        -- rust-analyzer is set up by rust-tools.nvim.
-        require'rust-tools'.setup {
-          tools = {
-            inlay_hints = {
-              show_parameter_hints = true,
-              other_hints_prefix = '  » ',
-            }
-          },
+        vim.g.rustaceanvim = {
           server = {
-            capabilities = require'cmp_nvim_lsp'.default_capabilities(),
+            capabilities = require("cmp_nvim_lsp").default_capabilities(),
             settings = {
               ["rust-analyzer"] = {
                 completion = {
@@ -1243,14 +1228,13 @@ require("lazy").setup({
                   addCallParenthesis = false,
                 },
                 diagnostics = {
-                  disabled = {"inactive-code"},
+                  disabled = { "inactive-code" },
                 },
               },
             },
           },
         }
-        -- vim.cmd('autocmd FileType rust setlocal omnifunc=v:lua.vim.lsp.omnifunc')
-      end
+      end,
     },
     -- {
     --   "j-hui/fidget.nvim",
