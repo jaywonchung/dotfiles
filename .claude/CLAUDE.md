@@ -8,3 +8,7 @@ On the same note, do not confuse the code's comments with message you want to co
 When you create plots (e.g., using `matplotlib`), whenever it makes sense, start the X and Y axes from zero.
 
 When you find that the files you have worked on are different from where you left them, it means I have changed them after you'd made the changes. NEVER revert my changes. If you find any discrepancy with your memory/context, figure out related parts, read and understand them, and work with the current state of the codebase.
+
+In all cases, be explicit about your assumptions. Any number, threshold, choice you came up with that is not explicitly from me must be laid out and explained.
+
+When parsing and aggregating data files, NEVER set random defaults for missing values. The default should ALWAYS be raising an error, unless I explicitly tell you that certain fields are optional.
