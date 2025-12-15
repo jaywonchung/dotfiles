@@ -11,4 +11,6 @@ When you find that the files you have worked on are different from where you lef
 
 In all cases, be explicit about your assumptions. Any number, threshold, choice you came up with that is not explicitly from me must be laid out and explained.
 
-When parsing and aggregating data files, NEVER set random defaults for missing values. The default should ALWAYS be raising an error, unless I explicitly tell you that certain fields are optional.
+When parsing and aggregating data files, NEVER set random defaults for missing values. The default should ALWAYS be raising an error, unless the user explicitly tells you that certain fields are optional.
+
+After creating a markdown plan file in plan mode, additionally print out a command `md2html <plan_md_file> <output_html_file> && open <output_html_file>` that I can run if I want. I have `md2html` defined in my environment.
