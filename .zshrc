@@ -161,6 +161,14 @@ function ovim() {
 
 alias gh='PAGER= gh'
 
+function md2html() {
+  pandoc -f markdown -t html5 -s "$1" -o "$2" \
+    -f markdown+lists_without_preceding_blankline \
+    --no-highlight \
+    -H ~/.config/pandoc/highlight-header.html \
+    -H <(echo "<style>$(cat ~/.config/pandoc/pandoc-catppuccin.css)</style>")
+}
+
 #-------------------------------------------------------------------
 # Language-specific
 #-------------------------------------------------------------------
@@ -240,6 +248,9 @@ function waitpid() {
 function rc() {
   print -n '\033[5 q'
 }
+
+# Disable auto-update
+alias claude='DISABLE_AUTOUPDATER=1 claude'
 
 #-------------------------------------------------------------------
 # Environment variables
