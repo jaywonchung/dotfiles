@@ -197,8 +197,8 @@ vim.keymap.set('i', '<C-d>', '<DEL>')
 --   end,
 -- })
 
--- Fix autoread
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
+-- Refresh file if changed outside of vim
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "WinEnter" }, {
   pattern = "*",
   command = "checktime"
 })
@@ -249,6 +249,14 @@ vim.api.nvim_create_autocmd("VimEnter", {
       vim.cmd('windo set wrap')
     end
   end
+})
+
+-- Automatically allow direnv on .envrc write
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = ".envrc",
+  callback = function()
+    vim.fn.system("direnv allow")
+  end,
 })
 
 
@@ -425,12 +433,11 @@ require("lazy").setup({
         -- Don't initialize Avante if Copilot hasn't been set up
         copilot_configured = require("copilot.auth").get_creds() ~= nil
         if copilot_configured then
-          print("wtf")
           require('avante').setup({
             provider = "copilot",
             providers = {
               copilot = {
-                model = "claude-sonnet-4",
+                model = "claude-sonnet-4.5",
                 -- extra_request_body = {
                 --   temperature = 0,
                 --   max_tokens = 8192,
@@ -1148,6 +1155,14 @@ require("lazy").setup({
             }
           })
           vim.lsp.enable('pyright')
+        end
+
+        if vim.fn.executable('ty') == 1 then
+          vim.lsp.config('ty', {
+            capabilities = capabilities,
+            filetypes = { "python" },
+          })
+          -- vim.lsp.enable('ty')
         end
 
         if vim.fn.executable('ltex-ls') == 1 then
