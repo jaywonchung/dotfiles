@@ -128,8 +128,8 @@
                     "ignore": false,
                     "simple_modifications": [
                         {
-                            "from": { "key_code": "page_down" },
-                            "to": [{ "key_code": "f2" }]
+                            "from": { "key_code": "page_up" },
+                            "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
                         }
                     ]
                 },
