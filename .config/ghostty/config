@@ -35,6 +35,8 @@ clipboard-paste-protection = false
 
 window-save-state = always
 
+shell-integration-features = ssh-env,ssh-terminfo
+
 keybind = ctrl+shift+enter=new_split:right
 keybind = ctrl+alt+enter=new_split:down
 keybind = alt+h=goto_split:left
