@@ -249,3 +249,16 @@ subprocess
 ZeusMonitor
 Nanobatching
 Nanobatch
+MBO
+Arceus
+XGBoost
+hypervolume
+HVI
+microbatch
+iso-time
+iso-energy
+Iso-Time
+Iso-Energy
+makespan
+NVLink
+LMArena
