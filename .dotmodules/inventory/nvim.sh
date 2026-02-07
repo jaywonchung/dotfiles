@@ -28,3 +28,16 @@ rsync -a nvim-$OS/* ~/.local/
 
 # Cleanup
 rm -rf nvim-$OS
+
+# Install tree-sitter CLI
+if [[ "$unamestr" == "Darwin" ]]; then
+  curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-macos-arm64.gz
+  mv tree-sitter-macos-arm64.gz tree-sitter.gz
+elif [[ "$unamestr" == "Linux" ]]; then
+  curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x86.gz
+  mv tree-sitter-linux-x86.gz tree-sitter.gz
+fi
+
+gunzip tree-sitter.gz
+chmod +x tree-sitter
+mv -f tree-sitter ~/.local/bin/tree-sitter

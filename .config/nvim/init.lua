@@ -80,6 +80,66 @@ vim.keymap.set('n', '<Leader>s', ':sp<CR>')
 vim.keymap.set('n', '<Leader>v', ':vsp<CR>')
 vim.keymap.set('n', '<Leader>p', ":echo expand('%:p')<CR>")
 
+-- Yank selected area to system clipboard
+local yank = {}
+yank.get_buffer_absolute = function()
+  return vim.fn.expand '%:p'
+end
+yank.get_buffer_cwd_relative = function()
+  return vim.fn.expand '%:.'
+end
+yank.get_visual_bounds = function()
+  local mode = vim.fn.mode()
+  if mode ~= 'v' and mode ~= 'V' then
+    error('get_visual_bounds must be called in visual or visual-line mode (current mode: ' .. vim.inspect(mode) .. ')')
+  end
+  local is_visual_line_mode = mode == 'V'
+  local start_pos = vim.fn.getpos 'v'
+  local end_pos = vim.fn.getpos '.'
+  return {
+    start_line = math.min(start_pos[2], end_pos[2]),
+    end_line = math.max(start_pos[2], end_pos[2]),
+    start_col = is_visual_line_mode and 0 or math.min(start_pos[3], end_pos[3]) - 1,
+    end_col = is_visual_line_mode and -1 or math.max(start_pos[3], end_pos[3]),
+    mode = mode,
+    start_pos = start_pos,
+    end_pos = end_pos,
+  }
+end
+yank.format_line_range = function(start_line, end_line)
+  return start_line == end_line and tostring(start_line) or start_line .. '-' .. end_line
+end
+yank.simulate_yank_highlight = function()
+  local bounds = yank.get_visual_bounds()
+  local ns = vim.api.nvim_create_namespace 'simulate_yank_highlight'
+  vim.highlight.range(0, ns, 'IncSearch', { bounds.start_line - 1, bounds.start_col }, { bounds.end_line - 1, bounds.end_col }, { priority = 200 })
+  vim.defer_fn(function()
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+  end, 150)
+end
+yank.exit_visual_mode = function()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', false)
+end
+yank.yank_visual_with_path = function(path, label)
+  local bounds = yank.get_visual_bounds()
+  local selected_lines = vim.fn.getregion(bounds.start_pos, bounds.end_pos, { type = bounds.mode })
+  local selected_text = table.concat(selected_lines, '\n')
+  local line_range = yank.format_line_range(bounds.start_line, bounds.end_line)
+  local path_with_lines = path .. ':' .. line_range
+  local result = path_with_lines .. '\n\n' .. selected_text
+  vim.fn.setreg('+', result)
+  yank.simulate_yank_highlight()
+  yank.exit_visual_mode()
+  print('Yanked ' .. label .. ' with lines ' .. line_range)
+end
+
+-- Just yank to system clipboard
+vim.keymap.set('v', '<Leader>yy', '"+y')
+-- Yank with relative file path
+vim.keymap.set('v', '<Leader>yr', function() yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), 'relative') end)
+-- Yank with absolute file path
+vim.keymap.set('v', '<Leader>ya', function() yank.yank_visual_with_path(yank.get_buffer_absolute(), 'absolute') end)
+
 -- Delete selected area and replace with yanked content
 -- without overwriting the copy register "
 vim.keymap.set('v', '<Leader>p', '"_dP')
@@ -325,14 +385,6 @@ require("lazy").setup({
       end,
     },
     {
-      "ojroques/nvim-osc52",
-      config = function()
-        vim.keymap.set('n', '<leader>y', require('osc52').copy_operator, { expr = true })
-        vim.keymap.set('n', '<leader>yy', '<leader>y_', { remap = true })
-        vim.keymap.set('v', '<leader>y', require('osc52').copy_visual)
-      end,
-    },
-    {
       "voldikss/vim-floaterm",
       init = function()
         -- Size
@@ -382,7 +434,7 @@ require("lazy").setup({
             filetypes = {
               ["*"] = true,
             },
-            copilot_model = "gpt-4o-copilot",
+            -- copilot_model = "gpt-4o-copilot",
             server_opts_overrides = {
               settings = {
                 telemetry = {
@@ -397,6 +449,14 @@ require("lazy").setup({
           print("Skipping Copilot setup as `node` was not found in $PATH.")
         end
       end,
+    },
+    {
+      "MeanderingProgrammer/render-markdown.nvim",
+      cmd = { "RenderMarkdown" },
+      opts = {
+        file_types = { "Avante", "markdown" },
+      },
+      ft = { "Avante" },
     },
     {
       "yetone/avante.nvim",
@@ -417,14 +477,6 @@ require("lazy").setup({
         --- The below dependencies are optional,
         "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
         "zbirenbaum/copilot.lua", -- for providers='copilot'
-        {
-          -- Make sure to set this up properly if you have lazy=true
-          'MeanderingProgrammer/render-markdown.nvim',
-          opts = {
-            file_types = { "Avante" },
-          },
-          ft = { "Avante" },
-        },
       },
       keys = {
         { '<Leader>aa', ':AvanteToggle' }
@@ -1365,19 +1417,13 @@ require("lazy").setup({
     -- Syntactic language support
     {
       "nvim-treesitter/nvim-treesitter",
+      lazy = false,
       build = ':TSUpdate',
       config = function()
-        require'nvim-treesitter.configs'.setup {
-          ensure_installed = { "c", "cpp", "python", "rust", "go", "vim", "vimdoc", "lua", "zig", "markdown", "markdown_inline", "proto" },
-          highlight = {
-            enable = true,
-          },
-        }
-        vim.api.nvim_create_autocmd("BufEnter", {
-          pattern = { "*.c", "*.h", "*.cpp", "*.hpp", "*.py", "*.rs", "*.go", "*.vim", "*.lua", "*.zig", "*.md" },
-          callback = function()
-            vim.treesitter.start()
-          end,
+        require'nvim-treesitter'.install { "c", "cpp", "python", "rust", "go", "vim", "vimdoc", "lua", "zig", "markdown", "markdown_inline", "proto" }
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = { "c", "h", "cpp", "hpp", "cuda", "py", "rs", "go", "vim", "lua", "zig", "md", "proto" },
+          callback = function() vim.treesitter.start() end,
         })
       end
     },
