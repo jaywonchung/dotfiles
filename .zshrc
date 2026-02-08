@@ -293,6 +293,9 @@ if [[ "$_UNAME" == "Darwin" ]]; then
   # Sioyek
   export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
 
+  # trash (keg-only)
+  export PATH="/opt/homebrew/opt/trash/bin:$PATH"
+
 # Linux
 elif [[ "$_UNAME" == "Linux" ]]; then
   # Ghostty
