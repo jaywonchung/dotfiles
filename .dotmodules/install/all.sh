@@ -8,6 +8,6 @@ fi
 
 source ~/.dotmodules/install/zsh.sh
 source ~/.dotmodules/install/tmux.sh
-source ~/.dotmodules/install/nvim.sh
 source ~/.dotmodules/install/rust.sh
+source ~/.dotmodules/install/nvim.sh
 source ~/.dotmodules/install/python.sh

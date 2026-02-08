@@ -34,10 +34,19 @@ if [[ "$unamestr" == "Darwin" ]]; then
   curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-macos-arm64.gz
   mv tree-sitter-macos-arm64.gz tree-sitter.gz
 elif [[ "$unamestr" == "Linux" ]]; then
-  curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x86.gz
-  mv tree-sitter-linux-x86.gz tree-sitter.gz
+  curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
+  mv tree-sitter-linux-x64.gz tree-sitter.gz
 fi
 
 gunzip tree-sitter.gz
 chmod +x tree-sitter
 mv -f tree-sitter ~/.local/bin/tree-sitter
+
+# Check GLIBC version
+tree-sitter --version
+if [[ "$?" -ne 0 ]]; then
+  echo "Error: tree-sitter CLI doesn't seem to be working. Please check if your GLIBC version is compatible."
+  echo
+  echo "Consider compiling from source: cargo install --locked tree-sitter-cli"
+  echo "If you don't have libclang build might fail. Then consider sudo dnf install clang-devel temporarily for building."
+fi

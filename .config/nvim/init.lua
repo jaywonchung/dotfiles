@@ -1422,7 +1422,7 @@ require("lazy").setup({
       config = function()
         require'nvim-treesitter'.install { "c", "cpp", "python", "rust", "go", "vim", "vimdoc", "lua", "zig", "markdown", "markdown_inline", "proto" }
         vim.api.nvim_create_autocmd("FileType", {
-          pattern = { "c", "h", "cpp", "hpp", "cuda", "py", "rs", "go", "vim", "lua", "zig", "md", "proto" },
+          pattern = { "c", "h", "cpp", "hpp", "cuda", "python", "rust", "go", "vim", "lua", "zig", "markdown", "protobuf" },
           callback = function() vim.treesitter.start() end,
         })
       end
