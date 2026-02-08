@@ -14,3 +14,5 @@ In all cases, be explicit about your assumptions. Any number, threshold, choice 
 When parsing and aggregating data files, NEVER set random defaults for missing values. The default should ALWAYS be raising an error, unless the user explicitly tells you that certain fields are optional.
 
 After creating a markdown plan file in plan mode, additionally print out a command `md2html <plan_md_file> <output_html_file> && open <output_html_file>` that I can run if I want. I have `md2html` defined in my environment.
+
+Never use `open` commands (e.g., `open file.pdf`, `open file.svg`) that steal focus from the terminal. If the user needs to view a file, just tell them the path.

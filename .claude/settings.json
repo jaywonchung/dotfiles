@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
+  "alwaysThinkingEnabled": true,
+  "addCoauthoredBy": false,
+  "trustedDirectories": [
+    "/Users/jaywonchung"
+  ]
+}
