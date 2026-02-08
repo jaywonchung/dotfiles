@@ -69,4 +69,7 @@ keybind = global:ctrl+shift+q=toggle_quick_terminal
 keybind = global:cmd+enter=new_window
 desktop-notifications = true
 
+auto-update = off
+auto-update-channel = tip
+
 background-opacity = 1
