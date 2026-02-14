@@ -6,5 +6,6 @@
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
-  ]
+  ],
+  "skipDangerousModePermissionPrompt": true
 }

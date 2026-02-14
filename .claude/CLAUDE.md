@@ -1,4 +1,4 @@
-When you need to run Python, use `uv`.
+When you need to run Python, use `uv`. When you see "warning: `VIRTUAL_ENV=mlenergy-data/.venv` does not match the project environment path `.venv` and will be ignored", stop the uv command immediately and run `source .venv/bin/activate` to activate the correct virtual environment, then run the uv command again, or just use `python` if it was `uv run`.
 
 Zeus should be installed with `pip install zeus` (or `uv pip install zeus`). It was moved from `zeus-ml` to `zeus`.
 
