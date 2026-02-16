@@ -3,9 +3,9 @@
     "defaultMode": "acceptEdits"
   },
   "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
-  ],
-  "skipDangerousModePermissionPrompt": true
+  ]
 }

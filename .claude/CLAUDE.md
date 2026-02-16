@@ -16,3 +16,5 @@ When parsing and aggregating data files, NEVER set random defaults for missing v
 After creating a markdown plan file in plan mode, additionally print out a command `md2html <plan_md_file> <output_html_file> && open <output_html_file>` that I can run if I want. I have `md2html` defined in my environment.
 
 Never use `open` commands (e.g., `open file.pdf`, `open file.svg`) that steal focus from the terminal. If the user needs to view a file, just tell them the path.
+
+Backwards compatibility is not a requirement in every cases; when we're in the process of building something from scratch, we can make every breaking change we want. Your session may seem like a lot of code already exists and we need to prevent breaking changes, but in reality, we may be in the early stages of development where we can make breaking changes without issue. Always ask if you're unsure about the stage of development and whether backwards compatibility is a concern.

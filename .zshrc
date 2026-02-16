@@ -250,7 +250,7 @@ function rc() {
 }
 
 # Disable auto-update
-alias claude='DISABLE_AUTOUPDATER=1 claude'
+alias claude='CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000 claude'
 
 #-------------------------------------------------------------------
 # Environment variables
