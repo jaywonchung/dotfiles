@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.71.2
+VERSION=2.86.0
 
 if [[ $(uname -m) = arm64 ]]; then
   ARCH=arm64
