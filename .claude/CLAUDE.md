@@ -38,6 +38,18 @@ Never use `open` commands (e.g., `open file.pdf`, `open file.svg`) that steal fo
 
 After creating a markdown plan file in plan mode, additionally print out a command `md2html <plan_md_file> <output_html_file> && open <output_html_file>` that I can run if I want. I have `md2html` defined in my environment.
 
+# Type Checking
+
+Use `ty` for type checking, not pyright. Run `uvx ty check` on relevant directories.
+
+# Fallback Behavior
+
+NEVER implement silent fallbacks. If a preferred code path is unavailable or fails, raise an error instead of quietly falling back to an alternative implementation. The user will decide what the fallback should be, if any.
+
+# Verification After Changes
+
+After making code changes, ALWAYS run the relevant tests or scripts to verify correctness before reporting success. Do not skip verification steps. If there are known regression tests or verification commands (e.g., in project CLAUDE.md or MEMORY.md), run them.
+
 # GitHub
 
 To fetch PR review comments programmatically, use:
