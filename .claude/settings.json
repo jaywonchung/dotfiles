@@ -1,9 +1,9 @@
 {
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(~/.claude/scripts/fetch-reviews.sh*)"
-    ]
+    ],
+    "defaultMode": "acceptEdits"
   },
   "hooks": {
     "PreToolUse": [
@@ -23,5 +23,7 @@
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
-  ]
+  ],
+  "effortLevel": "high",
+  "voiceEnabled": true
 }
