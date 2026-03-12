@@ -38,8 +38,4 @@ rm -rf ~/_autojump
 
 installing "direnv"
 mkdir -p ~/.local/bin
-if [[ $(uname -m) = arm64 ]]; then
-  brew install direnv
-else
-  curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
-fi
+curl -sfL https://direnv.net/install.sh | bin_path=~/.local/bin bash
