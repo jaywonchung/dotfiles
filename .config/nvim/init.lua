@@ -1252,6 +1252,22 @@ require("lazy").setup({
           vim.lsp.enable('texlab')
         end
 
+        -- if vim.fn.executable('harper-ls') == 1 then
+        --   vim.lsp.config('harper_ls', {
+        --     capabilities = capabilities,
+        --     filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
+        --     settings = {
+        --       ["harper-ls"] = {
+        --         userDictPath = vim.fn.expand("~") .. "/.local/share/ltex/ltex.dictionary.en-US.txt",
+        --         linters = {
+        --           LongSentences = false,
+        --         }
+        --       }
+        --     }
+        --   })
+        --   vim.lsp.enable('harper_ls')
+        -- end
+        --
         if vim.fn.executable('gopls') == 1 then
           vim.lsp.config('gopls', {
             capabilities = capabilities,
