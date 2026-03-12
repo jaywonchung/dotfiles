@@ -34,6 +34,7 @@ link-url = true
 clipboard-paste-protection = false
 
 window-save-state = always
+scrollback-limit = 100000000
 
 shell-integration-features = ssh-env,ssh-terminfo
 
