@@ -26,10 +26,10 @@
   process = git-lfs filter-process
   required = true
 [rerere]
-	enabled = true
+  enabled = true
 [branch]
-	sort = -committerdate
+  sort = -committerdate
 [init]
-	defaultBranch = master
+  defaultBranch = master
 [push]
-	autoSetupRemote = true
+  autoSetupRemote = true
