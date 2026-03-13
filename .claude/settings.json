@@ -19,11 +19,11 @@
     ]
   },
   "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
-  ],
-  "effortLevel": "high"
+  ]
 }
