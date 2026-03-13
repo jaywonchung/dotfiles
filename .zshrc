@@ -128,7 +128,30 @@ bindkey '^G' fzf-file-widget
 
 # Homebrew for MacOS
 if [[ "$_UNAME" == "Darwin" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  #eval "$(/opt/homebrew/bin/brew shellenv)"
+  function free() {
+    local page_size=$(pagesize)
+
+    vm_stat | awk -v page=$page_size '
+      /Pages free/                   { free=$3 }
+      /Pages active/                 { active=$3 }
+      /Pages inactive/               { inactive=$3 }
+      /Pages wired/                  { wired=$4 }
+      /Pages occupied by compressor/ { compressed=$5 }
+      END {
+        total     = (free + active + inactive + wired + compressed) * page
+        used      = (active + wired + compressed) * page
+        free_mem  = free * page
+        cache     = inactive * page
+        available = (free + inactive) * page
+
+        printf "%-12s %10s %10s %10s %12s %12s\n", \
+          "", "total", "used", "free", "buff/cache", "available"
+        printf "%-12s %9.1fG %9.1fG %9.1fG %11.1fG %11.1fG\n", \
+          "Mem:", total/2^30, used/2^30, free_mem/2^30, cache/2^30, available/2^30
+      }
+    '
+  }
 fi
 
 # direnv
@@ -292,9 +315,6 @@ if [[ "$_UNAME" == "Darwin" ]]; then
 
   # Sioyek
   export PATH="/Applications/sioyek.app/Contents/MacOS:$PATH"
-
-  # trash (keg-only)
-  export PATH="/opt/homebrew/opt/trash/bin:$PATH"
 
 # Linux
 elif [[ "$_UNAME" == "Linux" ]]; then
