@@ -1,0 +1,275 @@
+/*
+ * Pandoc Markdown Stylesheet with Catppuccin Mocha Syntax Highlighting
+ * No background on code blocks
+ */
+
+/* ============================================
+   Base Document Styles
+   ============================================ */
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif;
+  font-size: 14px;
+  padding: 0 26px;
+  line-height: 22px;
+  word-wrap: break-word;
+  color: #333;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+a {
+  text-decoration: none;
+  color: #4078c0;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #ddd;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+h1 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #eee;
+}
+
+h2 {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #eee;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+table > thead > tr > th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+  padding: 8px 12px;
+}
+
+table > tbody > tr > td {
+  padding: 8px 12px;
+  border-top: 1px solid #ddd;
+}
+
+blockquote {
+  margin: 0 0 16px 0;
+  padding: 0 16px;
+  border-left: 4px solid #ddd;
+  color: #666;
+}
+
+/* ============================================
+   Code Block Styles - NO BACKGROUND
+   ============================================ */
+
+code, pre {
+  font-family: "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace;
+  font-size: 13px;
+}
+
+/* Inline code */
+code:not(pre code) {
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  background-color: rgba(175, 184, 193, 0.2);
+}
+
+/* Code blocks - Catppuccin Mocha dark background */
+pre {
+  padding: 16px;
+  overflow: auto;
+  line-height: 1.5;
+  border-radius: 6px;
+  background-color: #1e1e2e !important; /* Catppuccin Mocha base */
+}
+
+pre code {
+  background: transparent !important;
+  padding: 0;
+  border-radius: 0;
+}
+
+pre code.hljs {
+  background: transparent !important;
+  padding: 0;
+}
+
+/* ============================================
+   Catppuccin Mocha Syntax Highlighting
+   Using !important to override hljs defaults
+   ============================================ */
+
+/*
+  Catppuccin Mocha Palette:
+  - rosewater: #f5e0dc
+  - flamingo:  #f2cdcd
+  - pink:      #f5c2e7
+  - mauve:     #cba6f7
+  - red:       #f38ba8
+  - maroon:    #eba0ac
+  - peach:     #fab387
+  - yellow:    #f9e2af
+  - green:     #a6e3a1
+  - teal:      #94e2d5
+  - sky:       #89dceb
+  - sapphire:  #74c7ec
+  - blue:      #89b4fa
+  - lavender:  #b4befe
+  - text:      #cdd6f4
+  - subtext1:  #bac2de
+  - subtext0:  #a6adc8
+  - overlay2:  #9399b2
+  - overlay1:  #7f849c
+  - overlay0:  #6c7086
+*/
+
+/* Base text color */
+.hljs {
+  color: #cdd6f4 !important;
+  background: transparent !important;
+}
+
+/* Comments - overlay2 */
+.hljs-comment,
+.hljs-quote {
+  color: #9399b2 !important;
+  font-style: italic;
+}
+
+/* Keywords - mauve */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cba6f7 !important;
+}
+
+/* Built-in, doctag - red */
+.hljs-built_in,
+.hljs-doctag,
+.hljs-deletion {
+  color: #f38ba8 !important;
+}
+
+/* Types, classes - yellow */
+.hljs-type,
+.hljs-title.class_,
+.hljs-class .hljs-title {
+  color: #f9e2af !important;
+}
+
+/* Numbers, literals - peach */
+.hljs-number,
+.hljs-literal,
+.hljs-variable.constant_,
+.hljs-meta {
+  color: #fab387 !important;
+}
+
+/* Strings - green */
+.hljs-string,
+.hljs-addition {
+  color: #a6e3a1 !important;
+}
+
+/* Regex - pink */
+.hljs-regexp {
+  color: #f5c2e7 !important;
+}
+
+/* Functions - blue */
+.hljs-title,
+.hljs-title.function_,
+.hljs-function .hljs-title,
+.hljs-section {
+  color: #89b4fa !important;
+}
+
+/* Tags, properties - teal */
+.hljs-tag,
+.hljs-property {
+  color: #94e2d5 !important;
+}
+
+/* Operators - sky */
+.hljs-operator {
+  color: #89dceb !important;
+}
+
+/* Attributes - sapphire */
+.hljs-attr,
+.hljs-attribute {
+  color: #74c7ec !important;
+}
+
+/* Punctuation - subtext1 */
+.hljs-punctuation,
+.hljs-subst {
+  color: #bac2de !important;
+}
+
+/* Params - text */
+.hljs-params {
+  color: #cdd6f4 !important;
+}
+
+/* Variables - mauve */
+.hljs-variable,
+.hljs-variable.language_ {
+  color: #cba6f7 !important;
+}
+
+/* Symbols - flamingo */
+.hljs-symbol {
+  color: #f2cdcd !important;
+}
+
+/* Links - maroon */
+.hljs-link {
+  color: #eba0ac !important;
+  text-decoration: underline;
+}
+
+/* Character escape - green */
+.hljs-char.escape_ {
+  color: #a6e3a1 !important;
+}
+
+/* Template variable - peach */
+.hljs-template-variable,
+.hljs-template-tag {
+  color: #fab387 !important;
+}
+
+/* Selectors - blue */
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #89b4fa !important;
+}
+
+/* Emphasis */
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

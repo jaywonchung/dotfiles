@@ -489,7 +489,7 @@ require("lazy").setup({
             provider = "copilot",
             providers = {
               copilot = {
-                model = "claude-sonnet-4.5",
+                model = "claude-opus-4.6",
                 -- extra_request_body = {
                 --   temperature = 0,
                 --   max_tokens = 8192,
@@ -505,6 +505,9 @@ require("lazy").setup({
                 cursor = "<Leader>cc",
               },
             },
+            selection = {
+              hint_display = "none",
+            }
           })
         end
       end
@@ -575,6 +578,9 @@ require("lazy").setup({
               "diagnostics",
             },
             lualine_z = { { my_location } },
+          },
+          tabline = {
+            lualine_a = { { 'tabs', mode = 2, max_length = vim.o.columns } },
           },
         }
 
@@ -658,7 +664,6 @@ require("lazy").setup({
     {
       "catppuccin/nvim",
       name = 'catppuccin',
-      lazy = false,
       priority = 1000,
       config = function()
         require("catppuccin").setup({
@@ -672,9 +677,10 @@ require("lazy").setup({
               enabled = true,
             },
           },
+          auto_integrations = true,
         })
 
-        vim.g.lualine_theme = "catppuccin"
+        vim.g.lualine_theme = "auto"
 
         vim.cmd([[
         colorscheme catppuccin-mocha
@@ -857,6 +863,7 @@ require("lazy").setup({
               local last_buf_info = vim.fn.getbufinfo(tab_bufs[1])[1]
               if last_buf_info.name:match(".*NvimTree_%d*$") then       -- and that buffer is nvim tree
                 vim.schedule(function ()
+                  if not vim.api.nvim_win_is_valid(tab_wins[1]) then return end
                   if #vim.api.nvim_list_wins() == 1 then                -- if its the last buffer in vim
                     vim.cmd "quit"                                        -- then close all of vim
                   else                                                  -- else there are more tabs open
@@ -1021,31 +1028,6 @@ require("lazy").setup({
       }
     },
     -- {
-    --   "ggandor/leap.nvim",
-    --   config = function()
-    --     vim.keymap.set("n", "s",  "<Plug>(leap-forward)", { silent = true })
-    --     vim.keymap.set("n", "S",  "<Plug>(leap-backward)", { silent = true })
-    --   end
-    -- },
-    {
-      "akinsho/bufferline.nvim",
-      version = "*",
-      dependencies = "nvim-tree/nvim-web-devicons",
-      opts = {
-        options = {
-          mode = "tabs",
-          show_buffer_close_icons = false,
-          always_show_bufferline = false,
-          auto_toggle_bufferline = true,
-          show_buffer_icons = false,
-          diagnostics = "nvim_lsp",
-          diagnostics_indicator = function(count, level)
-              local icon = level:match("error") and "" or ""
-              return " " .. icon .. " " .. count
-          end,
-        },
-      },
-    },
     -- Language server protocol
     {
       "hrsh7th/nvim-cmp",
@@ -1288,12 +1270,10 @@ require("lazy").setup({
         vim.g.zig_fmt_autosave = 0
 
         -- Configs for diagnostics
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-          vim.lsp.diagnostic.on_publish_diagnostics, {
-            virtual_text = { spacing = 4 },
-            update_in_insert = true,
-          }
-        )
+        vim.diagnostic.config({
+          virtual_text = { spacing = 4 },
+          update_in_insert = true,
+        })
       end
     },
     {
@@ -1447,7 +1427,6 @@ require("lazy").setup({
       "lervag/vimtex",
       init = function()
         vim.g.vimtex_view_method = 'sioyek'
-        vim.g.vimtex_view_sioyek_exe = '/Applications/sioyek.app/Contents/MacOS/sioyek'
         vim.g.vimtex_callback_progpath = 'arch -arm64 nvim'
         vim.g.vimtex_view_use_temp_files = 1
         vim.g.vimtex_quickfix_open_on_warning = 0
@@ -1582,10 +1561,3 @@ require("lazy").setup({
   ui = { custom_keys = {}, },
   readme = { enabled = false },
 })
-
-
-------------------------------------------------------------------------------
--- Setup after lazy.nvim
-------------------------------------------------------------------------------
--- LSP loading becomes lazy, so this has to be called manually.
-vim.cmd.LspStart()

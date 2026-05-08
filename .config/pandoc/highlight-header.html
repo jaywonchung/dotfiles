@@ -1,0 +1,16 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Pandoc with --no-highlight outputs <pre class="lang"><code>
+  // highlight.js expects <pre><code class="language-lang">
+  document.querySelectorAll('pre[class]').forEach(function(pre) {
+    var lang = pre.className;
+    var code = pre.querySelector('code');
+    if (code && lang) {
+      code.className = 'language-' + lang;
+      pre.removeAttribute('class');
+    }
+  });
+  hljs.highlightAll();
+});
+</script>

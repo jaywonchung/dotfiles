@@ -1,9 +1,12 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(~/.claude/scripts/fetch-reviews.sh*)"
+    "deny": [
+      "Bash(git add .:*)"
     ],
-    "defaultMode": "acceptEdits"
+    "ask": [
+      "Bash(rm:*)"
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -13,15 +16,30 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/ban-bare-pip-python.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-github-mutations.sh"
           }
         ]
       }
     ]
   },
+  "enabledPlugins": {},
+  "extraKnownMarketplaces": {
+    "ml-energy-data": {
+      "source": {
+        "source": "github",
+        "repo": "ml-energy/data"
+      }
+    }
+  },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
-  "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true,
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
