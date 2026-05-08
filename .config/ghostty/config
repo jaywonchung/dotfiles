@@ -1,4 +1,5 @@
 font-family = JetBrainsMono Nerd Font Mono
+font-family = D2Coding
 font-size = 16
 
 background = #323232
@@ -69,8 +70,5 @@ keybind = ctrl+0=text:\x02\x30
 keybind = global:ctrl+shift+q=toggle_quick_terminal
 keybind = global:cmd+enter=new_window
 desktop-notifications = true
-
-auto-update = off
-auto-update-channel = tip
 
 background-opacity = 1
