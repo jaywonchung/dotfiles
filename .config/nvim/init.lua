@@ -1137,39 +1137,36 @@ require("lazy").setup({
         "barreiroleo/ltex_extra.nvim",
       },
       config = function()
-        -- Disable default mappings since 0.11.
-        if vim.fn.mapcheck("grn", "n") ~= "" then
-          vim.keymap.del("n", "grn")
+        -- Delete default gr* keymaps to avoid delay on `gr` (Telescope lsp_references).
+        -- Also delete <C-S> (signature_help) since lsp_signature.nvim handles it.
+        for _, keys in ipairs({ "grn", "gra", "grr", "gri", "grt", "grx" }) do
+          pcall(vim.keymap.del, "n", keys)
         end
-        if vim.fn.mapcheck("gra", "n") ~= "" then
-          vim.keymap.del("n", "gra")
-        end
-        if vim.fn.mapcheck("grr", "n") ~= "" then
-          vim.keymap.del("n", "grr")
-        end
-        if vim.fn.mapcheck("gri", "n") ~= "" then
-          vim.keymap.del("n", "gri")
-        end
-        if vim.fn.mapcheck("g0", "n") ~= "" then
-          vim.keymap.del("n", "g0")
-        end
-        if vim.fn.mapcheck("<C-s>", "i") ~= "" then
-          vim.keymap.del("i", "<C-s>")
-        end
+        pcall(vim.keymap.del, { "n", "x" }, "gra")
+        pcall(vim.keymap.del, "i", "<C-S>")
 
-        vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, { buffer = bufnr, silent = true })
-        vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ border = "rounded" }) end, { buffer = bufnr, silent = true })
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = bufnr, silent = true })
-        vim.keymap.set('n', 'gD', vim.diagnostic.open_float, { buffer = bufnr, silent = true })
-        vim.keymap.set('n', 'gn', vim.diagnostic.goto_next, { buffer = bufnr, silent = true })
-        vim.keymap.set('n', 'gp', vim.diagnostic.goto_prev, { buffer = bufnr, silent = true })
-        vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, { buffer = bufnr, silent = true })
+        -- Buffer-local LSP keymaps via LspAttach
+        vim.api.nvim_create_autocmd('LspAttach', {
+          group = vim.api.nvim_create_augroup('my.lsp', {}),
+          callback = function(ev)
+            local opts = { buffer = ev.buf, silent = true }
+            vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, opts)
+            vim.keymap.set('n', 'K', function() vim.lsp.buf.hover({ border = "rounded" }) end, opts)
+            vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+            vim.keymap.set('n', 'gD', vim.diagnostic.open_float, opts)
+            vim.keymap.set('n', 'gn', function() vim.diagnostic.jump({ count = 1 }) end, opts)
+            vim.keymap.set('n', 'gp', function() vim.diagnostic.jump({ count = -1 }) end, opts)
+            vim.keymap.set('n', 'ga', vim.lsp.buf.code_action, opts)
+          end,
+        })
 
-        local capabilities = require'cmp_nvim_lsp'.default_capabilities()
+        -- Shared capabilities for all servers (from nvim-cmp)
+        vim.lsp.config('*', {
+          capabilities = require('cmp_nvim_lsp').default_capabilities(),
+        })
 
         if vim.fn.executable('clangd') == 1 then
           vim.lsp.config('clangd', {
-            capabilities = capabilities,
             filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
           })
           vim.lsp.enable('clangd')
@@ -1177,7 +1174,6 @@ require("lazy").setup({
 
         if vim.fn.executable('pyright') == 1 then
           vim.lsp.config('pyright', {
-            capabilities = capabilities,
             settings = {
               python = {
                 analysis = {
@@ -1193,15 +1189,13 @@ require("lazy").setup({
 
         if vim.fn.executable('ty') == 1 then
           vim.lsp.config('ty', {
-            capabilities = capabilities,
             filetypes = { "python" },
           })
-          -- vim.lsp.enable('ty')
+          vim.lsp.enable('ty')
         end
 
         if vim.fn.executable('ltex-ls') == 1 then
           vim.lsp.config('ltex', {
-            capabilities = capabilities,
             filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
             settings = {
               ltex = {
@@ -1220,7 +1214,6 @@ require("lazy").setup({
 
         if vim.fn.executable('texlab') == 1 then
           vim.lsp.config('texlab', {
-            capabilities = capabilities,
             settings = {
               texlab = {
                 chktex = {
@@ -1236,7 +1229,6 @@ require("lazy").setup({
 
         -- if vim.fn.executable('harper-ls') == 1 then
         --   vim.lsp.config('harper_ls', {
-        --     capabilities = capabilities,
         --     filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
         --     settings = {
         --       ["harper-ls"] = {
@@ -1251,25 +1243,17 @@ require("lazy").setup({
         -- end
         --
         if vim.fn.executable('gopls') == 1 then
-          vim.lsp.config('gopls', {
-            capabilities = capabilities,
-          })
           vim.lsp.enable('gopls')
         end
 
         if vim.fn.executable('zls') == 1 then
-          vim.lsp.config('zls', {
-            capabilities = capabilities,
-          })
           vim.lsp.enable('zls')
         end
 
-        -- Remove when Neovim > 0.10.0 is released as
-        -- https://github.com/neovim/neovim/pull/28904 was merged.
         vim.g.zig_fmt_parse_errors = 0
         vim.g.zig_fmt_autosave = 0
 
-        -- Configs for diagnostics
+        -- Diagnostics
         vim.diagnostic.config({
           virtual_text = { spacing = 4 },
           update_in_insert = true,
@@ -1446,117 +1430,6 @@ require("lazy").setup({
         }
       end
     },
-    {
-      "bngarren/checkmate.nvim",
-      ft = "markdown",
-      opts = {
-        archive = {
-          heading = {
-            title = "Completed",
-            level = 1
-          },
-        },
-        keys = {
-          ["<leader>tt"] = {
-            rhs = "<cmd>Checkmate toggle<CR>",
-            desc = "Toggle todo item",
-            modes = { "n", "v" },
-          },
-          ["<leader>tc"] = {
-            rhs = "<cmd>Checkmate check<CR>",
-            desc = "Set todo item as checked (done)",
-            modes = { "n", "v" },
-          },
-          ["<leader>tu"] = {
-            rhs = "<cmd>Checkmate uncheck<CR>",
-            desc = "Set todo item as unchecked (not done)",
-            modes = { "n", "v" },
-          },
-          ["<leader>tn"] = {
-            rhs = "<cmd>Checkmate create<CR>",
-            desc = "Create todo item",
-            modes = { "n", "v" },
-          },
-          ["<leader>tR"] = {
-            rhs = "<cmd>Checkmate remove_all_metadata<CR>",
-            desc = "Remove all metadata from a todo item",
-            modes = { "n", "v" },
-          },
-          ["<leader>ta"] = {
-            rhs = "<cmd>Checkmate archive<CR>",
-            desc = "Archive checked/completed todo items (move to bottom section)",
-            modes = { "n" },
-          },
-          ["<leader>tv"] = {
-            rhs = "<cmd>Checkmate metadata select_value<CR>",
-            desc = "Update the value of a metadata tag under the cursor",
-            modes = { "n" },
-          },
-          ["<leader>t]"] = {
-            rhs = "<cmd>Checkmate metadata jump_next<CR>",
-            desc = "Move cursor to next metadata tag",
-            modes = { "n" },
-          },
-          ["<leader>t["] = {
-            rhs = "<cmd>Checkmate metadata jump_previous<CR>",
-            desc = "Move cursor to previous metadata tag",
-            modes = { "n" },
-          },
-        },
-        metadata = {
-          priority = {
-            style = function(context)
-              local value = context.value:lower()
-              if value == "high" then
-                return { fg = "#ff5555", bold = true }
-              elseif value == "medium" then
-                return { fg = "#ffb86c" }
-              elseif value == "low" then
-                return { fg = "#8be9fd" }
-              else -- fallback
-                return { fg = "#8be9fd" }
-              end
-            end,
-            get_value = function()
-              return "medium" -- Default priority
-            end,
-            choices = function()
-              return { "low", "medium", "high" }
-            end,
-            key = "<leader>tp",
-            sort_order = 10,
-            jump_to_on_insert = "value",
-            select_on_insert = true,
-          },
-          -- Example: A @started tag that uses a default date/time string when added
-          started = {
-            aliases = { "init" },
-            style = { fg = "#9fd6d5" },
-            get_value = function()
-              return tostring(os.date("%m/%d/%y %H:%M"))
-            end,
-            key = "<leader>ts",
-            sort_order = 20,
-          },
-          -- Example: A @done tag that also sets the todo item state when it is added and removed
-          done = {
-            aliases = { "completed", "finished" },
-            style = { fg = "#96de7a" },
-            get_value = function()
-              return tostring(os.date("%m/%d/%y %H:%M"))
-            end,
-            key = "<leader>td",
-            on_add = function(todo_item)
-              require("checkmate").set_todo_item(todo_item, "checked")
-            end,
-            on_remove = function(todo_item)
-              require("checkmate").set_todo_item(todo_item, "unchecked")
-            end,
-            sort_order = 30,
-          },
-        },
-      }
-    }
   },
   ui = { custom_keys = {}, },
   readme = { enabled = false },
