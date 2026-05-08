@@ -156,6 +156,10 @@
                             "to": [{ "key_code": "fn" }]
                         }
                     ]
+                },
+                {
+                    "identifiers": { "is_keyboard": true },
+                    "ignore": true
                 }
             ],
             "name": "Default profile",
