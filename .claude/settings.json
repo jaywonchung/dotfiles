@@ -1,10 +1,9 @@
 {
   "permissions": {
     "deny": [
-      "Bash(git add .:*)"
-    ],
-    "ask": [
-      "Bash(rm:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "defaultMode": "auto"
   },
@@ -35,7 +34,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,

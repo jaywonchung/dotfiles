@@ -24,9 +24,16 @@ When parsing and aggregating data files, NEVER set random defaults for missing v
 
 In all cases, be explicit about your assumptions. Any number, threshold, choice you came up with that is not explicitly from me must be laid out and explained.
 
-# Docstrings & Documentation
+# Python Docstrings & Documentation
 
-Assume all docstrings will be processed with mkdocstrings. No double backticks or double colons in Python docstrings. Just use single backticks and single colons. Triple backticks and language tag for code blocks within docstrings. Follow the clean Google style guide.
+Assume all Python docstrings will be processed with mkdocstrings. No double backticks or double colons in Python docstrings. Just use single backticks and single colons. Triple backticks and language tag for code blocks within docstrings. Follow the clean Google style guide.
+
+Section header-like comments in code (e.g., `# --- Data Loading ---`) are not allowed.
+
+# Allowed Characters
+
+By default, only ASCII characters are allowed. This applies to EVERYWHERE.
+Examples of disallowed characters include: emojis, en dashes, em dashes, and arrows.
 
 # Plots
 
@@ -97,6 +104,6 @@ Adjust column count and widths to match the table structure.
 
 NEVER add a new bibtex entry to the paper's .bib file or change an existing entry in ANY case. If you need to cite a new paper, leave an empty \cite{} in the LaTeX source and tell me what you intended to cite and hand off to me to add the bibtex entry and fill in the citation. If you believe you found an error in an existing bibtex entry, do not change it yourself. Instead, flag it to the user and let them decide.
 
-When you compile a LaTeX paper, always check if there's a Makefile for compilation. If so, use Make instead of running `pdflatex` directly.
+When you compile a LaTeX paper, always check if there's a Makefile for compilation. If so, use `make` instead of running `pdflatex` directly.
 
-For changes that very likely won't cause compilation failure, don't even compile, because the user likely has a `latexmk` watcher running that will auto-compile on file changes. Just make the change and let the watcher handle compilation, if it exists.
+For changes that very likely won't cause compilation failure, skip compilation. For changes that might lead to compilation failure, only initiate compilation if the user DOES NOT have a `latexmk` instance running on the computer.
