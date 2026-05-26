@@ -2,7 +2,7 @@
 
 set -ev
 
-VERSION="${VERSION:-0.13.0}"
+VERSION="${VERSION:-0.16.0}"
 
 unamestr="$(uname)"
 if [[ "$unamestr" == "Darwin" ]]; then
@@ -24,11 +24,11 @@ else
 fi
 
 cd /tmp
-curl -LO "https://ziglang.org/download/0.13.0/zig-$OS-$ARCH-$VERSION.tar.xz"
+curl -LO "https://ziglang.org/download/$VERSION/zig-$ARCH-$OS-$VERSION.tar.xz"
 rm -r ~/.local/zig || true
-tar xf "zig-$OS-$ARCH-$VERSION.tar.xz"
-mv "zig-$OS-$ARCH-$VERSION" ~/.local/zig
-rm "zig-$OS-$ARCH-$VERSION.tar.xz"
+tar xf "zig-$ARCH-$OS-$VERSION.tar.xz"
+mv "zig-$ARCH-$OS-$VERSION" ~/.local/zig
+rm "zig-$ARCH-$OS-$VERSION.tar.xz"
 ln -s "$HOME/.local/zig/zig" "$HOME/.local/bin/zig"
 
 curl -LO "https://github.com/zigtools/zls/releases/download/$VERSION/zls-$ARCH-$OS.tar.xz"

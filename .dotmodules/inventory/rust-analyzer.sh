@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [[ $(uname -m) = arm64 ]]; then
   ARCH=aarch64
 else

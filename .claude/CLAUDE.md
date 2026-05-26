@@ -10,6 +10,8 @@ Always look for existing scripts for linting, testing, type checking, etc. befor
 
 # Code Changes
 
+Do obvious next steps immediately. Do not ask whether to do something that is clearly required to complete the current task. If a required follow-up is evident, do it.
+
 When you fix something in-place based on my request, do not create something new named "xxx_fixed", "xxx_correct", etc. Just in-place fix the original. Don't write comments saying it was fixed, either.
 On the same note, do not confuse the code's comments with message you want to convey to me. For instance, do not write comments like `# Fixed the bug here`, `# Changed to use function xyz`, `# Now uses abc library`, etc. Just make the change, let me know through our conversation, and keep the code and comments "stateless" so to speak.
 This type of comments will be referred to as slop comments.
@@ -76,6 +78,11 @@ Search ONLY within paths that are explicitly part of the current task:
 If you don't know where a file lives outside those scoped paths, STOP and ask the user where to look. Do not guess by walking the filesystem upward.
 
 # GitHub
+
+Do not publish or mutate public/remote state without explicit authorization in the current user message.
+Do not run commands that send state to GitHub, package registries, container registries, or public/remote services unless the user explicitly asks for that exact remote action in the current turn.
+Codex additionally blocks `git add`, `git commit`, `git push`, mutating `gh` commands, package publishing commands, and container image pushes through `~/.codex/rules/default.rules`.
+Local non-staging git operations such as `git mv`, `git branch`, `git stash`, and `git rebase` are allowed when they are part of the requested local work.
 
 To fetch PR review comments programmatically, use:
 ```bash
