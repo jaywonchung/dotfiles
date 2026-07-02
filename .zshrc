@@ -272,8 +272,15 @@ function rc() {
   print -n '\033[5 q'
 }
 
-# Disable auto-update
-alias claude='CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000 claude'
+# Claude Code billed to the company API key instead of the personal subscription
+function claude-api() {
+  local key_file="$HOME/.local/secrets/anthropic/mlenergy_apikey"
+  if [[ ! -r "$key_file" ]]; then
+    echo "claude-api: API key file not found or not readable: $key_file" >&2
+    return 1
+  fi
+  ANTHROPIC_API_KEY="$(<"$key_file")" claude "$@"
+}
 
 #-------------------------------------------------------------------
 # Environment variables
