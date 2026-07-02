@@ -2,7 +2,7 @@
 
 Do obvious next steps immediately. Do not ask whether to do something that is clearly required to complete the current task. If a required follow-up is evident, do it. In other words, when you stop, it should be either to raise a clarifying or design question that blocks further progress, or to report full completion.
 
-Whenever you write documentation or comments, write it first and then cut it by at least half. Do not include information no one will ever need to know. Do not include information just because it was a major design consideration for shift during the development process; no one cares about a suboptimal/broken intermediate state that we were once at during development.
+Whenever you write documentation or comments, write it first and then see if you can cut it by half. Do not include information no one will ever need to know. Do not include information just because it was a major design consideration for shift during the development process; no one cares about a suboptimal/broken intermediate state that we were once at during development. Now, this DOES NOT mean you should compress the hell out of the writing and make it cryptic; no one enjoys reading such dense text. It just means that you should be ruthless about cutting out any information that is not strictly necessary for understanding the current state of the code or design. The sentences that survived should be clear, straightforward, friendly, and reasonably (and not overly) concise.
 
 When you fix something in-place based on my request, do not create something new named "xxx_fixed", "xxx_correct", etc. Just in-place fix the original. Don't write comments saying it was fixed, either.
 On the same note, do not confuse the code's comments with message you want to convey to me. For instance, do not write comments like `# Fixed the bug here`, `# Changed to use function xyz`, `# Now uses abc library`, etc. Just make the change, let me know through our conversation, and keep the code and comments "stateless" so to speak.
@@ -10,11 +10,13 @@ On the same note, do not confuse the code's comments with message you want to co
 As to tone of all kinds of writing, COMPLETELY AVOID tones that match the following pattern:
 - "This is X. No Y, no Z."
 
-When you write markdown, put one sentence per line. This does not mean one sentence per paragraph; don't put a blank line between every line/sentence. Just break lines at the end of each sentences; when you want to break paragraphs, use a blank line (i.e., two newlines).
+When you write markdown, put one sentence per line. Do not split a sentence across multiple lines; there is no line length limit. Also, this does not mean one sentence per paragraph; don't put a blank line between every line/sentence. Just break lines at the end of each sentences; when you want to break paragraphs, use a blank line (i.e., two newlines).
 
 When you find that the files you have worked on are different from where you left them, it means I have changed them after you'd made the changes. NEVER revert my changes. If you find any discrepancy with your memory/context, figure out related parts, read and understand them, and work with the current state of the codebase.
 
 Backwards compatibility is not a requirement in every case; when we're in the process of building something from scratch, we can make every breaking change we want. Your session may seem like a lot of code already exists and we need to prevent breaking changes, but in reality, we may be in the early stages of development where we can make breaking changes without issue. Always ask if you're unsure about the stage of development and whether backwards compatibility is a concern.
+
+Don't include non-standard terminology or expression that you invented during the session (particularly to compress or shorten things) in user-facing messages assuming the user will understand them.
 
 # Python & Tooling
 
@@ -70,9 +72,11 @@ NEVER implement silent fallbacks. If a preferred code path is unavailable or fai
 
 After making code changes, ALWAYS run the relevant tests or scripts to verify correctness before reporting success. Do not skip verification steps. If there are known regression tests or verification commands (e.g., in project CLAUDE.md or MEMORY.md), run them.
 
-# Moving files
+# Creating and moving files and directories
 
 ALWAYS use `git mv` when moving around files inside a git repository.
+
+Do not create new directories *outside* the project working directory without explicit permission from the user. `/tmp` is fine, but create a subdirectory within it scoped for the project + purpose (e.g., `/tmp/zeus/this_task/`) and put files there to avoid cluttering `/tmp` too much.
 
 # Filesystem searches
 
