@@ -454,63 +454,8 @@ require("lazy").setup({
       "MeanderingProgrammer/render-markdown.nvim",
       cmd = { "RenderMarkdown" },
       opts = {
-        file_types = { "Avante", "markdown" },
+        file_types = { "markdown" },
       },
-      ft = { "Avante" },
-    },
-    {
-      "yetone/avante.nvim",
-      event = "VeryLazy",
-      lazy = true,
-      version = false, -- set this if you want to always pull the latest change
-      opts = {
-        -- add any opts here
-      },
-      -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-      build = "make",
-      -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-      dependencies = {
-        "nvim-treesitter/nvim-treesitter",
-        "stevearc/dressing.nvim",
-        "nvim-lua/plenary.nvim",
-        "MunifTanjim/nui.nvim",
-        --- The below dependencies are optional,
-        "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-        "zbirenbaum/copilot.lua", -- for providers='copilot'
-      },
-      keys = {
-        { '<Leader>aa', ':AvanteToggle' }
-      },
-      config = function()
-        -- Don't initialize Avante if Copilot hasn't been set up
-        copilot_configured = require("copilot.auth").get_creds() ~= nil
-        if copilot_configured then
-          require('avante').setup({
-            provider = "copilot",
-            providers = {
-              copilot = {
-                model = "claude-opus-4.6",
-                -- extra_request_body = {
-                --   temperature = 0,
-                --   max_tokens = 8192,
-                -- },
-              },
-            },
-            mappings = {
-              diff = {
-                ours = "<Leader>co",
-                theirs = "<Leader>ct",
-                all_theirs = "<Leader>ca",
-                both = "<Leader>cb",
-                cursor = "<Leader>cc",
-              },
-            },
-            selection = {
-              hint_display = "none",
-            }
-          })
-        end
-      end
     },
     {
       "lukas-reineke/indent-blankline.nvim",
