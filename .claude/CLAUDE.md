@@ -90,6 +90,12 @@ Search ONLY within paths that are explicitly part of the current task:
 
 If you don't know where a file lives outside those scoped paths, STOP and ask the user where to look. Do not guess by walking the filesystem upward.
 
+# Sensitive Files and .gitignore
+
+The local directory may have sensitive files that should not be mentioned anywhere, including in the .gitignore; mentioning the name of those files in .gitignore with the purpose of not tracking them on git in turn advertises their existence.
+Never write the names of sensitive or internal files into anything that gets committed, .gitignore included: a committed ignore entry advertises exactly what it hides.
+In no case will you or the user will ever run broad `git add` commands that add all untracked files to the repository; all files will be added judiciously and checked with `git status`, and .gitignore does NOT have to have every file that is intended to be ignored.
+
 # GitHub
 
 Do not publish or mutate public/remote state without explicit authorization in the current user message.

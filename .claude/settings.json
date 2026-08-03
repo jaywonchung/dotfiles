@@ -45,5 +45,6 @@
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
-  ]
+  ],
+  "skipWorkflowUsageWarning": true
 }
