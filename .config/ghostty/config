@@ -1,6 +1,8 @@
-font-family = JetBrainsMono Nerd Font Mono
+font-family = MonoLisaCode Nerd Font Mono
 font-family = D2Coding
-font-size = 16
+font-size = 18
+adjust-cell-height = 5%
+adjust-cell-width = -10%
 
 background = #323232
 foreground = #ffffff
@@ -26,7 +28,6 @@ palette = 15=#ffffff
 
 macos-icon = "chalkboard"
 
-adjust-cell-height = 10%
 window-padding-x = 10
 window-padding-y = 10
 
@@ -38,6 +39,8 @@ window-save-state = always
 scrollback-limit = 100000000
 
 shell-integration-features = ssh-env,ssh-terminfo
+
+unfocused-split-opacity = 1
 
 keybind = ctrl+shift+enter=new_split:right
 keybind = ctrl+alt+enter=new_split:down
