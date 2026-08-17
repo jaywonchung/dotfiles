@@ -1065,21 +1065,11 @@ require("lazy").setup({
       end
     },
     {
-      "barreiroleo/ltex_extra.nvim",
-      branch = "dev",
-      ft = { "markdown", "rst", "tex", "gitcommit", "text" },
-      opts = {
-        load_langs = { "en-US" },
-        path = vim.fn.expand("~") .. "/.local/share/ltex",
-      }
-    },
-    {
       "neovim/nvim-lspconfig",
       dependencies = {
         "hrsh7th/nvim-cmp",
         "hrsh7th/cmp-nvim-lsp",
         "RRethy/vim-illuminate",
-        "barreiroleo/ltex_extra.nvim",
       },
       config = function()
         -- Delete default gr* keymaps to avoid delay on `gr` (Telescope lsp_references).
@@ -1139,23 +1129,6 @@ require("lazy").setup({
           vim.lsp.enable('ty')
         end
 
-        if vim.fn.executable('ltex-ls') == 1 then
-          vim.lsp.config('ltex', {
-            filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
-            settings = {
-              ltex = {
-                latex = {
-                  commands = {
-                    ["\\JW{}"] = "ignore",
-                    ["\\jw{}"] = "ignore",
-                    ["\\todo{}"] = "ignore",
-                  }
-                }
-              }
-            }
-          })
-          vim.lsp.enable('ltex')
-        end
 
         if vim.fn.executable('texlab') == 1 then
           vim.lsp.config('texlab', {
@@ -1165,6 +1138,9 @@ require("lazy").setup({
                   onEdit = false,
                   onOpenAndSave = true,
                 },
+                diagnostics = {
+                  ignoredPatterns = { "Unused entry" },
+                },
               },
             },
             filetypes = { "tex" },
@@ -1172,21 +1148,27 @@ require("lazy").setup({
           vim.lsp.enable('texlab')
         end
 
-        -- if vim.fn.executable('harper-ls') == 1 then
-        --   vim.lsp.config('harper_ls', {
-        --     filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
-        --     settings = {
-        --       ["harper-ls"] = {
-        --         userDictPath = vim.fn.expand("~") .. "/.local/share/ltex/ltex.dictionary.en-US.txt",
-        --         linters = {
-        --           LongSentences = false,
-        --         }
-        --       }
-        --     }
-        --   })
-        --   vim.lsp.enable('harper_ls')
-        -- end
-        --
+        if vim.fn.executable('harper-ls') == 1 then
+          vim.lsp.config('harper_ls', {
+            filetypes = { "markdown", "rst", "tex", "gitcommit", "text" },
+            settings = {
+              ["harper-ls"] = {
+                userDictPath = vim.fn.expand("~") .. "/.local/share/ltex/ltex.dictionary.en-US.txt",
+                linters = {
+                  LongSentences = false,
+                  UseTitleCase = false,
+                  OrthographicConsistency = false,
+                  MoreAdjective = false,
+                  AvoidAndAlso = false,
+                  BuiltIn = false,
+                  MassNouns = false,
+                }
+              }
+            }
+          })
+          vim.lsp.enable('harper_ls')
+        end
+
         if vim.fn.executable('gopls') == 1 then
           vim.lsp.enable('gopls')
         end
