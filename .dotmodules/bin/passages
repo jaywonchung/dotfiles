@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+#
+# passage wrapper that keeps the store replicas in sync.
+#
+# Usage: vault.sh <passage arguments>   e.g., vault.sh insert -m github
+#        vault.sh sync                  mirror ~/.passage to replicas now
+#
+# Mutating commands are refused unless every replica directory is present.
+# After each mutation, ~/.passage is mirrored to all replicas and verified.
+
+set -euo pipefail
+
+REPLICAS=(
+    "/Volumes/Sandisk 2T/passage"
+    "$HOME/Google/Sync/passage"
+)
+
+is_mutating() {
+    case "${1:-}" in
+        insert|edit|generate|rm|mv|cp|init|sync) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+sync_replicas() {
+    local r
+    for r in "${REPLICAS[@]}"; do
+        rsync -a --delete "$HOME/.passage/" "$r/"
+        if ! diff -rq "$HOME/.passage" "$r" >/dev/null; then
+            echo "vault.sh: replica '$r' differs after sync" >&2
+            exit 1
+        fi
+        echo "vault.sh: synced '$r'"
+    done
+}
+
+if is_mutating "${1:-}"; then
+    for r in "${REPLICAS[@]}"; do
+        if [[ ! -d $r ]]; then
+            echo "vault.sh: replica '$r' not present; refusing to modify the store" >&2
+            exit 1
+        fi
+    done
+fi
+
+if [[ "${1:-}" == "sync" ]]; then
+    sync_replicas
+    exit 0
+fi
+
+passage "$@"
+
+if is_mutating "${1:-}"; then
+    sync_replicas
+fi
