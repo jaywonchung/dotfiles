@@ -420,34 +420,48 @@ require("lazy").setup({
       "zbirenbaum/copilot.lua",
       config = function()
         -- Skip copilot auth if `node` is not installed.
-        if vim.fn.executable("node") == 1 then
-          require("copilot").setup({
-            suggestion = {
-              enabled = true,
-              auto_trigger = true,
-              keymap = {
-                accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
-                accept_line = "<C-l>",
-                accept_word = "<C-f>",
-              },
-            },
-            filetypes = {
-              ["*"] = true,
-            },
-            -- copilot_model = "gpt-4o-copilot",
-            server_opts_overrides = {
-              settings = {
-                telemetry = {
-                  telemetryLevel = "off",
+        if vim.fn.executable("node") ~= 1 then
+          print("Skipping Copilot setup as `node` was not found in $PATH.")
+          return
+        end
+
+        -- Start Copilot only after a UI attaches. Headless instances (e.g., vimtex
+        -- inverse search launched by the PDF viewer) never attach a UI and exit right
+        -- away, which would leave an orphaned Copilot language server behind.
+        vim.api.nvim_create_autocmd("UIEnter", {
+          once = true,
+          callback = function()
+            require("copilot").setup({
+              suggestion = {
+                enabled = true,
+                auto_trigger = true,
+                keymap = {
+                  accept = "<C-e>",  -- Doesn't conflict with cmp because select = false.
+                  accept_line = "<C-l>",
+                  accept_word = "<C-f>",
                 },
               },
-            },
-          })
+              filetypes = {
+                ["*"] = true,
+              },
+              -- copilot_model = "gpt-4o-copilot",
+              server_opts_overrides = {
+                settings = {
+                  telemetry = {
+                    telemetryLevel = "off",
+                  },
+                },
+                -- On exit, wait up to this many ms for the language server to shut
+                -- down gracefully, then kill it instead of leaving it orphaned.
+                flags = {
+                  exit_timeout = 200,
+                },
+              },
+            })
 
-          vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
-        else
-          print("Skipping Copilot setup as `node` was not found in $PATH.")
-        end
+            vim.keymap.set('n', '<Leader>cd', ':Copilot disable<CR>', { silent = true })
+          end,
+        })
       end,
     },
     {
@@ -455,6 +469,7 @@ require("lazy").setup({
       cmd = { "RenderMarkdown" },
       opts = {
         file_types = { "markdown" },
+        headings = { icon = false, position = 'inline' },
       },
     },
     {
