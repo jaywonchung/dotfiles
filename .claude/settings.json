@@ -1,13 +1,15 @@
 {
   "permissions": {
     "deny": [
-      "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)"
     ],
+    "ask": [
+      "Bash(git add:*)"
+    ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "fable[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -25,19 +27,24 @@
       }
     ]
   },
-  "enabledPlugins": {},
+  "enabledPlugins": {
+    "zeus@ml-energy": true,
+    "mlenergy-data@ml-energy": true
+  },
   "extraKnownMarketplaces": {
-    "ml-energy-data": {
+    "ml-energy": {
       "source": {
-        "source": "github",
-        "repo": "ml-energy/data"
+        "source": "directory",
+        "path": "/Users/jaywonchung/workspace/mlenergy/plugins"
       }
     }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "awaySummaryEnabled": false,
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
@@ -45,6 +52,5 @@
   "addCoauthoredBy": false,
   "trustedDirectories": [
     "/Users/jaywonchung"
-  ],
-  "skipWorkflowUsageWarning": true
+  ]
 }
