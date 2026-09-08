@@ -4,31 +4,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "PageDown → Ctrl+Space (clean)",
-                        "manipulators": [
-                            {
-                                "from": { "key_code": "page_down" },
-                                "to": [
-                                    {
-                                        "key_code": "left_control",
-                                        "lazy": false
-                                    },
-                                    {
-                                        "key_code": "spacebar",
-                                        "modifiers": ["left_control"]
-                                    }
-                                ],
-                                "to_after_key_up": [
-                                    {
-                                        "key_code": "left_control",
-                                        "modifiers": []
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "CMD/SHIFT + ESC to CMD/SHIFT + Backtick",
                         "manipulators": [
                             {
@@ -98,19 +73,6 @@
                         {
                             "from": { "key_code": "right_option" },
                             "to": [{ "key_code": "right_command" }]
-                        }
-                    ]
-                },
-                {
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 20565,
-                        "vendor_id": 12815
-                    },
-                    "simple_modifications": [
-                        {
-                            "from": { "key_code": "page_down" },
-                            "to": [{ "key_code": "f2" }]
                         }
                     ]
                 },
