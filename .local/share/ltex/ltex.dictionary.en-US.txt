@@ -1,6 +1,7 @@
 A2A
 AAAI
 AMDSMI
+ASIC
 ASPLOS
 Actix
 AllGather
@@ -12,6 +13,7 @@ B200
 BurstGPT
 CAIS
 CDF
+CSE
 CUDA
 CVPR
 Capriccio
@@ -21,7 +23,9 @@ Conflux
 Containerd
 Cornfigurator
 Cornserve
+Cornserve's
 DAG
+DAG's
 DAGs
 DER
 DERA
@@ -57,6 +61,7 @@ First‑Class
 FlashAttention
 FlashInfer
 G7
+GB300
 GLM
 GPQA
 GPU's
@@ -64,11 +69,12 @@ GPipe
 GQA
 GSI
 GSRA
+GW
 Gbps
 GenAI
 Geri
-Goodput
 Gradio
+HPC
 HPCA
 HVI
 HotCarbon
@@ -103,12 +109,15 @@ LLaVA
 LM
 LMArena
 LMSys
+LPU
+Laude
 Lowtime
 MAB
 MBO
 MHA
 MILP
 MILPs
+MLCommons
 MLLM
 MLOps
 MLPerf
@@ -135,6 +144,7 @@ NVML
 NVSwitch
 Nano-batching
 NanoFlow
+Nebius
 Neovim
 NeurIPS
 Nevermind
@@ -147,8 +157,10 @@ OpenDSS
 OpenEI
 OpenG2G
 OpenTelemetry
+P1
 Patchland
 Powerpoint
+Predoctoral
 Protobuf
 PyPI
 Pydantic
@@ -162,6 +174,7 @@ RAPL
 RDMA
 RMSNorm
 ROCm
+RPP
 Rackham
 Recomputation
 ReduceScatter
@@ -171,6 +184,7 @@ Ruofan
 SGLang
 SIGCOMM
 SIMD
+SLO
 SLOs
 SM
 SMs
@@ -178,6 +192,7 @@ SOSP
 SOTA
 Sarathi-Serve
 Scalarization
+SemiAnalysis
 ServeGen
 ShareGPT
 Sora
@@ -192,6 +207,8 @@ TDP
 TODO
 TP
 TPOT
+TPU
+TTA
 TTFT
 TensorRT
 TensorRT-LLM
@@ -204,8 +221,11 @@ Tradeoffs
 UCX
 UMich
 USENIX
+Unidle
+Unidle's
 VL
 VLSI
+VR200
 Vaswani
 Wide-ResNet
 XGBoost
@@ -217,6 +237,7 @@ ZeusMonitor
 ZeusPerStage
 administrivia
 agentic
+analyses
 async
 bert-huge-uncased
 bilevel
@@ -235,7 +256,9 @@ busways
 checkpointing
 colocatable
 combinatorially
+composabilities
 controllability
+counterproductively
 cuBLAS
 cuDNN
 datacenter
@@ -257,6 +280,7 @@ e2e
 entrypoint
 filesystem
 gRPC
+goodput
 granularities
 hardcode
 hardcoding
@@ -266,6 +290,7 @@ hypervolume
 inapproximability
 inter-node
 interplays
+intra
 intra-node
 iso-latency
 jaywonchung
@@ -280,6 +305,9 @@ megakernels
 microbatch
 microbatches
 misprediction
+monomorphization
+monomorphize
+monomorphized
 multi-year
 multimodality
 multiplicatively
@@ -289,6 +317,8 @@ nanobatch
 nanobatches
 nanobatching
 naı̈ve
+non-critical
+non-trivial
 optimality
 optimizers
 p95
@@ -317,6 +347,8 @@ sysfs
 testbeds
 timestep
 underutilization
+underutilizes
+underutilizing
 undervoltage
 vLLM
 vLLM-Omni
