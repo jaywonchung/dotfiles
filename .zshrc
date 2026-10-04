@@ -282,6 +282,8 @@ function claude-api() {
   ANTHROPIC_API_KEY="$(<"$key_file")" claude "$@"
 }
 
+alias claude-symbioticlab="CLAUDE_CONFIG_DIR=$HOME/.claude-symbioticlab claude"
+
 #-------------------------------------------------------------------
 # Environment variables
 #-------------------------------------------------------------------
