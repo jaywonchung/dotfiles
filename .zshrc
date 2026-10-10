@@ -297,6 +297,11 @@ export EDITOR="nvim"
 export MANPAGER="nvim +Man!"
 export MANWIDTH=999
 
+# Keep track of ssh-agent sockets inside remote nodes
+if [[ -n "$SSH_CONNECTION" && -S "$HOME/.ssh/ssh_auth_sock" ]]; then
+  export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+fi
+
 #-------------------------------------------------------------------
 # Machine-specific
 #-------------------------------------------------------------------
