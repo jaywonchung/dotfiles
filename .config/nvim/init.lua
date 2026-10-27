@@ -804,6 +804,22 @@ require("lazy").setup({
               }
             },
           },
+          filesystem_watchers = {
+            ignore_dirs = function(path)
+              for _, pattern in ipairs({ "/.ccls-cache", "/build", "/node_modules", "/target", "/.zig-cache" }) do
+                if vim.fn.match(path, pattern) ~= -1 then
+                  return true
+                end
+              end
+              for _, dir in ipairs({ "/.codex", "/.cache" }) do
+                local ignored = vim.env.HOME .. dir
+                if path == ignored or vim.startswith(path, ignored .. "/") then
+                  return true
+                end
+              end
+              return false
+            end,
+          },
         })
 
         local function tab_win_closed(winnr)
