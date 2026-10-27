@@ -9,7 +9,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable[1m]",
+  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -41,6 +41,11 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    }
+  },
   "awaySummaryEnabled": false,
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
