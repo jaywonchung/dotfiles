@@ -27,18 +27,22 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "'/Applications/Dockset.app/Contents/MacOS/Dockset' --claude-usage-statusline"
+  },
   "enabledPlugins": {
-    "zeus@ml-energy": true,
     "mlenergy-data@ml-energy": true
   },
   "extraKnownMarketplaces": {
     "ml-energy": {
       "source": {
-        "source": "directory",
-        "path": "/Users/jaywonchung/workspace/mlenergy/plugins"
+        "source": "github",
+        "repo": "ml-energy/plugins"
       }
     }
   },
+  "feedbackDrafts": "off",
   "alwaysThinkingEnabled": true,
   "effortLevel": "xhigh",
   "modelSettings": {
@@ -50,6 +54,7 @@
   "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
+  "preferredNotifChannel": "notifications_disabled",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
